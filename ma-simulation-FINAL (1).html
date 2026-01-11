@@ -1,0 +1,2321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M&A Simulation - DataSync Acquisition Analysis - Cloverpath</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #2d8659;
+            --light-green: #7cb342;
+            --dark-green: #1b5e3a;
+            --light-green-dark: #5a9c2e;
+            --bg-light: #f5f9f7;
+            --text-dark: #1a1a1a;
+            --text-gray: #666;
+            --border-color: #e0e0e0;
+            --white: #ffffff;
+            --yellow: #ffc107;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            color: var(--white);
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .company-banner {
+            background: linear-gradient(135deg, #5a9c2e 0%, #7cb342 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .company-banner h2 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .company-banner p {
+            opacity: 0.9;
+        }
+
+        .quick-facts {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .quick-facts h3 {
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .facts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .fact-item {
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .fact-item.primary {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+
+        .fact-item.warning {
+            background: #fefce8;
+            border: 1px solid #fde047;
+        }
+
+        .fact-item.info {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+        }
+
+        .fact-label {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .fact-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .alert-banner {
+            background: #fef2f2;
+            border-left: 3px solid var(--yellow);
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+        }
+
+        .alert-banner strong {
+            color: var(--primary-green);
+        }
+
+        .progress-container {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-green) 0%, var(--light-green) 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        .section {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-header {
+            border-left: 4px solid var(--primary-green);
+            padding-left: 20px;
+            margin-bottom: 25px;
+        }
+
+        .section-header h2 {
+            color: var(--primary-green);
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .section-header p {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+
+        .guide-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .guide-box h3 {
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .guide-checklist {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .guide-item {
+            padding-left: 20px;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .guide-item::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--primary-green);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .materials-box {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .materials-box.read {
+            border-color: var(--primary-green);
+            background: #fafafa;
+        }
+
+        .read-indicator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--primary-green);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: none;
+        }
+
+        .materials-box.read .read-indicator {
+            display: block;
+        }
+
+        .materials-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .materials-header h3 {
+            color: var(--text-dark);
+            font-size: 1.2rem;
+        }
+
+        .materials-toggle {
+            background: var(--primary-green);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+        }
+
+        .materials-content {
+            margin-top: 15px;
+            display: none;
+        }
+
+        .materials-content.expanded {
+            display: block;
+        }
+
+        .materials-content h4 {
+            color: var(--primary-green);
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .materials-content p, .materials-content ul {
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            line-height: 1.7;
+        }
+
+        .materials-content ul {
+            margin-left: 20px;
+        }
+
+        .materials-content li {
+            margin-bottom: 5px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+            font-size: 0.9rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .data-table th {
+            background: var(--primary-green);
+            color: white;
+            font-weight: 600;
+        }
+
+        .data-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .data-table td:first-child {
+            font-weight: 500;
+        }
+
+        .highlight-box {
+            background: #fefce8;
+            border-left: 3px solid var(--yellow);
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .example-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .example-box h4 {
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .example-good {
+            background: #f0fdf4;
+            border-left: 3px solid var(--primary-green);
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .example-good::before {
+            content: "✓ GOOD: ";
+            font-weight: bold;
+            color: var(--primary-green);
+        }
+
+        .example-bad {
+            background: #fef2f2;
+            border-left: 3px solid #dc2626;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .example-bad::before {
+            content: "✗ BAD: ";
+            font-weight: bold;
+            color: #dc2626;
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--primary-green);
+        }
+
+        .input-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .input-hint {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .checkbox-group {
+            margin: 15px 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            padding: 10px;
+            background: #fafafa;
+            border-radius: 6px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .tooltip-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background: var(--primary-green);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 16px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 5px;
+            cursor: help;
+            vertical-align: middle;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 280px;
+            background-color: var(--text-dark);
+            color: white;
+            text-align: left;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: normal;
+            line-height: 1.4;
+            position: absolute;
+            z-index: 1000;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -140px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--text-dark) transparent transparent transparent;
+        }
+
+        .tooltip-wrapper:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-green);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(45, 134, 89, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--primary-green);
+            border: 2px solid var(--primary-green);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-green);
+            color: var(--white);
+        }
+
+        .score-card {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--light-green) 100%);
+            color: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .score-number {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .score-breakdown {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-dark);
+        }
+
+        .score-item:last-child {
+            border-bottom: none;
+        }
+
+        .score-label {
+            font-weight: 600;
+        }
+
+        .score-value {
+            color: var(--primary-green);
+            font-weight: bold;
+        }
+
+        .feedback-box {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .feedback-box.warning {
+            border-left-color: #ff9800;
+            background: #fff3e0;
+        }
+
+        .feedback-box.error {
+            border-left-color: #f44336;
+            background: #ffebee;
+        }
+
+        .feedback-box.success {
+            border-left-color: var(--light-green);
+            background: #f1f8e9;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .btn-export {
+            background: var(--light-green);
+            color: var(--white);
+        }
+
+        .btn-export:hover {
+            background: var(--light-green-dark);
+        }
+
+        .framework-box {
+            background: white;
+            border: 2px solid var(--light-green);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .framework-box h4 {
+            color: var(--light-green-dark);
+            margin-bottom: 10px;
+        }
+
+        .calc-box {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .calc-box strong {
+            color: var(--primary-green);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                font-size: 14px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 20px 15px;
+                margin-bottom: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+                margin-bottom: 8px;
+            }
+
+            .header p {
+                font-size: 0.9rem;
+            }
+
+            .company-banner h2 {
+                font-size: 1.4rem;
+            }
+
+            .progress-container,
+            .section,
+            .quick-facts,
+            .materials-box,
+            .guide-box,
+            .framework-box {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            .section-header {
+                padding-left: 15px;
+                margin-bottom: 20px;
+            }
+
+            .section-header h2 {
+                font-size: 1.4rem;
+            }
+
+            .section-header p {
+                font-size: 0.9rem;
+            }
+
+            .facts-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .fact-item {
+                padding: 12px;
+            }
+
+            .fact-label {
+                font-size: 0.7rem;
+            }
+
+            .fact-value {
+                font-size: 1.1rem;
+            }
+
+            .guide-checklist {
+                grid-template-columns: 1fr;
+            }
+
+            .materials-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .materials-toggle {
+                align-self: flex-start;
+                padding: 8px 16px;
+            }
+
+            .materials-content {
+                font-size: 0.9rem;
+            }
+
+            .data-table {
+                font-size: 0.7rem;
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 8px 4px;
+                font-size: 0.7rem;
+            }
+
+            .data-table th {
+                white-space: nowrap;
+            }
+
+            .input-group {
+                margin: 15px 0;
+            }
+
+            .input-group label {
+                font-size: 0.95rem;
+            }
+
+            .input-group input,
+            .input-group textarea,
+            .input-group select {
+                padding: 10px;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+
+            .input-group textarea {
+                min-height: 100px;
+            }
+
+            .checkbox-item {
+                padding: 12px 8px;
+                align-items: flex-start;
+            }
+
+            .checkbox-item input[type="checkbox"] {
+                margin-top: 2px;
+                flex-shrink: 0;
+            }
+
+            .checkbox-item label {
+                font-size: 0.9rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 14px 20px;
+                font-size: 1rem;
+            }
+
+            .tooltip-wrapper:hover .tooltip-text {
+                display: none; /* Disable tooltips on mobile */
+            }
+
+            .tooltip-icon {
+                display: none; /* Hide tooltip icons on mobile */
+            }
+
+            .calc-box {
+                font-size: 0.75rem;
+                padding: 12px;
+            }
+
+            .example-box {
+                padding: 15px;
+                font-size: 0.9rem;
+            }
+
+            .example-good,
+            .example-bad {
+                padding: 10px;
+                font-size: 0.85rem;
+            }
+
+            .highlight-box,
+            .feedback-box,
+            .alert-banner {
+                padding: 12px 15px;
+                font-size: 0.9rem;
+            }
+
+            .score-card {
+                padding: 20px 15px;
+            }
+
+            .score-number {
+                font-size: 3rem;
+                margin: 15px 0;
+            }
+
+            .score-breakdown {
+                padding: 15px;
+            }
+
+            .score-item {
+                padding: 10px 0;
+                font-size: 0.9rem;
+            }
+
+            .export-buttons {
+                flex-direction: column;
+            }
+
+            .framework-box h4,
+            .guide-box h3,
+            .materials-header h3 {
+                font-size: 1.1rem;
+            }
+
+            /* Make tables scroll horizontally on mobile */
+            .materials-content table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        /* Extra small devices */
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.3rem;
+            }
+
+            .company-banner h2 {
+                font-size: 1.2rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.2rem;
+            }
+
+            .score-number {
+                font-size: 2.5rem;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 6px 3px;
+                font-size: 0.65rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>M&A Simulation</h1>
+            <p>Evaluate an acquisition target and develop investment recommendation</p>
+        </div>
+
+        <div class="progress-container">
+            <h3>Your Progress</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text">
+                <span id="progressLabel">Introduction</span>
+                <span id="progressPercent">0% Complete</span>
+            </div>
+        </div>
+
+        <!-- Section 0: Introduction & Materials -->
+        <div class="section active" id="section0">
+            <div class="company-banner">
+                <h2>DataSync Technologies</h2>
+                <p>Cloud Data Integration Platform - Acquisition Target</p>
+            </div>
+
+            <div class="quick-facts">
+                <h3>Target Company Overview</h3>
+                <div class="facts-grid">
+                    <div class="fact-item primary">
+                        <div class="fact-label">Enterprise Value Range</div>
+                        <div class="fact-value">$180-240M</div>
+                    </div>
+                    <div class="fact-item info">
+                        <div class="fact-label">Revenue (LTM)</div>
+                        <div class="fact-value">$32.5M</div>
+                    </div>
+                    <div class="fact-item warning">
+                        <div class="fact-label">Revenue Growth</div>
+                        <div class="fact-value">+45% YoY</div>
+                    </div>
+                    <div class="fact-item info">
+                        <div class="fact-label">EBITDA Margin</div>
+                        <div class="fact-value">18%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert-banner">
+                <strong>SITUATION:</strong> You are an M&A Associate at TechVentures Partners (strategic buyer) evaluating the acquisition of DataSync Technologies, a cloud data integration SaaS platform. Your task is to analyze the target using comparable companies and precedent transactions, calculate valuation, assess synergies, and make a go/no-go recommendation.
+            </div>
+
+            <div class="section-header">
+                <h2>Target Company & Market Materials</h2>
+                <p>Review all materials before beginning your analysis</p>
+            </div>
+
+            <div class="feedback-box success">
+                <h3 style="margin-bottom: 10px;">Your Role</h3>
+                <p>You are an <strong>M&A Associate</strong> at TechVentures Partners, a $12B revenue enterprise software company. The corporate development team is evaluating DataSync Technologies for acquisition to enhance your data integration capabilities and cross-sell to your existing customer base.</p>
+                <p style="margin-top: 10px;"><strong>Your Mission:</strong> Complete valuation analysis using comparable companies and precedent transactions, identify synergies, calculate pro forma returns, and make an investment recommendation with price range.</p>
+            </div>
+
+            <div class="guide-box">
+                <h3>What You Need to Extract from Materials:</h3>
+                <div class="guide-checklist">
+                    <div class="guide-item">Target financials and growth metrics</div>
+                    <div class="guide-item">Comparable company multiples</div>
+                    <div class="guide-item">Precedent transaction multiples</div>
+                    <div class="guide-item">Revenue and cost synergies</div>
+                    <div class="guide-item">Valuation methodology and range</div>
+                    <div class="guide-item">Strategic rationale and risks</div>
+                </div>
+            </div>
+
+            <div class="materials-box" id="mat-target">
+                <span class="read-indicator">Read</span>
+                <div class="materials-header" onclick="toggleMaterials('targetData')">
+                    <h3>Target Company & Transaction Materials</h3>
+                    <span class="materials-toggle">Click to View</span>
+                </div>
+                <div class="materials-content" id="targetData">
+                    <h4>DataSync Technologies - Company Overview</h4>
+                    <p><strong>DataSync Technologies</strong> is a cloud-based data integration platform that helps enterprises connect, transform, and synchronize data across multiple systems (CRM, ERP, databases, cloud apps). Founded in 2018, the company has grown rapidly by serving mid-market and enterprise customers in financial services, healthcare, and retail verticals.</p>
+
+                    <p><strong>Product:</strong> iPaaS (Integration Platform as a Service) - enables no-code/low-code data integration workflows</p>
+                    <p><strong>Business Model:</strong> SaaS subscription, annual contracts, usage-based pricing for data volume processed</p>
+                    <p><strong>Customers:</strong> 485 active customers, 95% retention rate, NRR (Net Revenue Retention) 130%</p>
+
+                    <h4>Financial Performance (Last Twelve Months - LTM)</h4>
+                    <table class="data-table">
+                        <tr>
+                            <th>Metric</th>
+                            <th>LTM</th>
+                            <th>Prior Year</th>
+                            <th>Growth</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Revenue</strong></td>
+                            <td>$32.5M</td>
+                            <td>$22.4M</td>
+                            <td>+45%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Recurring Revenue (ARR)</strong></td>
+                            <td>$35.2M</td>
+                            <td>$24.1M</td>
+                            <td>+46%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Gross Profit</strong></td>
+                            <td>$25.4M</td>
+                            <td>$17.0M</td>
+                            <td>+49%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Gross Margin</strong></td>
+                            <td>78%</td>
+                            <td>76%</td>
+                            <td>+2 pts</td>
+                        </tr>
+                        <tr>
+                            <td><strong>EBITDA</strong></td>
+                            <td>$5.9M</td>
+                            <td>$2.7M</td>
+                            <td>+119%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>EBITDA Margin</strong></td>
+                            <td>18%</td>
+                            <td>12%</td>
+                            <td>+6 pts</td>
+                        </tr>
+                    </table>
+
+                    <h4>Revenue Composition</h4>
+                    <ul>
+                        <li><strong>Subscription Revenue:</strong> $30.2M (93% of total) - Annual contracts, monthly billing</li>
+                        <li><strong>Professional Services:</strong> $2.3M (7%) - Implementation, custom integrations</li>
+                        <li><strong>Net Revenue Retention:</strong> 130% (existing customers expanding usage)</li>
+                        <li><strong>Customer Acquisition Cost (CAC):</strong> $18,500 per customer</li>
+                        <li><strong>Lifetime Value (LTV):</strong> $142,000 (LTV/CAC ratio of 7.7x)</li>
+                    </ul>
+
+                    <h4>Customer Segmentation</h4>
+                    <table class="data-table">
+                        <tr>
+                            <th>Segment</th>
+                            <th># Customers</th>
+                            <th>Avg Contract Value</th>
+                            <th>% of Revenue</th>
+                        </tr>
+                        <tr>
+                            <td>Enterprise (>$250K ACV)</td>
+                            <td>42</td>
+                            <td>$385K</td>
+                            <td>50%</td>
+                        </tr>
+                        <tr>
+                            <td>Mid-Market ($50-250K ACV)</td>
+                            <td>158</td>
+                            <td>$95K</td>
+                            <td>46%</td>
+                        </tr>
+                        <tr>
+                            <td>SMB (<$50K ACV)</td>
+                            <td>285</td>
+                            <td>$12K</td>
+                            <td>4%</td>
+                        </tr>
+                    </table>
+
+                    <h4>Comparable Public Companies</h4>
+                    <table class="data-table">
+                        <tr>
+                            <th>Company</th>
+                            <th>Revenue</th>
+                            <th>Rev Growth</th>
+                            <th>EBITDA Margin</th>
+                            <th>EV/Revenue</th>
+                            <th>EV/EBITDA</th>
+                        </tr>
+                        <tr>
+                            <td><strong>MuleSoft (acq'd by Salesforce)</strong></td>
+                            <td>$296M</td>
+                            <td>+58%</td>
+                            <td>-2%</td>
+                            <td>17.2x</td>
+                            <td>N/A</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Informatica</strong></td>
+                            <td>$1,420M</td>
+                            <td>+12%</td>
+                            <td>32%</td>
+                            <td>7.8x</td>
+                            <td>24.4x</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Boomi (Dell owned)</strong></td>
+                            <td>~$250M</td>
+                            <td>+35%</td>
+                            <td>~15%</td>
+                            <td>9.0x</td>
+                            <td>60.0x</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Talend</strong></td>
+                            <td>$318M</td>
+                            <td>+18%</td>
+                            <td>8%</td>
+                            <td>5.2x</td>
+                            <td>65.0x</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Celigo</strong></td>
+                            <td>~$50M</td>
+                            <td>+40%</td>
+                            <td>20%</td>
+                            <td>10.5x</td>
+                            <td>52.5x</td>
+                        </tr>
+                        <tr style="background: #fef3c7; font-weight: 600;">
+                            <td><strong>Median</strong></td>
+                            <td>--</td>
+                            <td>+35%</td>
+                            <td>15%</td>
+                            <td>9.0x</td>
+                            <td>52.5x</td>
+                        </tr>
+                    </table>
+
+                    <div class="highlight-box">
+                        <strong>Comp Analysis Note:</strong> DataSync's 45% revenue growth is above median (+35%). EBITDA margin of 18% is close to median (15%). Size ($32.5M revenue) is smaller than comps, typically warrants 10-20% valuation discount.
+                    </div>
+
+                    <h4>Precedent M&A Transactions (Data Integration/iPaaS)</h4>
+                    <table class="data-table">
+                        <tr>
+                            <th>Target</th>
+                            <th>Acquirer</th>
+                            <th>Year</th>
+                            <th>Revenue</th>
+                            <th>Rev Growth</th>
+                            <th>EV/Revenue</th>
+                        </tr>
+                        <tr>
+                            <td><strong>MuleSoft</strong></td>
+                            <td>Salesforce</td>
+                            <td>2018</td>
+                            <td>$296M</td>
+                            <td>+58%</td>
+                            <td>17.2x</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Jitterbit</strong></td>
+                            <td>Vista Equity</td>
+                            <td>2021</td>
+                            <td>~$60M</td>
+                            <td>+35%</td>
+                            <td>11.2x</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SnapLogic</strong></td>
+                            <td>CapitalG</td>
+                            <td>2021</td>
+                            <td>~$100M</td>
+                            <td>+40%</td>
+                            <td>9.5x</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Workato</strong></td>
+                            <td>Secondary (Battery Ventures)</td>
+                            <td>2022</td>
+                            <td>~$140M</td>
+                            <td>+60%</td>
+                            <td>12.8x</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Celigo</strong></td>
+                            <td>Salesforce Ventures</td>
+                            <td>2023</td>
+                            <td>~$50M</td>
+                            <td>+40%</td>
+                            <td>10.5x</td>
+                        </tr>
+                        <tr style="background: #fef3c7; font-weight: 600;">
+                            <td><strong>Median</strong></td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>+40%</td>
+                            <td>11.2x</td>
+                        </tr>
+                    </table>
+
+                    <div class="highlight-box">
+                        <strong>Transaction Multiples Note:</strong> Median precedent EV/Revenue is 11.2x. DataSync's 45% growth is above median (+40%), suggesting it could command premium. MuleSoft's 17.2x was outlier (strategic premium from Salesforce).
+                    </div>
+
+                    <h4>TechVentures Partners - Acquirer Profile</h4>
+                    <p><strong>TechVentures Partners</strong> is a $12B revenue enterprise software company offering CRM, ERP, and business intelligence solutions to mid-market and enterprise customers. Key stats:</p>
+                    <ul>
+                        <li><strong>Revenue:</strong> $12.2B (FY2024), +8% growth</li>
+                        <li><strong>EBITDA Margin:</strong> 28%</li>
+                        <li><strong>Customer Base:</strong> 18,500 active customers, 92% retention</li>
+                        <li><strong>Sales Force:</strong> 2,400 enterprise sales reps, existing relationships with Fortune 1000</li>
+                        <li><strong>M&A Track Record:</strong> 12 acquisitions in last 5 years, average 3.2x revenue multiple paid</li>
+                    </ul>
+
+                    <h4>Identified Synergies - Revenue Side</h4>
+                    <p><strong>1. Cross-Sell to Existing Customer Base (Year 3 Run-Rate)</strong></p>
+                    <ul>
+                        <li>TechVentures has 18,500 customers, 65% of which need data integration solutions</li>
+                        <li>Assume 8% conversion rate = 962 new DataSync customers by Year 3</li>
+                        <li>Average contract value: $75,000 (mid-market tier)</li>
+                        <li><strong>Revenue Synergy: $72.2M annual run-rate by Year 3</strong></li>
+                    </ul>
+
+                    <p><strong>2. Up-Sell DataSync to Larger Enterprises (Year 3 Run-Rate)</strong></p>
+                    <ul>
+                        <li>TechVentures can leverage relationships to move DataSync up-market</li>
+                        <li>Convert 25 mid-market customers → enterprise tier (increase ACV from $95K to $250K)</li>
+                        <li><strong>Revenue Synergy: $3.9M incremental annual revenue</strong></li>
+                    </ul>
+
+                    <p><strong>Total Revenue Synergies: $76.1M by Year 3 (run-rate)</strong></p>
+
+                    <h4>Identified Synergies - Cost Side</h4>
+                    <p><strong>1. Sales & Marketing Elimination</strong></p>
+                    <ul>
+                        <li>DataSync spends ~$12M annually on S&M (37% of revenue)</li>
+                        <li>TechVentures can cross-sell through existing sales force, eliminate 70% of DataSync S&M</li>
+                        <li><strong>Cost Synergy: $8.4M annually</strong></li>
+                    </ul>
+
+                    <p><strong>2. G&A and Infrastructure Consolidation</strong></p>
+                    <ul>
+                        <li>Eliminate redundant finance, HR, legal functions ($1.8M savings)</li>
+                        <li>Consolidate cloud infrastructure and vendor contracts ($600K savings)</li>
+                        <li><strong>Cost Synergy: $2.4M annually</strong></li>
+                    </ul>
+
+                    <p><strong>Total Cost Synergies: $10.8M annually</strong></p>
+
+                    <div class="highlight-box">
+                        <strong>Synergy Summary:</strong> Total synergies = $76.1M revenue + $10.8M cost = $86.9M by Year 3. At 18% EBITDA margin on incremental revenue, total EBITDA impact = $24.5M ($13.7M from revenue synergies + $10.8M from cost synergies).
+                    </div>
+
+                    <h4>Strategic Rationale</h4>
+                    <p><strong>Why This Deal Makes Sense:</strong></p>
+                    <ul>
+                        <li><strong>Strategic Fit:</strong> Data integration is critical missing capability in TechVentures' product suite</li>
+                        <li><strong>Customer Overlap:</strong> 78% of DataSync customers also use competitor CRM/ERP systems - opportunity to convert to TechVentures</li>
+                        <li><strong>Market Timing:</strong> iPaaS market growing 35% annually, $8.5B TAM by 2027</li>
+                        <li><strong>Talent Acquisition:</strong> DataSync's 85-person engineering team brings deep integration expertise</li>
+                        <li><strong>Cross-Sell Potential:</strong> Massive opportunity to leverage 2,400 TechVentures sales reps</li>
+                    </ul>
+
+                    <h4>Key Risks</h4>
+                    <ul>
+                        <li><strong>Integration Complexity:</strong> Merging product roadmaps, potential customer confusion</li>
+                        <li><strong>Customer Concentration:</strong> Top 10 customers = 38% of DataSync revenue</li>
+                        <li><strong>Competitive Response:</strong> Salesforce, Microsoft could bundle competitive offerings</li>
+                        <li><strong>Retention Risk:</strong> Key DataSync executives and engineering talent may leave post-acquisition</li>
+                        <li><strong>Synergy Execution:</strong> Cross-sell assumes 8% conversion - unproven, could be lower</li>
+                    </ul>
+
+                    <h4>Seller Expectations & Process</h4>
+                    <p>DataSync's board has engaged an investment bank to run a formal auction process. Key details:</p>
+                    <ul>
+                        <li><strong>Valuation Expectations:</strong> Seller wants 12-14x revenue ($390-455M enterprise value)</li>
+                        <li><strong>Competing Bids:</strong> 3 strategic buyers + 2 private equity firms in process</li>
+                        <li><strong>Timeline:</strong> Final bids due in 3 weeks, looking to close in 60 days</li>
+                        <li><strong>Management Retention:</strong> CEO and CTO want significant equity rollover (10-15%)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="nextSection()">Begin Valuation Analysis →</button>
+            </div>
+        </div>
+
+        <!-- Section 1: Comparable Companies Valuation -->
+        <div class="section" id="section1">
+            <div class="section-header">
+                <h2>Comparable Companies Analysis</h2>
+                <p>Calculate valuation using public company multiples</p>
+            </div>
+
+            <div class="framework-box">
+                <h4>Comparable Companies Method</h4>
+                <p>This approach values DataSync based on how similar public companies trade in the market. The key steps are:</p>
+                <ul style="margin-top: 10px;">
+                    <li>1. Identify comparable companies (data integration/iPaaS vendors)</li>
+                    <li>2. Calculate their trading multiples (EV/Revenue, EV/EBITDA)</li>
+                    <li>3. Apply median multiples to DataSync's financials</li>
+                    <li>4. Adjust for size/growth differences (typically 10-20% discount for smaller companies)</li>
+                </ul>
+            </div>
+
+            <div class="example-box">
+                <h4>Valuation Calculation Examples:</h4>
+                <div class="example-good">EV = $32.5M revenue × 9.0x median EV/Revenue = $292.5M. Apply 15% size discount = $248.6M enterprise value</div>
+                <div class="example-bad">The company is worth around $250M because it's a good SaaS business</div>
+            </div>
+
+            <div class="input-group">
+                <label>1. What is the median EV/Revenue multiple from comparable companies?
+                    <span class="tooltip-wrapper">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Review the comparable companies table in materials. Find the median EV/Revenue multiple (highlighted row).</span>
+                    </span>
+                </label>
+                <input type="number" step="0.1" id="medianRevMultiple" placeholder="Enter multiple (e.g., 9.0)">
+            </div>
+
+            <div class="input-group">
+                <label>2. Calculate implied enterprise value using median EV/Revenue</label>
+                <div class="calc-box">
+                    <strong>Formula:</strong> Enterprise Value = Revenue (LTM) × EV/Revenue Multiple<br>
+                    DataSync Revenue (LTM) = $32.5M<br>
+                    Median EV/Revenue = [your answer from Q1]<br>
+                    <strong>Calculate:</strong> $32.5M × _____ = ?
+                </div>
+                <input type="number" step="0.1" id="impliedEVRevenue" placeholder="Enter enterprise value ($M)">
+            </div>
+
+            <div class="input-group">
+                <label>3. Apply a size discount. What discount percentage is appropriate?
+                    <span class="tooltip-wrapper">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Smaller companies typically trade at 10-20% discount to larger peers due to liquidity, scale, and risk. DataSync ($32.5M revenue) is much smaller than most comps.</span>
+                    </span>
+                </label>
+                <select id="sizeDiscount">
+                    <option value="">-- Select Discount % --</option>
+                    <option value="0">0% (no discount)</option>
+                    <option value="10">10%</option>
+                    <option value="15">15%</option>
+                    <option value="20">20%</option>
+                    <option value="25">25%</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>4. Calculate final comparable companies valuation (after discount)</label>
+                <input type="number" step="0.1" id="finalCompsValuation" placeholder="Enter discounted enterprise value ($M)">
+                <div class="input-hint">Implied EV (Q2) × (1 - Discount%) = Final Valuation</div>
+            </div>
+
+            <div class="input-group">
+                <label>5. What is the median EV/EBITDA multiple from comparables?</label>
+                <input type="number" step="0.1" id="medianEBITDAMultiple" placeholder="Enter multiple (e.g., 52.5)">
+            </div>
+
+            <div class="input-group">
+                <label>6. Explain why EV/EBITDA multiples are so high for these companies (80+ words)</label>
+                <textarea id="multipleExplanation" placeholder="Consider: DataSync's EBITDA margin (18%), high growth rates, SaaS valuation dynamics, investment in growth vs. profitability trade-off. Why do growth SaaS companies trade at high EBITDA multiples?"></textarea>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="prevSection()">← Previous</button>
+                <button class="btn btn-primary" onclick="nextSection()">Next Section →</button>
+            </div>
+        </div>
+
+        <!-- Section 2: Precedent Transactions Analysis -->
+        <div class="section" id="section2">
+            <div class="section-header">
+                <h2>Precedent Transactions Analysis</h2>
+                <p>Calculate valuation using M&A transaction multiples</p>
+            </div>
+
+            <div class="framework-box">
+                <h4>Precedent Transactions Method</h4>
+                <p>This approach values DataSync based on actual M&A transactions of similar companies. Transaction multiples typically include a "control premium" (10-30% higher than public trading multiples) because buyers pay extra to acquire 100% ownership.</p>
+            </div>
+
+            <div class="input-group">
+                <label>1. What is the median EV/Revenue multiple from precedent transactions?</label>
+                <input type="number" step="0.1" id="precedentMultiple" placeholder="Enter multiple from precedent table">
+            </div>
+
+            <div class="input-group">
+                <label>2. Calculate implied enterprise value using precedent transactions</label>
+                <div class="calc-box">
+                    <strong>Formula:</strong> EV = $32.5M revenue × Precedent EV/Revenue Multiple
+                </div>
+                <input type="number" step="0.1" id="precedentEV" placeholder="Enter enterprise value ($M)">
+            </div>
+
+            <div class="input-group">
+                <label>3. How does the precedent transactions valuation compare to comps valuation? (100+ words)</label>
+                <textarea id="compsPrecedentComparison" placeholder="Compare the two valuations. Which is higher and why? Discuss control premium, market timing differences, strategic vs. financial buyers. What does this tell you about valuation range?"></textarea>
+            </div>
+
+            <div class="input-group">
+                <label>4. Which precedent transaction is MOST comparable to DataSync and why? (80+ words)</label>
+                <textarea id="mostComparable" placeholder="Review the precedent transactions table. Which target is most similar to DataSync in terms of revenue size, growth rate, and business model? Justify your selection with specific data."></textarea>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="prevSection()">← Previous</button>
+                <button class="btn btn-primary" onclick="nextSection()">Next Section →</button>
+            </div>
+        </div>
+
+        <!-- Section 3: Synergy Analysis & Returns -->
+        <div class="section" id="section3">
+            <div class="section-header">
+                <h2>Synergy Analysis & Expected Returns</h2>
+                <p>Calculate synergy value and evaluate investment returns</p>
+            </div>
+
+            <div class="input-group">
+                <label>1. What are the total identified revenue synergies by Year 3? (from materials)</label>
+                <input type="number" step="0.1" id="revenueSynergies" placeholder="Enter $M">
+            </div>
+
+            <div class="input-group">
+                <label>2. What are the total identified cost synergies annually? (from materials)</label>
+                <input type="number" step="0.1" id="costSynergies" placeholder="Enter $M annually">
+            </div>
+
+            <div class="input-group">
+                <label>3. Calculate total EBITDA impact from synergies by Year 3</label>
+                <div class="calc-box">
+                    <strong>Revenue Synergies EBITDA:</strong> $76.1M × 18% margin = $13.7M<br>
+                    <strong>Cost Synergies EBITDA:</strong> $10.8M (100% flows to EBITDA)<br>
+                    <strong>Total EBITDA Synergies:</strong> ? 
+                </div>
+                <input type="number" step="0.1" id="totalEBITDASynergies" placeholder="Enter total EBITDA synergies ($M)">
+            </div>
+
+            <div class="input-group">
+                <label>4. Calculate DataSync's pro forma Year 3 EBITDA (standalone + synergies)</label>
+                <div class="input-hint" style="margin-bottom: 10px;">
+                    Assume DataSync grows standalone EBITDA from $5.9M (LTM) to $12.5M by Year 3 (organic growth)<br>
+                    Pro Forma EBITDA = Standalone + Synergies
+                </div>
+                <input type="number" step="0.1" id="proFormaEBITDA" placeholder="Enter Year 3 pro forma EBITDA ($M)">
+            </div>
+
+            <div class="input-group">
+                <label>5. Are the identified synergies realistic and achievable? What are the key risks? (150+ words)</label>
+                <textarea id="synergyAssessment" placeholder="Evaluate each synergy category. Revenue synergies assume 8% conversion of TechVentures customers - is this realistic? Cost synergies assume 70% S&M elimination - feasible? What execution risks exist? Are synergies conservative, aggressive, or reasonable?"></textarea>
+            </div>
+
+            <div class="input-group">
+                <label>6. If you pay $240M for DataSync, what is the implied EV/EBITDA multiple on Year 3 pro forma EBITDA?</label>
+                <div class="calc-box">
+                    <strong>Formula:</strong> Purchase Price / Year 3 Pro Forma EBITDA = Multiple
+                </div>
+                <input type="number" step="0.1" id="impliedMultiple" placeholder="Enter multiple (e.g., 6.5)">
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="prevSection()">← Previous</button>
+                <button class="btn btn-primary" onclick="nextSection()">Next Section →</button>
+            </div>
+        </div>
+
+        <!-- Section 4: Investment Recommendation -->
+        <div class="section" id="section4">
+            <div class="section-header">
+                <h2>Investment Recommendation</h2>
+                <p>Develop your recommendation and price range</p>
+            </div>
+
+            <div class="example-box">
+                <h4>Strong vs. Weak Recommendations:</h4>
+                <div class="example-good">Recommend acquisition at $210-240M (6.5-7.4x revenue). Comps valuation of $249M provides ceiling. Precedent transactions support 11.2x, but we apply 30% discount for execution risk. Strong strategic fit, $24.5M EBITDA synergies justify 8.5x pro forma multiple.</div>
+                <div class="example-bad">Buy DataSync because it's a good company and we need data integration.</div>
+            </div>
+
+            <div class="input-group">
+                <label>1. What is your recommendation?</label>
+                <select id="recommendation">
+                    <option value="">-- Select Recommendation --</option>
+                    <option value="proceed">Proceed with Acquisition</option>
+                    <option value="pass">Pass on Acquisition</option>
+                    <option value="conditional">Conditional/Further Diligence Needed</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>2. If proceeding, what is your recommended offer price range?</label>
+                <div class="input-hint" style="margin-bottom: 10px;">
+                    Consider: Comps valuation, precedent transactions, synergy value, seller expectations ($390-455M), competitive bids
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div>
+                        <input type="number" step="1" id="priceLow" placeholder="Low end ($M)">
+                    </div>
+                    <div>
+                        <input type="number" step="1" id="priceHigh" placeholder="High end ($M)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>3. Provide detailed rationale for your recommendation (250+ words)</label>
+                <textarea id="recommendationRationale" placeholder="Justify your decision with data. Reference: valuation analysis (comps = $249M, precedents = $365M), synergy value ($24.5M EBITDA), strategic fit, execution risks, competitive landscape, seller expectations. If passing, explain why. If proceeding, defend your price range vs. seller expectations."></textarea>
+            </div>
+
+            <div class="input-group">
+                <label>4. What are the top 3 risks that could derail this acquisition? (120+ words)</label>
+                <textarea id="topRisks" placeholder="Identify and explain the 3 biggest risks: integration execution, customer retention, competitive response, synergy realization, talent retention, price/valuation risk, etc. For each risk, explain potential impact."></textarea>
+            </div>
+
+            <div class="input-group">
+                <label>5. How would you structure the deal to mitigate risks?</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="structure1" value="earnout">
+                        <label for="structure1">Earnout (tie 20-30% of price to hitting revenue/retention targets)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="structure2" value="retention">
+                        <label for="structure2">Management retention packages (equity vesting over 3-4 years)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="structure3" value="escrow">
+                        <label for="structure3">Escrow holdback (10-15% in escrow for 12-18 months for indemnification)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="structure4" value="staged">
+                        <label for="structure4">Staged payments (defer portion of consideration to Year 2-3)</label>
+                    </div>
+                </div>
+                <textarea id="structureRationale" placeholder="Explain which deal structures you selected and why. How do they mitigate specific risks?" style="margin-top: 15px;"></textarea>
+            </div>
+
+            <div class="input-group">
+                <label>6. What is your "walk-away" price? (maximum you'd pay)</label>
+                <input type="number" step="1" id="walkAwayPrice" placeholder="Enter maximum price ($M)">
+                <textarea id="walkAwayRationale" placeholder="Justify your walk-away price. At what price do the returns/risks no longer make sense? Reference valuation multiples and synergy value." style="margin-top: 10px;"></textarea>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="prevSection()">← Previous</button>
+                <button class="btn btn-primary" onclick="nextSection()">View Results →</button>
+            </div>
+        </div>
+
+        <!-- Section 5: Results -->
+        <div class="section" id="section5">
+            <div class="section-header">
+                <h2>M&A Analysis Results</h2>
+                <p>Your comprehensive investment analysis scorecard</p>
+            </div>
+
+            <div class="score-card">
+                <h3>Overall Score</h3>
+                <div class="score-number" id="totalScore">--</div>
+                <p>Out of 100 Points</p>
+                
+                <div class="score-breakdown">
+                    <div class="score-item">
+                        <span class="score-label">Comparable Companies Analysis</span>
+                        <span class="score-value" id="score1">--/25</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-label">Precedent Transactions Analysis</span>
+                        <span class="score-value" id="score2">--/15</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-label">Synergy Analysis & Returns</span>
+                        <span class="score-value" id="score3">--/25</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-label">Investment Recommendation</span>
+                        <span class="score-value" id="score4">--/35</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="feedbackContainer"></div>
+
+            <div class="export-buttons">
+                <button class="btn btn-export" onclick="generateReport()">Download M&A Report</button>
+                <button class="btn btn-primary" onclick="resetSimulation()">Start New Analysis</button>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="prevSection()">← Previous</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Supabase
+        let supabaseClient;
+        
+        function initSupabase() {
+            if (typeof window.supabase === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+                script.onload = () => {
+                    supabaseClient = window.supabase.createClient(
+                        'https://clhuplhaejneecbyhphh.supabase.co',
+                        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsaHVwbGhhZWpuZWVjYnlocGhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjY2OTI0NzMsImV4cCI6MjA0MjI2ODQ3M30.HCW1CV2BbA5DdCd_9Q_vEoMxA-NMkPtZG2qg3hJDZLo'
+                    );
+                    startApp();
+                };
+                document.head.appendChild(script);
+            } else {
+                supabaseClient = window.supabase.createClient(
+                    'https://clhuplhaejneecbyhphh.supabase.co',
+                    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsaHVwbGhhZWpuZWVjYnlocGhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjY2OTI0NzMsImV4cCI6MjA0MjI2ODQ3M30.HCW1CV2BbA5DdCd_9Q_vEoMxA-NMkPtZG2qg3hJDZLo'
+                );
+                startApp();
+            }
+        }
+
+        function startApp() {
+            getUserEmail();
+            updateProgress();
+        }
+
+        let currentSection = 0;
+        const totalSections = 6;
+        let userEmail = null;
+
+        // Answer key for validation
+        const ANSWER_KEY = {
+            medianRevMultiple: 9.0,
+            medianEBITDAMultiple: 52.5,
+            precedentMultiple: 11.2,
+            revenueSynergies: 76.1,
+            costSynergies: 10.8,
+            totalEBITDASynergies: 24.5,
+            proFormaEBITDA: 37.0, // 12.5 standalone + 24.5 synergies
+            sizeDiscount: 15,
+            requiredKeywords: {
+                multipleExplanation: ["growth", "saas", "invest", "margin", "ebitda"],
+                synergy: ["risk", "conversion", "realistic", "execution"],
+                rationale: ["valuation", "synerg", "revenue", "ebitda", "price", "strategic"]
+            }
+        };
+
+        // Get user email from parent window (Webflow/Memberstack)
+        function getUserEmail() {
+            try {
+                // Try to get from Memberstack
+                if (window.parent.$memberstackDom) {
+                    window.parent.$memberstackDom.getCurrentMember()
+                        .then(({ data: member }) => {
+                            if (member) {
+                                userEmail = member.auth.email;
+                                loadProgress();
+                            }
+                        });
+                }
+                // Fallback: check localStorage
+                else if (localStorage.getItem('cloverpath_user_email')) {
+                    userEmail = localStorage.getItem('cloverpath_user_email');
+                    loadProgress();
+                }
+                // Fallback: get from URL parameter
+                else {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    userEmail = urlParams.get('email');
+                    if (userEmail) {
+                        loadProgress();
+                    }
+                }
+            } catch (error) {
+                console.error('Error getting user email:', error);
+            }
+        }
+
+        // Load saved progress
+        async function loadProgress() {
+            if (!userEmail) return;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('simulation_progress')
+                    .select('*')
+                    .eq('user_email', userEmail)
+                    .eq('simulation_type', 'ma_analysis')
+                    .single();
+
+                if (data && data.progress_data) {
+                    const savedData = data.progress_data;
+                    // Restore form values
+                    Object.keys(savedData).forEach(key => {
+                        const element = document.getElementById(key);
+                        if (element) {
+                            if (element.type === 'checkbox') {
+                                element.checked = savedData[key];
+                            } else {
+                                element.value = savedData[key];
+                            }
+                        }
+                    });
+                    
+                    // Restore section if saved
+                    if (savedData.currentSection) {
+                        currentSection = savedData.currentSection;
+                        showSection(currentSection);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading progress:', error);
+            }
+        }
+
+        // Save progress
+        async function saveProgress() {
+            if (!userEmail) return;
+
+            const formData = {};
+            
+            // Collect all form inputs
+            document.querySelectorAll('input, textarea, select').forEach(element => {
+                if (element.id) {
+                    if (element.type === 'checkbox') {
+                        formData[element.id] = element.checked;
+                    } else {
+                        formData[element.id] = element.value;
+                    }
+                }
+            });
+
+            formData.currentSection = currentSection;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('simulation_progress')
+                    .upsert({
+                        user_email: userEmail,
+                        simulation_type: 'ma_analysis',
+                        progress_data: formData,
+                        last_updated: new Date().toISOString()
+                    }, {
+                        onConflict: 'user_email,simulation_type'
+                    });
+
+                if (error) throw error;
+            } catch (error) {
+                console.error('Error saving progress:', error);
+            }
+        }
+
+        // Auto-save on input changes
+        document.addEventListener('input', () => {
+            clearTimeout(window.saveTimeout);
+            window.saveTimeout = setTimeout(saveProgress, 2000);
+        });
+
+        function toggleMaterials(id) {
+            const content = document.getElementById(id);
+            content.classList.toggle('expanded');
+        }
+
+        function showSection(sectionNum) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(`section${sectionNum}`).classList.add('active');
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Tell parent window the new height - multiple attempts to ensure accuracy
+            setTimeout(function() {
+                const body = document.body;
+                const html = document.documentElement;
+                const height = Math.max(
+                    body.scrollHeight,
+                    body.offsetHeight,
+                    html.clientHeight,
+                    html.scrollHeight,
+                    html.offsetHeight
+                );
+                window.parent.postMessage({
+                    type: 'iframe-height',
+                    height: height + 150 // Extra padding for mobile
+                }, '*');
+            }, 100);
+            
+            // Second attempt after layout settles
+            setTimeout(function() {
+                const body = document.body;
+                const html = document.documentElement;
+                const height = Math.max(
+                    body.scrollHeight,
+                    body.offsetHeight,
+                    html.clientHeight,
+                    html.scrollHeight,
+                    html.offsetHeight
+                );
+                window.parent.postMessage({
+                    type: 'iframe-height',
+                    height: height + 150
+                }, '*');
+            }, 400);
+            
+            // Third attempt for safety
+            setTimeout(function() {
+                const body = document.body;
+                const html = document.documentElement;
+                const height = Math.max(
+                    body.scrollHeight,
+                    body.offsetHeight,
+                    html.clientHeight,
+                    html.scrollHeight,
+                    html.offsetHeight
+                );
+                window.parent.postMessage({
+                    type: 'iframe-height',
+                    height: height + 150
+                }, '*');
+            }, 800);
+        }
+
+        function updateProgress() {
+            const progress = (currentSection / (totalSections - 1)) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            const labels = ['Introduction', 'Comparable Companies', 'Precedent Transactions', 'Synergy Analysis', 'Investment Recommendation', 'Results'];
+            document.getElementById('progressLabel').textContent = labels[currentSection] || 'Section ' + currentSection;
+            document.getElementById('progressPercent').textContent = Math.round(progress) + '% Complete';
+        }
+
+        function nextSection() {
+            if (currentSection < totalSections - 1) {
+                currentSection++;
+                showSection(currentSection);
+                saveProgress();
+                
+                if (currentSection === totalSections - 1) {
+                    calculateScore();
+                }
+            }
+        }
+
+        function prevSection() {
+            if (currentSection > 0) {
+                currentSection--;
+                showSection(currentSection);
+                saveProgress();
+            }
+        }
+
+        function countWords(text) {
+            return text.trim().split(/\s+/).filter(w => w.length > 0).length;
+        }
+
+        function hasKeywords(text, keywords, minMatches = 2) {
+            const lowerText = text.toLowerCase();
+            let matches = 0;
+            keywords.forEach(keyword => {
+                if (lowerText.includes(keyword.toLowerCase())) {
+                    matches++;
+                }
+            });
+            return matches >= minMatches;
+        }
+
+        async function calculateScore() {
+            let score1 = 0, score2 = 0, score3 = 0, score4 = 0;
+            const feedback = [];
+
+            // SECTION 1: Comparable Companies Analysis (25 points)
+            const medianRevMultiple = parseFloat(document.getElementById('medianRevMultiple')?.value) || 0;
+            const impliedEVRevenue = parseFloat(document.getElementById('impliedEVRevenue')?.value) || 0;
+            const sizeDiscount = parseFloat(document.getElementById('sizeDiscount')?.value);
+            const finalCompsValuation = parseFloat(document.getElementById('finalCompsValuation')?.value) || 0;
+            const medianEBITDAMultiple = parseFloat(document.getElementById('medianEBITDAMultiple')?.value) || 0;
+            const multipleExplanation = document.getElementById('multipleExplanation')?.value || '';
+
+            // Median EV/Revenue (5 points)
+            if (medianRevMultiple === ANSWER_KEY.medianRevMultiple) {
+                score1 += 5;
+            } else if (Math.abs(medianRevMultiple - ANSWER_KEY.medianRevMultiple) < 0.5) {
+                score1 += 3;
+            } else if (medianRevMultiple > 0) {
+                score1 += 1;
+                feedback.push({
+                    type: 'error',
+                    message: 'Median EV/Revenue multiple incorrect. Check the comparable companies table for the highlighted median row: 9.0x'
+                });
+            }
+
+            // Implied EV calculation (6 points)
+            const correctImpliedEV = 32.5 * ANSWER_KEY.medianRevMultiple; // 292.5
+            if (Math.abs(impliedEVRevenue - correctImpliedEV) < 5) {
+                score1 += 6;
+            } else if (Math.abs(impliedEVRevenue - correctImpliedEV) < 15) {
+                score1 += 3;
+                feedback.push({
+                    type: 'warning',
+                    message: `Implied EV calculation slightly off. Formula: $32.5M × 9.0x = $292.5M`
+                });
+            } else if (impliedEVRevenue > 0) {
+                score1 += 1;
+            }
+
+            // Size discount (4 points)
+            if (sizeDiscount === ANSWER_KEY.sizeDiscount) {
+                score1 += 4;
+            } else if (sizeDiscount === 10 || sizeDiscount === 20) {
+                score1 += 3;
+            } else if (sizeDiscount >= 0) {
+                score1 += 1;
+            }
+
+            // Final comps valuation (5 points)
+            const correctFinalVal = correctImpliedEV * (1 - ANSWER_KEY.sizeDiscount / 100); // ~248.6
+            if (Math.abs(finalCompsValuation - correctFinalVal) < 10) {
+                score1 += 5;
+            } else if (Math.abs(finalCompsValuation - correctFinalVal) < 25) {
+                score1 += 3;
+            } else if (finalCompsValuation > 0) {
+                score1 += 1;
+            }
+
+            // Median EBITDA multiple (3 points)
+            if (medianEBITDAMultiple === ANSWER_KEY.medianEBITDAMultiple) {
+                score1 += 3;
+            } else if (Math.abs(medianEBITDAMultiple - ANSWER_KEY.medianEBITDAMultiple) < 5) {
+                score1 += 2;
+            } else if (medianEBITDAMultiple > 0) {
+                score1 += 1;
+            }
+
+            // Multiple explanation (7 points)
+            const expWords = countWords(multipleExplanation);
+            const hasExpKeywords = hasKeywords(multipleExplanation, ANSWER_KEY.requiredKeywords.multipleExplanation, 3);
+            if (expWords >= 80 && hasExpKeywords) {
+                score1 += 7;
+            } else if (expWords >= 60) {
+                score1 += 4;
+            } else {
+                score1 += 2;
+            }
+
+            // SECTION 2: Precedent Transactions (15 points)
+            const precedentMultiple = parseFloat(document.getElementById('precedentMultiple')?.value) || 0;
+            const precedentEV = parseFloat(document.getElementById('precedentEV')?.value) || 0;
+            const compsPrecedentComparison = document.getElementById('compsPrecedentComparison')?.value || '';
+            const mostComparable = document.getElementById('mostComparable')?.value || '';
+
+            // Precedent multiple (4 points)
+            if (precedentMultiple === ANSWER_KEY.precedentMultiple) {
+                score2 += 4;
+            } else if (Math.abs(precedentMultiple - ANSWER_KEY.precedentMultiple) < 1) {
+                score2 += 2;
+            } else if (precedentMultiple > 0) {
+                score2 += 1;
+            }
+
+            // Precedent EV (4 points)
+            const correctPrecedentEV = 32.5 * ANSWER_KEY.precedentMultiple; // 364
+            if (Math.abs(precedentEV - correctPrecedentEV) < 10) {
+                score2 += 4;
+            } else if (Math.abs(precedentEV - correctPrecedentEV) < 25) {
+                score2 += 2;
+            } else if (precedentEV > 0) {
+                score2 += 1;
+            }
+
+            // Comparison (4 points)
+            if (countWords(compsPrecedentComparison) >= 100) {
+                score2 += 4;
+            } else if (countWords(compsPrecedentComparison) >= 70) {
+                score2 += 2;
+            } else {
+                score2 += 1;
+            }
+
+            // Most comparable (3 points)
+            if (countWords(mostComparable) >= 80) {
+                score2 += 3;
+            } else if (countWords(mostComparable) >= 50) {
+                score2 += 2;
+            } else {
+                score2 += 1;
+            }
+
+            // SECTION 3: Synergy Analysis (25 points)
+            const revenueSynergies = parseFloat(document.getElementById('revenueSynergies')?.value) || 0;
+            const costSynergies = parseFloat(document.getElementById('costSynergies')?.value) || 0;
+            const totalEBITDASynergies = parseFloat(document.getElementById('totalEBITDASynergies')?.value) || 0;
+            const proFormaEBITDA = parseFloat(document.getElementById('proFormaEBITDA')?.value) || 0;
+            const synergyAssessment = document.getElementById('synergyAssessment')?.value || '';
+            const impliedMultiple = parseFloat(document.getElementById('impliedMultiple')?.value) || 0;
+
+            // Revenue synergies (4 points)
+            if (Math.abs(revenueSynergies - ANSWER_KEY.revenueSynergies) < 2) {
+                score3 += 4;
+            } else if (Math.abs(revenueSynergies - ANSWER_KEY.revenueSynergies) < 10) {
+                score3 += 2;
+            } else if (revenueSynergies > 0) {
+                score3 += 1;
+            }
+
+            // Cost synergies (4 points)
+            if (Math.abs(costSynergies - ANSWER_KEY.costSynergies) < 1) {
+                score3 += 4;
+            } else if (Math.abs(costSynergies - ANSWER_KEY.costSynergies) < 3) {
+                score3 += 2;
+            } else if (costSynergies > 0) {
+                score3 += 1;
+            }
+
+            // Total EBITDA synergies (5 points)
+            if (Math.abs(totalEBITDASynergies - ANSWER_KEY.totalEBITDASynergies) < 2) {
+                score3 += 5;
+            } else if (Math.abs(totalEBITDASynergies - ANSWER_KEY.totalEBITDASynergies) < 5) {
+                score3 += 3;
+            } else if (totalEBITDASynergies > 0) {
+                score3 += 1;
+            }
+
+            // Pro forma EBITDA (5 points)
+            if (Math.abs(proFormaEBITDA - ANSWER_KEY.proFormaEBITDA) < 2) {
+                score3 += 5;
+            } else if (Math.abs(proFormaEBITDA - ANSWER_KEY.proFormaEBITDA) < 5) {
+                score3 += 3;
+            } else if (proFormaEBITDA > 0) {
+                score3 += 1;
+                feedback.push({
+                    type: 'error',
+                    message: 'Pro forma EBITDA incorrect. Standalone Year 3 EBITDA ($12.5M) + Total Synergies ($24.5M) = $37.0M'
+                });
+            }
+
+            // Synergy assessment (5 points)
+            const synWords = countWords(synergyAssessment);
+            const hasSynKeywords = hasKeywords(synergyAssessment, ANSWER_KEY.requiredKeywords.synergy, 2);
+            if (synWords >= 150 && hasSynKeywords) {
+                score3 += 5;
+            } else if (synWords >= 100) {
+                score3 += 3;
+            } else {
+                score3 += 1;
+            }
+
+            // Implied multiple (2 points)
+            const correctImpliedMultiple = 240 / 37.0; // ~6.5
+            if (Math.abs(impliedMultiple - correctImpliedMultiple) < 0.5) {
+                score3 += 2;
+            } else if (impliedMultiple > 0) {
+                score3 += 1;
+            }
+
+            // SECTION 4: Investment Recommendation (35 points)
+            const recommendation = document.getElementById('recommendation')?.value || '';
+            const priceLow = parseFloat(document.getElementById('priceLow')?.value) || 0;
+            const priceHigh = parseFloat(document.getElementById('priceHigh')?.value) || 0;
+            const recommendationRationale = document.getElementById('recommendationRationale')?.value || '';
+            const topRisks = document.getElementById('topRisks')?.value || '';
+            const structureRationale = document.getElementById('structureRationale')?.value || '';
+            const walkAwayPrice = parseFloat(document.getElementById('walkAwayPrice')?.value) || 0;
+            const walkAwayRationale = document.getElementById('walkAwayRationale')?.value || '';
+
+            // Recommendation made (5 points)
+            if (recommendation === 'proceed') {
+                score4 += 5;
+            } else if (recommendation === 'conditional') {
+                score4 += 4;
+            } else if (recommendation === 'pass') {
+                score4 += 3;
+            }
+
+            // Price range (8 points)
+            const isReasonableRange = priceLow >= 180 && priceLow <= 250 && priceHigh >= 220 && priceHigh <= 280 && priceHigh > priceLow;
+            if (isReasonableRange && (priceHigh - priceLow) <= 60) {
+                score4 += 8;
+            } else if (priceLow > 0 && priceHigh > priceLow) {
+                score4 += 4;
+            } else if (priceLow > 0 || priceHigh > 0) {
+                score4 += 2;
+            }
+
+            // Recommendation rationale (12 points)
+            const ratWords = countWords(recommendationRationale);
+            const hasRatKeywords = hasKeywords(recommendationRationale, ANSWER_KEY.requiredKeywords.rationale, 4);
+            const isQuantified = /\$\d+|(\d+)M|(\d+)\.\d+x/.test(recommendationRationale);
+
+            if (ratWords >= 250 && hasRatKeywords && isQuantified) {
+                score4 += 12;
+            } else if (ratWords >= 200) {
+                score4 += 8;
+                if (!isQuantified) {
+                    feedback.push({
+                        type: 'warning',
+                        message: 'Recommendation rationale should include specific numbers: valuation ranges ($249M comps, $365M precedents), synergy value ($24.5M), multiples.'
+                    });
+                }
+            } else if (ratWords >= 150) {
+                score4 += 5;
+            } else {
+                score4 += 2;
+            }
+
+            // Top risks (5 points)
+            if (countWords(topRisks) >= 120) {
+                score4 += 5;
+            } else if (countWords(topRisks) >= 80) {
+                score4 += 3;
+            } else {
+                score4 += 1;
+            }
+
+            // Deal structure (3 points)
+            if (countWords(structureRationale) >= 60) {
+                score4 += 3;
+            } else if (countWords(structureRationale) >= 40) {
+                score4 += 2;
+            } else {
+                score4 += 1;
+            }
+
+            // Walk-away price (2 points)
+            if (walkAwayPrice >= 250 && walkAwayPrice <= 300) {
+                score4 += 2;
+            } else if (walkAwayPrice > 0) {
+                score4 += 1;
+            }
+
+            const totalScore = score1 + score2 + score3 + score4;
+
+            // Overall performance feedback
+            if (totalScore >= 90) {
+                feedback.unshift({
+                    type: 'success',
+                    message: `Exceptional M&A analysis! You demonstrated investment banking-level execution with ${totalScore}/100 points. Your valuation methodology, synergy quantification, and strategic recommendation show professional-grade dealmaking skills.`
+                });
+            } else if (totalScore >= 80) {
+                feedback.unshift({
+                    type: 'success',
+                    message: `Strong performance with ${totalScore}/100 points. Your analysis was thorough with minor gaps in calculation accuracy or strategic depth.`
+                });
+            } else if (totalScore >= 70) {
+                feedback.unshift({
+                    type: 'success',
+                    message: `Good work with ${totalScore}/100 points. You understood core M&A concepts but need more precision in valuation calculations and synergy quantification.`
+                });
+            } else if (totalScore >= 60) {
+                feedback.unshift({
+                    type: 'warning',
+                    message: `Adequate effort with ${totalScore}/100 points. Review: Median EV/Revenue = 9.0x, apply 15% size discount, synergies = $76.1M revenue + $10.8M cost. Recommendations need quantified support.`
+                });
+            } else {
+                feedback.unshift({
+                    type: 'warning',
+                    message: `Significant gaps with ${totalScore}/100 points. Return to materials and extract specific multiples, calculate valuations step-by-step, quantify synergies precisely. M&A analysis requires mathematical rigor.`
+                });
+            }
+
+            // Update UI
+            document.getElementById('totalScore').textContent = totalScore;
+            document.getElementById('score1').textContent = `${score1}/25`;
+            document.getElementById('score2').textContent = `${score2}/15`;
+            document.getElementById('score3').textContent = `${score3}/25`;
+            document.getElementById('score4').textContent = `${score4}/35`;
+
+            // Display feedback
+            const feedbackContainer = document.getElementById('feedbackContainer');
+            feedbackContainer.innerHTML = feedback.map(f => 
+                `<div class="feedback-box ${f.type}">${f.message}</div>`
+            ).join('');
+
+            // Save final score to Supabase
+            if (userEmail) {
+                try {
+                    await supabaseClient
+                        .from('simulation_results')
+                        .upsert({
+                            user_email: userEmail,
+                            simulation_type: 'ma_analysis',
+                            total_score: totalScore,
+                            section_scores: {
+                                comps: score1,
+                                precedents: score2,
+                                synergies: score3,
+                                recommendation: score4
+                            },
+                            completed_at: new Date().toISOString()
+                        }, {
+                            onConflict: 'user_email,simulation_type'
+                        });
+                } catch (error) {
+                    console.error('Error saving results:', error);
+                }
+            }
+        }
+
+        function generateReport() {
+            const data = {
+                timestamp: new Date().toLocaleString(),
+                scores: {
+                    total: document.getElementById('totalScore').textContent,
+                    comps: document.getElementById('score1').textContent,
+                    precedents: document.getElementById('score2').textContent,
+                    synergies: document.getElementById('score3').textContent,
+                    recommendation: document.getElementById('score4').textContent
+                }
+            };
+
+            const reportContent = `
+M&A SIMULATION - INVESTMENT ANALYSIS REPORT
+DataSync Technologies Acquisition Evaluation
+Generated: ${data.timestamp}
+
+═══════════════════════════════════════════════════════════════
+
+PERFORMANCE SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Overall Score: ${data.scores.total}
+
+Breakdown by Section:
+- Comparable Companies Analysis: ${data.scores.comps}
+- Precedent Transactions Analysis: ${data.scores.precedents}
+- Synergy Analysis & Returns: ${data.scores.synergies}
+- Investment Recommendation: ${data.scores.recommendation}
+
+═══════════════════════════════════════════════════════════════
+
+This report was generated by the Cloverpath M&A Simulation Module.
+For educational purposes only.
+            `;
+
+            const blob = new Blob([reportContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `DataSync_MA_Analysis_${Date.now()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function resetSimulation() {
+            if (confirm('Are you sure you want to start a new analysis? All current data will be lost.')) {
+                location.reload();
+            }
+        }
+
+        // Initialize
+        initSupabase();
+        
+        // Send height to parent window for iframe resizing
+        function sendHeightToParent() {
+            try {
+                const body = document.body;
+                const html = document.documentElement;
+                
+                // Get maximum height from all possible measurements
+                const height = Math.max(
+                    body.scrollHeight,
+                    body.offsetHeight,
+                    html.clientHeight,
+                    html.scrollHeight,
+                    html.offsetHeight
+                );
+                
+                window.parent.postMessage({
+                    type: 'iframe-height',
+                    height: height + 150 // Extra padding for mobile safety
+                }, '*');
+            } catch (e) {
+                console.error('Error sending height:', e);
+            }
+        }
+        
+        // Send height on load and when content changes
+        window.addEventListener('load', function() {
+            setTimeout(sendHeightToParent, 100);
+            setTimeout(sendHeightToParent, 300);
+            setTimeout(sendHeightToParent, 500);
+            setTimeout(sendHeightToParent, 800);
+            setTimeout(sendHeightToParent, 1200);
+            setTimeout(sendHeightToParent, 1500);
+            setTimeout(sendHeightToParent, 2000);
+        });
+        
+        // Send height when window resizes
+        window.addEventListener('resize', function() {
+            setTimeout(sendHeightToParent, 100);
+            setTimeout(sendHeightToParent, 300);
+        });
+        
+        // Send height when any content changes (inputs, textareas)
+        document.addEventListener('input', function() {
+            clearTimeout(window.heightUpdateTimeout);
+            window.heightUpdateTimeout = setTimeout(sendHeightToParent, 500);
+        });
+    </script>
+    
+    <!-- Height marker for accurate iframe sizing -->
+    <div id="content-end-marker" style="height: 1px; margin: 0; padding: 0;"></div>
+</body>
+</html>
