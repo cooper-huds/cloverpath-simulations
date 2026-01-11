@@ -1,0 +1,2364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supply Chain Management Simulation - FlexTech Analysis - Cloverpath</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #2d8659;
+            --light-green: #7cb342;
+            --dark-green: #1b5e3a;
+            --light-green-dark: #5a9c2e;
+            --bg-light: #f5f9f7;
+            --text-dark: #1a1a1a;
+            --text-gray: #666;
+            --border-color: #e0e0e0;
+            --white: #ffffff;
+            --yellow: #ffc107;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            color: var(--white);
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .company-banner {
+            background: linear-gradient(135deg, #5a9c2e 0%, #7cb342 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .company-banner h2 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .company-banner p {
+            opacity: 0.9;
+        }
+
+        .quick-facts {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .quick-facts h3 {
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .facts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .fact-item {
+            padding: 15px;
+            border-radius: 8px;
+            background: var(--bg-light);
+        }
+
+        .fact-item.primary {
+            background: linear-gradient(135deg, rgba(45, 134, 89, 0.1) 0%, rgba(45, 134, 89, 0.05) 100%);
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .fact-item.warning {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);
+            border-left: 4px solid var(--yellow);
+        }
+
+        .fact-item.info {
+            background: linear-gradient(135deg, rgba(124, 179, 66, 0.1) 0%, rgba(124, 179, 66, 0.05) 100%);
+            border-left: 4px solid var(--light-green);
+        }
+
+        .fact-label {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            margin-bottom: 5px;
+        }
+
+        .fact-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        .alert-banner {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid var(--yellow);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .alert-banner strong {
+            color: var(--dark-green);
+        }
+
+        .progress-container {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-green) 0%, var(--light-green) 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        .section {
+            display: none;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 30px;
+        }
+
+        .section-header h2 {
+            color: var(--primary-green);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .section-header p {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+        }
+
+        .guide-box {
+            background: linear-gradient(135deg, rgba(45, 134, 89, 0.05) 0%, rgba(124, 179, 66, 0.05) 100%);
+            border: 2px solid var(--light-green);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .guide-box h3 {
+            color: var(--primary-green);
+            margin-bottom: 15px;
+        }
+
+        .guide-checklist {
+            display: grid;
+            gap: 10px;
+        }
+
+        .guide-item {
+            padding: 10px 15px;
+            background: white;
+            border-radius: 6px;
+            border-left: 3px solid var(--light-green);
+            font-weight: 500;
+        }
+
+        .materials-box {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .materials-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .materials-header h3 {
+            color: var(--text-dark);
+            font-size: 1.2rem;
+        }
+
+        .materials-toggle {
+            background: var(--primary-green);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+        }
+
+        .materials-content {
+            margin-top: 15px;
+            display: none;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .materials-content.show {
+            display: block;
+        }
+
+        .materials-content h4 {
+            color: var(--primary-green);
+            margin: 20px 0 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .materials-content p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .materials-content strong {
+            color: var(--dark-green);
+        }
+
+        .materials-content ul {
+            margin-left: 20px;
+        }
+
+        .materials-content li {
+            margin-bottom: 5px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            background: white;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .data-table th {
+            background: #5a9c2e;
+            color: white;
+            font-weight: 600;
+        }
+
+        .data-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .highlight-box {
+            background: #fef3c7;
+            border-left: 4px solid var(--yellow);
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 5px;
+            cursor: help;
+        }
+
+        .tooltip-icon {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            background: var(--primary-green);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 18px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 250px;
+            background-color: var(--text-dark);
+            color: white;
+            text-align: left;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -125px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            font-weight: normal;
+        }
+
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--text-dark) transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--primary-green);
+        }
+
+        .input-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .input-hint {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .example-box {
+            background: var(--bg-light);
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .example-header {
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+
+        .example-header:hover {
+            background: rgba(45, 134, 89, 0.05);
+        }
+
+        .example-header h4 {
+            color: var(--primary-green);
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .example-toggle {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+        }
+
+        .example-content {
+            padding: 0 15px 15px 15px;
+            display: none;
+        }
+
+        .example-content.show {
+            display: block;
+        }
+
+        .example-good {
+            border-left: 4px solid var(--light-green);
+        }
+
+        .example-bad {
+            border-left: 4px solid #f44336;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-green);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(45, 134, 89, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--primary-green);
+            border: 2px solid var(--primary-green);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-green);
+            color: var(--white);
+        }
+
+        .score-card {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--light-green) 100%);
+            color: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .score-number {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .score-breakdown {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-dark);
+        }
+
+        .score-item:last-child {
+            border-bottom: none;
+        }
+
+        .score-label {
+            font-weight: 600;
+        }
+
+        .score-value {
+            color: var(--primary-green);
+            font-weight: bold;
+        }
+
+        .feedback-box {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .feedback-box.warning {
+            border-left-color: #ff9800;
+            background: #fff3e0;
+        }
+
+        .feedback-box.error {
+            border-left-color: #f44336;
+            background: #ffebee;
+        }
+
+        .feedback-box.success {
+            border-left-color: var(--light-green);
+            background: #f1f8e9;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .btn-export {
+            background: var(--light-green);
+            color: var(--white);
+        }
+
+        .btn-export:hover {
+            background: var(--light-green-dark);
+        }
+
+        .framework-box {
+            background: white;
+            border: 2px solid var(--light-green);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .framework-box h4 {
+            color: var(--light-green-dark);
+            margin-bottom: 10px;
+        }
+
+        .calc-box {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .calc-box strong {
+            color: var(--primary-green);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                font-size: 14px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 20px 15px;
+                margin-bottom: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+                margin-bottom: 8px;
+            }
+
+            .header p {
+                font-size: 0.9rem;
+            }
+
+            .company-banner {
+                padding: 15px;
+            }
+
+            .company-banner h2 {
+                font-size: 1.3rem;
+                line-height: 1.3;
+                word-break: break-word;
+            }
+
+            .company-banner p {
+                font-size: 0.85rem;
+                line-height: 1.4;
+            }
+
+            .progress-container,
+            .section,
+            .quick-facts,
+            .guide-box,
+            .framework-box {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            .materials-box {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            .section-header {
+                padding-left: 15px;
+                margin-bottom: 20px;
+            }
+
+            .section-header h2 {
+                font-size: 1.4rem;
+            }
+
+            .section-header p {
+                font-size: 0.9rem;
+            }
+
+            .facts-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .fact-item {
+                padding: 12px;
+            }
+
+            .fact-label {
+                font-size: 0.7rem;
+            }
+
+            .fact-value {
+                font-size: 1.1rem;
+            }
+
+            .guide-checklist {
+                grid-template-columns: 1fr;
+            }
+
+            .materials-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .materials-header h3 {
+                font-size: 1.1rem;
+                min-width: 0;
+                flex: none;
+                width: 100%;
+                word-break: break-word;
+                line-height: 1.4;
+            }
+
+            .materials-toggle {
+                padding: 10px 16px;
+                font-size: 0.85rem;
+                align-self: flex-start;
+            }
+
+            .materials-content {
+                font-size: 0.9rem;
+                padding: 0;
+            }
+
+            .materials-content h4 {
+                font-size: 1.05rem;
+                margin: 15px 0 8px 0;
+            }
+
+            .materials-content p {
+                margin-bottom: 12px;
+                line-height: 1.6;
+            }
+
+            .materials-content ul {
+                margin-left: 15px;
+            }
+
+            .materials-content li {
+                margin-bottom: 8px;
+                line-height: 1.5;
+            }
+
+            .data-table {
+                font-size: 0.7rem;
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 8px 4px;
+                font-size: 0.7rem;
+            }
+
+            .data-table th {
+                white-space: nowrap;
+            }
+
+            .input-group {
+                margin: 15px 0;
+            }
+
+            .input-group label {
+                font-size: 0.95rem;
+            }
+
+            .input-group input,
+            .input-group textarea,
+            .input-group select {
+                padding: 10px;
+                font-size: 16px;
+            }
+
+            .input-group textarea {
+                min-height: 100px;
+            }
+
+            .checkbox-item {
+                padding: 12px 8px;
+                align-items: flex-start;
+            }
+
+            .checkbox-item input[type="checkbox"] {
+                margin-top: 2px;
+                flex-shrink: 0;
+            }
+
+            .checkbox-item label {
+                font-size: 0.9rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 14px 20px;
+                font-size: 1rem;
+            }
+
+            .tooltip-wrapper:hover .tooltip-text {
+                display: none;
+            }
+
+            .tooltip-icon {
+                display: none;
+            }
+
+            .calc-box {
+                font-size: 0.75rem;
+                padding: 12px;
+                word-break: break-word;
+            }
+
+            .example-box {
+                padding: 15px;
+                font-size: 0.9rem;
+            }
+
+            .example-good,
+            .example-bad {
+                padding: 10px;
+                font-size: 0.85rem;
+                word-break: break-word;
+            }
+
+            .highlight-box,
+            .feedback-box,
+            .alert-banner {
+                padding: 12px 15px;
+                font-size: 0.9rem;
+            }
+
+            .score-card {
+                padding: 20px 15px;
+            }
+
+            .score-number {
+                font-size: 3rem;
+                margin: 15px 0;
+            }
+
+            .score-breakdown {
+                padding: 15px;
+            }
+
+            .score-item {
+                padding: 10px 0;
+                font-size: 0.9rem;
+            }
+
+            .export-buttons {
+                flex-direction: column;
+            }
+
+            .framework-box h4,
+            .guide-box h3,
+            .materials-header h3 {
+                font-size: 1.1rem;
+            }
+
+            .materials-content table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .example-header,
+            .example-content {
+                word-break: break-word;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.3rem;
+            }
+
+            .company-banner {
+                padding: 12px;
+            }
+
+            .company-banner h2 {
+                font-size: 1.1rem;
+            }
+
+            .company-banner p {
+                font-size: 0.8rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.2rem;
+            }
+
+            .score-number {
+                font-size: 2.5rem;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 6px 3px;
+                font-size: 0.65rem;
+            }
+
+            .materials-header h3 {
+                font-size: 1rem;
+                line-height: 1.3;
+            }
+
+            .materials-toggle {
+                font-size: 0.8rem;
+                padding: 8px 14px;
+            }
+
+            .materials-content h4 {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Supply Chain Management Simulation</h1>
+            <p>Diagnose bottlenecks and develop operational improvement strategy</p>
+        </div>
+
+        <div class="progress-container">
+            <h3>Your Progress</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text">
+                <span id="progressLabel">Introduction</span>
+                <span id="progressPercent">0% Complete</span>
+            </div>
+        </div>
+
+        <!-- Section 0: Introduction & Materials -->
+        <div class="section active" id="section0">
+            <div class="company-banner">
+                <h2>FlexTech Manufacturing</h2>
+                <p>Electronics Component Manufacturer - Operational Crisis</p>
+            </div>
+
+            <div class="quick-facts">
+                <h3>Company Snapshot</h3>
+                <div class="facts-grid">
+                    <div class="fact-item primary">
+                        <div class="fact-label">Annual Revenue</div>
+                        <div class="fact-value">$185M</div>
+                    </div>
+                    <div class="fact-item warning">
+                        <div class="fact-label">Avg Lead Time</div>
+                        <div class="fact-value">45 days</div>
+                    </div>
+                    <div class="fact-item info">
+                        <div class="fact-label">On-Time Delivery</div>
+                        <div class="fact-value">68%</div>
+                    </div>
+                    <div class="fact-item warning">
+                        <div class="fact-label">Quality Defect Rate</div>
+                        <div class="fact-value">4.2%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert-banner">
+                <strong>SITUATION:</strong> You are a Supply Chain Analyst at FlexTech Manufacturing, a mid-size electronics component manufacturer facing severe operational challenges. Customer complaints about late deliveries have tripled in the past 6 months, major accounts are threatening to switch suppliers, and operational costs are 18% above industry benchmarks. Your task is to diagnose supply chain bottlenecks, quantify improvement opportunities, and build an actionable implementation roadmap.
+            </div>
+
+            <div class="section-header">
+                <h2>Company Materials & Operational Data</h2>
+                <p>Review all materials before beginning your analysis</p>
+            </div>
+
+            <div class="feedback-box success">
+                <h3 style="margin-bottom: 10px;">Your Role</h3>
+                <p>You are a <strong>Supply Chain Analyst</strong> at FlexTech Manufacturing, reporting directly to the VP of Operations. The executive team has given you 2 weeks to complete a comprehensive supply chain diagnostic and present an improvement strategy to the board.</p>
+                <p style="margin-top: 10px;"><strong>Your Mission:</strong> Identify the primary bottlenecks causing delays and cost overruns, quantify the financial impact of each issue, evaluate improvement strategies with ROI analysis, and build a phased implementation roadmap with expected outcomes.</p>
+            </div>
+
+            <div class="guide-box">
+                <h3>What You Need to Extract from Materials:</h3>
+                <div class="guide-checklist">
+                    <div class="guide-item">Current lead times by supplier region</div>
+                    <div class="guide-item">Capacity utilization and production constraints</div>
+                    <div class="guide-item">Quality defect rates and rework costs</div>
+                    <div class="guide-item">Cost impacts of each bottleneck</div>
+                    <div class="guide-item">Industry benchmarks for comparison</div>
+                    <div class="guide-item">Improvement strategy costs and benefits</div>
+                </div>
+            </div>
+
+            <div class="materials-box" id="mat-operations">
+                <div class="materials-header" onclick="toggleMaterials('operationsData')">
+                    <h3>FlexTech Operations & Supply Chain Materials</h3>
+                    <span class="materials-toggle">Click to View</span>
+                </div>
+                <div class="materials-content" id="operationsData">
+                    <h4>Company Background</h4>
+                    <p><strong>FlexTech Manufacturing</strong> is a mid-size electronics component manufacturer based in Austin, Texas. Founded in 2008, the company produces specialized circuit boards, connectors, and power modules for the automotive, industrial equipment, and consumer electronics industries. The company operates one primary manufacturing facility (120,000 sq ft) and employs 280 people.</p>
+
+                    <p><strong>Product Mix:</strong></p>
+                    <ul>
+                        <li>Custom circuit boards (45% of revenue)</li>
+                        <li>High-precision connectors (30% of revenue)</li>
+                        <li>Power management modules (25% of revenue)</li>
+                    </ul>
+
+                    <p><strong>Current Financial Performance:</strong></p>
+                    <ul>
+                        <li>Annual Revenue: $185M (LTM)</li>
+                        <li>Gross Margin: 32% (below 38% industry benchmark)</li>
+                        <li>Operating Margin: 6% (below 12% industry benchmark)</li>
+                        <li>Revenue Growth: +8% YoY (decelerating from +22% two years ago)</li>
+                    </ul>
+
+                    <h4>Supply Chain Structure - Current State</h4>
+                    <p><strong>Supplier Base:</strong> FlexTech sources components from 47 suppliers across three regions:</p>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Region</th>
+                                <th>% of Spend</th>
+                                <th>Lead Time</th>
+                                <th>Shipping Cost</th>
+                                <th>Quality Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Asia (China, Taiwan)</td>
+                                <td>62%</td>
+                                <td>45 days</td>
+                                <td>$12-18/kg</td>
+                                <td>4.2% defect rate</td>
+                            </tr>
+                            <tr>
+                                <td>Eastern Europe</td>
+                                <td>23%</td>
+                                <td>28 days</td>
+                                <td>$8-11/kg</td>
+                                <td>2.8% defect rate</td>
+                            </tr>
+                            <tr>
+                                <td>North America</td>
+                                <td>15%</td>
+                                <td>12 days</td>
+                                <td>$3-5/kg</td>
+                                <td>1.5% defect rate</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p><strong>Logistics & Transportation:</strong></p>
+                    <ul>
+                        <li>Ocean freight: 75% of inbound shipments (30-40 day transit)</li>
+                        <li>Air freight: 15% of shipments (expedited, 5-7 day transit, 4x cost of ocean)</li>
+                        <li>Ground: 10% (North American suppliers only)</li>
+                        <li>Annual expedited freight cost: $2.8M (up from $800K two years ago)</li>
+                    </ul>
+
+                    <h4>Primary Bottlenecks Identified</h4>
+
+                    <div class="highlight-box">
+                        <strong>BOTTLENECK #1: Extended Lead Times from Asian Suppliers</strong>
+                        <p><strong>Issue:</strong> 62% of component spend sourced from Asia with 45-day average lead times. Recent port congestion has extended this to 52-58 days for 35% of shipments.</p>
+                        <p><strong>Impact:</strong></p>
+                        <ul>
+                            <li>Safety stock requirements increased 40% (tying up $8.2M in working capital)</li>
+                            <li>Expedited air freight costs up 250% to $2.8M annually</li>
+                            <li>Production delays causing 32% on-time delivery rate to key customers</li>
+                            <li>Lost revenue: $12M in orders cancelled due to lead time constraints</li>
+                        </ul>
+                        <p><strong>Annual Cost Impact: $23M</strong> (working capital opportunity cost @ 12% + expedited freight + lost margin on cancelled orders)</p>
+                    </div>
+
+                    <div class="highlight-box">
+                        <strong>BOTTLENECK #2: Production Capacity Constraints</strong>
+                        <p><strong>Issue:</strong> Surface mount technology (SMT) line operating at 94% capacity utilization. Current facility has limited space for expansion.</p>
+                        <p><strong>Impact:</strong></p>
+                        <ul>
+                            <li>Unable to accept rush orders (turning down $6M in high-margin business annually)</li>
+                            <li>Minimal flexibility to absorb production variability</li>
+                            <li>Overtime costs elevated: $1.8M annually (18% of direct labor)</li>
+                            <li>Equipment downtime causes cascading delays (6.2% unplanned downtime)</li>
+                        </ul>
+                        <p><strong>Annual Cost Impact: $7.8M</strong> (lost revenue opportunity + overtime premium)</p>
+                    </div>
+
+                    <div class="highlight-box">
+                        <strong>BOTTLENECK #3: Quality Issues Causing Rework</strong>
+                        <p><strong>Issue:</strong> 4.2% defect rate on Asian-sourced components (vs. 1.5% North American benchmark). Incoming inspection catches 60% of defects; remaining 40% discovered in production.</p>
+                        <p><strong>Impact:</strong></p>
+                        <ul>
+                            <li>Rework costs: $3.2M annually (labor + materials)</li>
+                            <li>Scrap costs: $1.9M annually</li>
+                            <li>Production delays: 8% of manufacturing time spent on rework</li>
+                            <li>Customer returns: $2.1M annually (warranty + logistics + reputation damage)</li>
+                        </ul>
+                        <p><strong>Annual Cost Impact: $7.2M</strong> (rework + scrap + customer returns)</p>
+                    </div>
+
+                    <h4>Industry Benchmarks - Best-in-Class Performance</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>FlexTech Current</th>
+                                <th>Industry Median</th>
+                                <th>Best-in-Class</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Average Lead Time</td>
+                                <td>45 days</td>
+                                <td>28 days</td>
+                                <td>18 days</td>
+                            </tr>
+                            <tr>
+                                <td>On-Time Delivery %</td>
+                                <td>68%</td>
+                                <td>85%</td>
+                                <td>96%</td>
+                            </tr>
+                            <tr>
+                                <td>Defect Rate</td>
+                                <td>4.2%</td>
+                                <td>2.1%</td>
+                                <td>0.8%</td>
+                            </tr>
+                            <tr>
+                                <td>Inventory Turns</td>
+                                <td>4.2x</td>
+                                <td>6.8x</td>
+                                <td>9.5x</td>
+                            </tr>
+                            <tr>
+                                <td>Fill Rate</td>
+                                <td>88%</td>
+                                <td>94%</td>
+                                <td>98%</td>
+                            </tr>
+                            <tr>
+                                <td>Cost-per-Unit (indexed)</td>
+                                <td>118</td>
+                                <td>100</td>
+                                <td>87</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Improvement Strategies - Analysis & ROI</h4>
+
+                    <p><strong>STRATEGY A: Supplier Diversification & Near-Shoring</strong></p>
+                    <p>Shift 30% of Asian component spend to North American and Eastern European suppliers over 18 months.</p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Investment/Cost</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Supplier qualification & tooling</td>
+                                <td>$1.2M</td>
+                            </tr>
+                            <tr>
+                                <td>Higher component unit costs (8% premium)</td>
+                                <td>$2.9M/year</td>
+                            </tr>
+                            <tr>
+                                <td>Implementation team (18 months)</td>
+                                <td>$450K</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total 3-Year Cost</strong></td>
+                                <td><strong>$10.35M</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Benefit</th>
+                                <th>Annual Impact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Reduce lead time from 45 → 28 days</td>
+                                <td>Working capital release: $4.8M one-time</td>
+                            </tr>
+                            <tr>
+                                <td>Eliminate 70% of expedited freight</td>
+                                <td>$1.96M/year savings</td>
+                            </tr>
+                            <tr>
+                                <td>Improve on-time delivery to 89%</td>
+                                <td>Recapture $7M in lost revenue</td>
+                            </tr>
+                            <tr>
+                                <td>Reduce defect rate to 2.5%</td>
+                                <td>$2.8M/year (rework + scrap reduction)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total 3-Year Benefit</strong></td>
+                                <td><strong>$41.1M</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p><strong>ROI: 297% over 3 years | Payback Period: 14 months</strong></p>
+
+                    <p><strong>STRATEGY B: Production Automation & Capacity Expansion</strong></p>
+                    <p>Install second SMT line with automated optical inspection (AOI) and automated guided vehicles (AGVs) for material handling.</p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Investment/Cost</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>SMT line & AOI equipment</td>
+                                <td>$4.5M</td>
+                            </tr>
+                            <tr>
+                                <td>AGV system (4 vehicles)</td>
+                                <td>$800K</td>
+                            </tr>
+                            <tr>
+                                <td>Facility modifications</td>
+                                <td>$600K</td>
+                            </tr>
+                            <tr>
+                                <td>Installation & training</td>
+                                <td>$350K</td>
+                            </tr>
+                            <tr>
+                                <td>Additional operating costs (utilities, maintenance)</td>
+                                <td>$420K/year</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total 3-Year Cost</strong></td>
+                                <td><strong>$7.51M</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Benefit</th>
+                                <th>Annual Impact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Capacity increase 85% (handle $95M additional revenue)</td>
+                                <td>Capture $6M high-margin rush orders</td>
+                            </tr>
+                            <tr>
+                                <td>Reduce overtime by 75%</td>
+                                <td>$1.35M/year savings</td>
+                            </tr>
+                            <tr>
+                                <td>Automated inspection reduces defects by 40%</td>
+                                <td>$2.1M/year (rework + scrap + returns)</td>
+                            </tr>
+                            <tr>
+                                <td>Labor efficiency gains (AGVs)</td>
+                                <td>$580K/year</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total 3-Year Benefit</strong></td>
+                                <td><strong>$30.09M</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p><strong>ROI: 301% over 3 years | Payback Period: 18 months</strong></p>
+
+                    <p><strong>STRATEGY C: Integrated Supplier Quality Program</strong></p>
+                    <p>Implement supplier quality improvement program with resident quality engineers at top 3 Asian suppliers.</p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Investment/Cost</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>3 resident quality engineers (2 years)</td>
+                                <td>$720K</td>
+                            </tr>
+                            <tr>
+                                <td>Supplier process improvements (co-investment)</td>
+                                <td>$400K</td>
+                            </tr>
+                            <tr>
+                                <td>Enhanced incoming inspection equipment</td>
+                                <td>$280K</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total 3-Year Cost</strong></td>
+                                <td><strong>$1.4M</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Benefit</th>
+                                <th>Annual Impact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Reduce defect rate from 4.2% → 1.8%</td>
+                                <td>$4.2M/year (rework + scrap + returns)</td>
+                            </tr>
+                            <tr>
+                                <td>Reduce production disruptions</td>
+                                <td>$800K/year (throughput improvement)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total 3-Year Benefit</strong></td>
+                                <td><strong>$15M</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p><strong>ROI: 971% over 3 years | Payback Period: 3 months</strong></p>
+
+                    <h4>Implementation Roadmap - Phased Approach</h4>
+
+                    <p><strong>Phase 1 (Months 1-6): Quick Wins</strong></p>
+                    <ul>
+                        <li>Launch supplier quality program with 3 resident engineers</li>
+                        <li>Qualify 2 North American alternative suppliers for top 10 components</li>
+                        <li>Implement enhanced incoming inspection protocols</li>
+                        <li>Expected Impact: $2.1M annualized savings, defect rate → 3.0%</li>
+                    </ul>
+
+                    <p><strong>Phase 2 (Months 7-12): Capacity & Procurement</strong></p>
+                    <ul>
+                        <li>Complete SMT line installation and commissioning</li>
+                        <li>Shift 15% of Asian spend to qualified North American suppliers</li>
+                        <li>Install AGV system for material handling</li>
+                        <li>Expected Impact: $5.8M annualized savings, capacity utilization → 68%, defect rate → 2.2%</li>
+                    </ul>
+
+                    <p><strong>Phase 3 (Months 13-18): Full Optimization</strong></p>
+                    <ul>
+                        <li>Complete near-shoring transition (30% of spend shifted)</li>
+                        <li>Achieve full automation benefits and quality improvements</li>
+                        <li>Renegotiate shipping contracts based on reduced expedited freight</li>
+                        <li>Expected Impact: $10.6M annualized savings, lead time → 28 days, on-time delivery → 92%, defect rate → 1.5%</li>
+                    </ul>
+
+                    <p><strong>Phase 4 (Months 19-24): Continuous Improvement</strong></p>
+                    <ul>
+                        <li>Optimize inventory levels based on reduced lead times (release working capital)</li>
+                        <li>Pursue additional automation opportunities</li>
+                        <li>Expand capacity to capture incremental revenue opportunities</li>
+                        <li>Expected Impact: Achieve best-in-class metrics, $12.5M annualized benefit</li>
+                    </ul>
+
+                    <h4>Key Performance Indicators (KPIs) - Target State</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>KPI</th>
+                                <th>Current</th>
+                                <th>6-Month Target</th>
+                                <th>12-Month Target</th>
+                                <th>24-Month Target</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Average Lead Time</td>
+                                <td>45 days</td>
+                                <td>40 days</td>
+                                <td>32 days</td>
+                                <td>28 days</td>
+                            </tr>
+                            <tr>
+                                <td>On-Time Delivery</td>
+                                <td>68%</td>
+                                <td>78%</td>
+                                <td>87%</td>
+                                <td>92%</td>
+                            </tr>
+                            <tr>
+                                <td>Defect Rate</td>
+                                <td>4.2%</td>
+                                <td>3.0%</td>
+                                <td>2.2%</td>
+                                <td>1.5%</td>
+                            </tr>
+                            <tr>
+                                <td>Fill Rate</td>
+                                <td>88%</td>
+                                <td>91%</td>
+                                <td>94%</td>
+                                <td>96%</td>
+                            </tr>
+                            <tr>
+                                <td>Capacity Utilization</td>
+                                <td>94%</td>
+                                <td>88%</td>
+                                <td>68%</td>
+                                <td>72%</td>
+                            </tr>
+                            <tr>
+                                <td>Expedited Freight Cost</td>
+                                <td>$2.8M/yr</td>
+                                <td>$2.0M/yr</td>
+                                <td>$1.2M/yr</td>
+                                <td>$0.8M/yr</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Risk Factors</h4>
+                    <ul>
+                        <li><strong>Supplier Transition Risk:</strong> New suppliers may have initial quality or delivery issues during ramp-up (Mitigation: Dual-sourcing during transition, maintain 4-week safety stock)</li>
+                        <li><strong>Capital Investment Timing:</strong> SMT line installation could face delays (Mitigation: Include 15% schedule buffer, pre-order long-lead equipment)</li>
+                        <li><strong>Customer Patience:</strong> Major accounts threatening to leave may not wait for improvements (Mitigation: Provide detailed improvement timeline to top 5 accounts, offer short-term discounts)</li>
+                        <li><strong>Execution Capacity:</strong> Small team may struggle with multiple concurrent initiatives (Mitigation: Hire external implementation support for Phase 2)</li>
+                    </ul>
+
+                    <h4>Financial Summary - 3-Year Impact</h4>
+                    <div class="calc-box">
+                        <strong>Total Investment Required:</strong> $19.26M<br>
+                        <strong>Total 3-Year Benefits:</strong> $86.19M<br>
+                        <strong>Net Present Value (NPV @ 12% discount):</strong> $52.8M<br>
+                        <strong>Overall ROI:</strong> 347%<br>
+                        <strong>Blended Payback Period:</strong> 11 months
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="nextSection()">Begin Analysis →</button>
+            </div>
+        </div>
+
+        <!-- Section 1: Bottleneck Diagnosis -->
+        <div class="section" id="section1">
+            <div class="section-header">
+                <h2>Section 1: Bottleneck Diagnosis</h2>
+                <p>Identify and quantify the primary supply chain bottlenecks</p>
+            </div>
+
+            <div class="framework-box">
+                <h4>Diagnostic Framework</h4>
+                <p>Effective bottleneck analysis requires identifying constraints that limit overall system throughput. Use the materials to:</p>
+                <ul>
+                    <li>Identify which processes have the longest cycle times or highest resource utilization</li>
+                    <li>Quantify the impact of each bottleneck on delivery performance and costs</li>
+                    <li>Prioritize bottlenecks based on severity and solvability</li>
+                </ul>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    1. What is the PRIMARY bottleneck causing delivery delays at FlexTech?
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Identify the single biggest constraint. Reference specific metrics from materials (e.g., lead times, capacity utilization %).</span>
+                    </span>
+                </label>
+                <select id="primaryBottleneck">
+                    <option value="">Select primary bottleneck...</option>
+                    <option value="lead-time">Extended lead times from Asian suppliers (45 days)</option>
+                    <option value="capacity">Production capacity constraints (94% utilization)</option>
+                    <option value="quality">Quality defects causing rework (4.2% defect rate)</option>
+                    <option value="logistics">Inefficient logistics and transportation</option>
+                </select>
+                <div class="input-hint">Choose the bottleneck with the greatest impact on customer delivery performance</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    2. Quantify the annual cost impact of extended lead times from Asian suppliers
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Extract the specific dollar amount from materials. Include working capital, expedited freight, and lost revenue.</span>
+                    </span>
+                </label>
+                <input type="text" id="leadTimeCost" placeholder="Enter amount (e.g., $23M)">
+                <div class="input-hint">Must include working capital opportunity cost, expedited freight, and lost orders</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    3. Explain why extended lead times create a cascading impact on FlexTech's operations
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Reference specific operational impacts: safety stock, expedited freight usage, customer delivery performance. Use numbers from materials.</span>
+                    </span>
+                </label>
+                <textarea id="leadTimeExplanation" placeholder="Your explanation must reference specific metrics (45-day lead time, 32% on-time delivery, $2.8M expedited freight, etc.) and explain the operational chain reaction..."></textarea>
+                <div class="input-hint">Minimum 100 words. Must include specific numbers from materials showing how lead time affects inventory, shipping costs, and customer satisfaction.</div>
+            </div>
+
+            <div class="example-box example-good">
+                <div class="example-header" onclick="toggleExample('example1')">
+                    <h4>Strong Response Example</h4>
+                    <span class="example-toggle">Click to View</span>
+                </div>
+                <div class="example-content" id="example1">
+                    <p>FlexTech's 45-day average lead time from Asian suppliers (62% of component spend) creates a cascading operational crisis. First, it forces FlexTech to maintain 40% higher safety stock levels, tying up $8.2M in working capital that could otherwise be invested in growth. Second, when customer orders come in, the long lead time means FlexTech frequently resorts to expedited air freight at 4x the cost of ocean shipping, driving expedited freight costs to $2.8M annually (up 250% from two years ago). Third, even with these measures, on-time delivery has plummeted to just 32% for key customers, causing $12M in cancelled orders as customers switch to more reliable suppliers. The combination of higher inventory carrying costs, premium freight, and lost revenue creates a $23M annual impact that is directly eroding FlexTech's competitive position.</p>
+                </div>
+            </div>
+
+            <div class="example-box example-bad">
+                <div class="example-header" onclick="toggleExample('example1bad')">
+                    <h4>Weak Response Example</h4>
+                    <span class="example-toggle">Click to View</span>
+                </div>
+                <div class="example-content" id="example1bad">
+                    <p>Extended lead times are bad for FlexTech because they cause delays. When suppliers take too long to deliver parts, it creates problems in production. This leads to higher costs and unhappy customers. The company needs to find ways to reduce lead times to improve efficiency.</p>
+                    <p><strong>Why this fails:</strong> No specific metrics, no quantification of impact, generic statements that could apply to any company.</p>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="prevSection()">← Previous</button>
+                <button class="btn btn-primary" onclick="nextSection()">Next →</button>
+            </div>
+        </div>
+
+        <!-- Section 2: Root Cause Analysis -->
+        <div class="section" id="section2">
+            <div class="section-header">
+                <h2>Section 2: Root Cause Analysis</h2>
+                <p>Analyze why these bottlenecks exist and their interconnected impacts</p>
+            </div>
+
+            <div class="framework-box">
+                <h4>Root Cause Framework</h4>
+                <p>Moving beyond symptoms to underlying causes:</p>
+                <ul>
+                    <li>Why did FlexTech become dependent on distant Asian suppliers?</li>
+                    <li>What structural factors limit production capacity?</li>
+                    <li>How do quality issues compound with other bottlenecks?</li>
+                </ul>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    4. What percentage of FlexTech's component spend comes from Asian suppliers, and what is the average defect rate from these suppliers?
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Extract exact percentages from the materials. Both numbers must be precise.</span>
+                    </span>
+                </label>
+                <input type="text" id="asianSpend" placeholder="Enter percentage (e.g., 62%)">
+                <input type="text" id="asianDefectRate" placeholder="Enter defect rate (e.g., 4.2%)">
+                <div class="input-hint">Both answers must match materials exactly</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    5. Calculate the total annual cost of quality issues (rework + scrap + customer returns)
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Sum all quality-related costs from materials. Must arrive at exact total from three components.</span>
+                    </span>
+                </label>
+                <input type="text" id="qualityCost" placeholder="Enter total amount (e.g., $7.2M)">
+                <div class="input-hint">Add: rework costs + scrap costs + customer returns from materials</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    6. Explain how FlexTech's capacity constraints (94% utilization) interact with quality and lead time issues to amplify operational problems
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Demonstrate understanding of how bottlenecks interact: high utilization means no buffer for quality issues or delays. Use specific numbers.</span>
+                    </span>
+                </label>
+                <textarea id="capacityInteraction" placeholder="Explain how 94% capacity utilization, combined with 4.2% defect rates and 45-day lead times, creates a perfect storm..."></textarea>
+                <div class="input-hint">Minimum 120 words. Must explain the interaction effect and reference specific data points (94% utilization, $1.8M overtime, 6.2% downtime, turning down $6M in orders).</div>
+            </div>
+
+            <div class="example-box example-good">
+                <div class="example-header" onclick="toggleExample('example2')">
+                    <h4>Strong Response Example</h4>
+                    <span class="example-toggle">Click to View</span>
+                </div>
+                <div class="example-content" id="example2">
+                    <p>FlexTech's 94% capacity utilization creates a brittle system with no buffer to absorb variability. When quality defects occur (4.2% rate), production must stop to rework faulty units, consuming 8% of manufacturing time. With virtually no spare capacity, this rework forces costly overtime ($1.8M annually, 18% of direct labor) and delays other orders. The situation is compounded by 45-day lead times from Asian suppliers—when a batch arrives with defects, there's no time to reorder without disrupting the entire production schedule, forcing expensive expedited air freight. Additionally, equipment downtime (6.2% unplanned) in an overutilized facility cascades into missed customer commitments. The lack of capacity buffer means FlexTech must turn down $6M in high-margin rush orders annually, even as they struggle to fulfill existing commitments. This creates a vicious cycle: capacity constraints prevent accepting new business, which limits revenue growth needed to invest in additional capacity, while quality issues consume the limited capacity that exists.</p>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="prevSection()">← Previous</button>
+                <button class="btn btn-primary" onclick="nextSection()">Next →</button>
+            </div>
+        </div>
+
+        <!-- Section 3: Improvement Strategy Selection -->
+        <div class="section" id="section3">
+            <div class="section-header">
+                <h2>Section 3: Improvement Strategy Selection</h2>
+                <p>Evaluate improvement options and select optimal strategy</p>
+            </div>
+
+            <div class="framework-box">
+                <h4>Strategy Evaluation Framework</h4>
+                <p>Three improvement strategies are detailed in materials. Evaluate each based on:</p>
+                <ul>
+                    <li>Total investment required vs. expected 3-year benefits</li>
+                    <li>ROI percentage and payback period</li>
+                    <li>Impact on primary bottleneck (lead time reduction)</li>
+                    <li>Implementation risk and complexity</li>
+                </ul>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    7. Which improvement strategy has the highest ROI, and what is that ROI percentage?
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Compare the three strategies in materials: Supplier Diversification, Production Automation, Supplier Quality Program. Extract exact ROI.</span>
+                    </span>
+                </label>
+                <select id="highestROI">
+                    <option value="">Select strategy...</option>
+                    <option value="diversification">Supplier Diversification & Near-Shoring (297% ROI)</option>
+                    <option value="automation">Production Automation & Capacity Expansion (301% ROI)</option>
+                    <option value="quality">Integrated Supplier Quality Program (971% ROI)</option>
+                </select>
+                <div class="input-hint">Select the strategy with the highest 3-year ROI percentage from materials</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    8. Calculate the blended payback period if FlexTech implements ALL three strategies together
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">This is provided in the Financial Summary section of materials. Extract the exact number.</span>
+                    </span>
+                </label>
+                <input type="text" id="paybackPeriod" placeholder="Enter payback period (e.g., 11 months)">
+                <div class="input-hint">Find in Financial Summary section - blended payback for all strategies combined</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    9. Which strategy should FlexTech prioritize FIRST and why? Justify your recommendation with specific ROI, cost, and implementation data.
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Consider payback period, capital requirements, and impact on primary bottleneck. Your answer should balance ROI with implementation feasibility.</span>
+                    </span>
+                </label>
+                <textarea id="strategyRecommendation" placeholder="Recommend which strategy to implement first, providing specific justification using ROI percentages, payback periods, investment amounts, and expected impact on lead times and quality..."></textarea>
+                <div class="input-hint">Minimum 150 words. Must reference specific ROI, payback period, investment cost, and quantified benefits from materials. Explain why this strategy should come first despite other strategies potentially having higher ROI.</div>
+            </div>
+
+            <div class="example-box example-good">
+                <div class="example-header" onclick="toggleExample('example3')">
+                    <h4>Strong Response Example</h4>
+                    <span class="example-toggle">Click to View</span>
+                </div>
+                <div class="example-content" id="example3">
+                    <p>FlexTech should prioritize the Integrated Supplier Quality Program first, despite Supplier Diversification addressing the primary bottleneck more directly. The quality program delivers exceptional ROI of 971% with only $1.4M investment and an extraordinarily fast 3-month payback period. This low-risk, high-return initiative immediately reduces the defect rate from 4.2% to 1.8%, generating $4.2M in annual savings from eliminated rework, scrap, and customer returns, plus an additional $800K from reduced production disruptions. Critically, this strategy can be implemented quickly without major capital expenditure or operational disruption—FlexTech can deploy 3 resident quality engineers to top Asian suppliers within 60 days. The rapid payback means FlexTech will generate $5M in savings within the first year to help fund the more capital-intensive strategies. Furthermore, improving supplier quality creates a more stable foundation for the subsequent near-shoring strategy (which requires $10.35M investment), since FlexTech will be negotiating with new suppliers from a position of better quality management capability. While the quality program alone won't solve the 45-day lead time issue, it represents a quick win that builds momentum, generates cash, and de-risks larger initiatives.</p>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="prevSection()">← Previous</button>
+                <button class="btn btn-primary" onclick="nextSection()">Next →</button>
+            </div>
+        </div>
+
+        <!-- Section 4: Implementation Roadmap -->
+        <div class="section" id="section4">
+            <div class="section-header">
+                <h2>Section 4: Implementation Roadmap & KPI Tracking</h2>
+                <p>Build phased implementation plan with measurable milestones</p>
+            </div>
+
+            <div class="framework-box">
+                <h4>Implementation Planning Framework</h4>
+                <p>The materials provide a 4-phase, 24-month implementation roadmap. Your task:</p>
+                <ul>
+                    <li>Sequence initiatives to balance quick wins with long-term transformation</li>
+                    <li>Define measurable KPIs for each phase</li>
+                    <li>Identify risks and mitigation strategies</li>
+                </ul>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    10. What is the target average lead time FlexTech aims to achieve after 24 months of implementation?
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Find in the KPI table showing current state vs. targets at different milestones.</span>
+                    </span>
+                </label>
+                <input type="text" id="targetLeadTime" placeholder="Enter target lead time (e.g., 28 days)">
+                <div class="input-hint">Extract from 24-month target in KPI table</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    11. What on-time delivery percentage should FlexTech achieve after 12 months?
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Extract from the 12-month target column in KPI tracking table.</span>
+                    </span>
+                </label>
+                <input type="text" id="otdTarget" placeholder="Enter percentage (e.g., 87%)">
+                <div class="input-hint">Find in 12-month target column of KPI table</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    12. Build a recommended implementation sequence for the first 12 months. For each phase, specify which initiatives to launch, expected timeline, and quantified outcomes.
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Reference the phased roadmap in materials. Include specific initiatives, timelines, and expected savings/improvements for each phase.</span>
+                    </span>
+                </label>
+                <textarea id="implementationPlan" placeholder="Outline your 12-month implementation roadmap. Include: Phase 1 (months 1-6) initiatives and expected $M savings; Phase 2 (months 7-12) initiatives and expected outcomes. Reference specific projects like supplier quality program, SMT line installation, near-shoring %, defect rate targets..."></textarea>
+                <div class="input-hint">Minimum 200 words. Must include specific phase timelines, initiative names, quantified savings/improvements, and KPI targets from materials.</div>
+            </div>
+
+            <div class="example-box example-good">
+                <div class="example-header" onclick="toggleExample('example4')">
+                    <h4>Strong Response Example</h4>
+                    <span class="example-toggle">Click to View</span>
+                </div>
+                <div class="example-content" id="example4">
+                    <p>FlexTech's first 12 months should follow a carefully sequenced two-phase approach. Phase 1 (Months 1-6) focuses on quick wins with minimal capital: launch the supplier quality program by deploying 3 resident quality engineers to top Asian suppliers, qualify 2 North American alternative suppliers for the top 10 component categories, and implement enhanced incoming inspection protocols with upgraded equipment. This phase requires minimal investment ($700K) but delivers immediate impact—reducing the defect rate from 4.2% to 3.0%, generating $2.1M in annualized savings from reduced rework and scrap, and beginning the supplier diversification process. The 3-month payback on the quality program generates cash flow to fund subsequent phases. Phase 2 (Months 7-12) deploys the capital-intensive initiatives: complete installation and commissioning of the second SMT line with automated optical inspection ($4.5M investment), shift 15% of Asian component spend to the newly qualified North American suppliers (reducing average lead time from 45 to 38 days), and install the AGV material handling system ($800K). This phase delivers $5.8M in annualized savings through multiple mechanisms: capacity utilization drops from 94% to 68% (eliminating the need to turn down $3M in rush orders), overtime costs decrease by 50% ($900K savings), and the combination of better quality (2.2% defect rate) and shorter lead times enables a reduction in expedited freight usage ($1.2M savings). By month 12, FlexTech achieves 87% on-time delivery (up from 68%), positioning the company to pursue Phase 3's full near-shoring transition.</p>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="prevSection()">← Previous</button>
+                <button class="btn btn-primary" onclick="calculateScore()">Complete Analysis →</button>
+            </div>
+        </div>
+
+        <!-- Section 5: Results -->
+        <div class="section" id="section5">
+            <div class="section-header">
+                <h2>Analysis Complete</h2>
+                <p>Review your supply chain diagnostic results</p>
+            </div>
+
+            <div class="score-card">
+                <h3>Your Total Score</h3>
+                <div class="score-number" id="totalScore">--</div>
+                <p id="scoreCategory">Calculating...</p>
+
+                <div class="score-breakdown">
+                    <div class="score-item">
+                        <span class="score-label">Section 1: Bottleneck Diagnosis</span>
+                        <span class="score-value" id="score1">--/25</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-label">Section 2: Root Cause Analysis</span>
+                        <span class="score-value" id="score2">--/20</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-label">Section 3: Strategy Selection</span>
+                        <span class="score-value" id="score3">--/25</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-label">Section 4: Implementation Planning</span>
+                        <span class="score-value" id="score4">--/30</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="detailedFeedback"></div>
+
+            <div class="export-buttons">
+                <button class="btn btn-export" onclick="downloadReport()">Download Report</button>
+                <button class="btn btn-primary" onclick="location.reload()">Start New Analysis</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Supabase
+        let supabaseClient;
+        
+        function initSupabase() {
+            if (typeof window.supabase === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+                script.onload = () => {
+                    supabaseClient = window.supabase.createClient(
+                        'https://clhuplhaejneecbyhphh.supabase.co',
+                        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsaHVwbGhhZWpuZWVjYnlocGhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjY2OTI0NzMsImV4cCI6MjA0MjI2ODQ3M30.HCW1CV2BbA5DdCd_9Q_vEoMxA-NMkPtZG2qg3hJDZLo'
+                    );
+                    startApp();
+                };
+                document.head.appendChild(script);
+            } else {
+                supabaseClient = window.supabase.createClient(
+                    'https://clhuplhaejneecbyhphh.supabase.co',
+                    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsaHVwbGhhZWpuZWVjYnlocGhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjY2OTI0NzMsImV4cCI6MjA0MjI2ODQ3M30.HCW1CV2BbA5DdCd_9Q_vEoMxA-NMkPtZG2qg3hJDZLo'
+                );
+                startApp();
+            }
+        }
+
+        function startApp() {
+            getUserEmail();
+            updateProgress();
+        }
+
+        let userEmail = null;
+
+        function getUserEmail() {
+            try {
+                if (window.parent.$memberstackDom) {
+                    window.parent.$memberstackDom.getCurrentMember()
+                        .then(({ data: member }) => {
+                            if (member) {
+                                userEmail = member.auth.email;
+                                loadProgress();
+                            }
+                        });
+                } else if (localStorage.getItem('cloverpath_user_email')) {
+                    userEmail = localStorage.getItem('cloverpath_user_email');
+                    loadProgress();
+                } else {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    userEmail = urlParams.get('email');
+                    if (userEmail) {
+                        loadProgress();
+                    }
+                }
+            } catch (error) {
+                console.error('Error getting user email:', error);
+            }
+        }
+
+        async function loadProgress() {
+            if (!userEmail) return;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('simulation_progress')
+                    .select('*')
+                    .eq('user_email', userEmail)
+                    .eq('simulation_type', 'supply_chain')
+                    .single();
+
+                if (data && data.progress_data) {
+                    const savedData = data.progress_data;
+                    Object.keys(savedData).forEach(key => {
+                        const element = document.getElementById(key);
+                        if (element) {
+                            if (element.type === 'checkbox') {
+                                element.checked = savedData[key];
+                            } else {
+                                element.value = savedData[key];
+                            }
+                        }
+                    });
+                    
+                    if (savedData.currentSection) {
+                        currentSection = savedData.currentSection;
+                        showSection(currentSection);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading progress:', error);
+            }
+        }
+
+        async function saveProgress() {
+            if (!userEmail) return;
+
+            const formData = {};
+            
+            document.querySelectorAll('input, textarea, select').forEach(element => {
+                if (element.id) {
+                    if (element.type === 'checkbox') {
+                        formData[element.id] = element.checked;
+                    } else {
+                        formData[element.id] = element.value;
+                    }
+                }
+            });
+
+            formData.currentSection = currentSection;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('simulation_progress')
+                    .upsert({
+                        user_email: userEmail,
+                        simulation_type: 'supply_chain',
+                        progress_data: formData,
+                        last_updated: new Date().toISOString()
+                    }, {
+                        onConflict: 'user_email,simulation_type'
+                    });
+
+                if (error) throw error;
+            } catch (error) {
+                console.error('Error saving progress:', error);
+            }
+        }
+
+        document.addEventListener('input', () => {
+            clearTimeout(window.saveTimeout);
+            window.saveTimeout = setTimeout(saveProgress, 2000);
+        });
+
+        let currentSection = 0;
+        const totalSections = 6;
+
+        function updateProgress() {
+            const progress = (currentSection / (totalSections - 1)) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressPercent').textContent = Math.round(progress) + '% Complete';
+            
+            const labels = ['Introduction', 'Bottleneck Diagnosis', 'Root Cause Analysis', 'Strategy Selection', 'Implementation Planning', 'Results'];
+            document.getElementById('progressLabel').textContent = labels[currentSection];
+        }
+
+        function showSection(index) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById('section' + index).classList.add('active');
+            currentSection = index;
+            updateProgress();
+            window.scrollTo(0, 0);
+            saveProgress();
+            
+            setTimeout(function() {
+                const height = document.body.scrollHeight + 100;
+                window.parent.postMessage({
+                    type: 'iframe-height',
+                    height: height
+                }, '*');
+            }, 300);
+        }
+
+        function nextSection() {
+            if (currentSection < totalSections - 1) {
+                showSection(currentSection + 1);
+            }
+        }
+
+        function prevSection() {
+            if (currentSection > 0) {
+                showSection(currentSection - 1);
+            }
+        }
+
+        function toggleMaterials(id) {
+            const content = document.getElementById(id);
+            const box = content.closest('.materials-box');
+            content.classList.toggle('show');
+            
+            if (content.classList.contains('show')) {
+                box.querySelector('.materials-toggle').textContent = 'Click to Hide';
+            } else {
+                box.querySelector('.materials-toggle').textContent = 'Click to View';
+            }
+        }
+
+        function toggleExample(id) {
+            const content = document.getElementById(id);
+            const header = content.previousElementSibling;
+            const toggle = header.querySelector('.example-toggle');
+            content.classList.toggle('show');
+            
+            if (content.classList.contains('show')) {
+                toggle.textContent = 'Click to Hide';
+            } else {
+                toggle.textContent = 'Click to View';
+            }
+        }
+
+        function parseNumber(str) {
+            if (!str) return 0;
+            const cleaned = str.replace(/[$,MKmk%]/g, '');
+            const num = parseFloat(cleaned);
+            if (str.toLowerCase().includes('m')) return num;
+            if (str.toLowerCase().includes('k')) return num / 1000;
+            return num;
+        }
+
+        function calculateScore() {
+            let section1Score = 0;
+            let section2Score = 0;
+            let section3Score = 0;
+            let section4Score = 0;
+            let feedback = '';
+
+            // Section 1: Bottleneck Diagnosis (25 points)
+            const primaryBottleneck = document.getElementById('primaryBottleneck').value;
+            const leadTimeCost = document.getElementById('leadTimeCost').value;
+            const leadTimeExplanation = document.getElementById('leadTimeExplanation').value;
+
+            feedback += '<div class="feedback-box success"><h3>Section 1: Bottleneck Diagnosis</h3>';
+
+            // Q1: Primary bottleneck (5 points)
+            if (primaryBottleneck === 'lead-time') {
+                section1Score += 5;
+                feedback += '<p><strong>✓ Primary Bottleneck (5/5):</strong> Correct. Extended lead times from Asian suppliers is the primary bottleneck causing the greatest operational and financial impact.</p>';
+            } else if (primaryBottleneck === 'capacity' || primaryBottleneck === 'quality') {
+                section1Score += 3;
+                feedback += '<p><strong>⚠ Primary Bottleneck (3/5):</strong> While ' + (primaryBottleneck === 'capacity' ? 'capacity constraints' : 'quality issues') + ' are significant, extended lead times have the largest total impact ($23M annually) and affect the most customers.</p>';
+            } else {
+                section1Score += 0;
+                feedback += '<p><strong>✗ Primary Bottleneck (0/5):</strong> Incorrect. Review the materials—extended lead times from Asian suppliers create a $23M annual impact, the highest of all bottlenecks.</p>';
+            }
+
+            // Q2: Lead time cost (8 points)
+            const leadTimeCostNum = parseNumber(leadTimeCost);
+            if (leadTimeCostNum >= 22 && leadTimeCostNum <= 24) {
+                section1Score += 8;
+                feedback += '<p><strong>✓ Lead Time Cost Impact (8/8):</strong> Correct. The annual cost of extended lead times is $23M.</p>';
+            } else if (leadTimeCostNum >= 20 && leadTimeCostNum <= 26) {
+                section1Score += 5;
+                feedback += '<p><strong>⚠ Lead Time Cost Impact (5/8):</strong> Close. The exact figure from materials is $23M (working capital @ 12% + expedited freight + lost orders).</p>';
+            } else {
+                section1Score += 0;
+                feedback += '<p><strong>✗ Lead Time Cost Impact (0/8):</strong> Incorrect. Review the Bottleneck #1 section—total annual impact is $23M.</p>';
+            }
+
+            // Q3: Lead time explanation (12 points)
+            const wordCount = leadTimeExplanation.trim().split(/\s+/).length;
+            const hasLeadTime = leadTimeExplanation.includes('45') && (leadTimeExplanation.includes('day') || leadTimeExplanation.includes('days'));
+            const hasExpedited = leadTimeExplanation.includes('2.8') || leadTimeExplanation.includes('expedite');
+            const hasWorkingCapital = leadTimeExplanation.includes('8.2') || leadTimeExplanation.includes('working capital') || leadTimeExplanation.includes('inventory');
+            const hasLostRevenue = leadTimeExplanation.includes('12') && (leadTimeExplanation.includes('lost') || leadTimeExplanation.includes('cancel'));
+            const hasOTD = leadTimeExplanation.includes('32%') || leadTimeExplanation.includes('on-time');
+
+            let explanationScore = 0;
+            if (wordCount >= 100) explanationScore += 3;
+            if (hasLeadTime) explanationScore += 2;
+            if (hasExpedited) explanationScore += 2;
+            if (hasWorkingCapital) explanationScore += 2;
+            if (hasLostRevenue) explanationScore += 2;
+            if (hasOTD) explanationScore += 1;
+
+            section1Score += explanationScore;
+            if (explanationScore >= 10) {
+                feedback += '<p><strong>✓ Lead Time Explanation (' + explanationScore + '/12):</strong> Strong analysis demonstrating understanding of cascading impacts.</p>';
+            } else if (explanationScore >= 6) {
+                feedback += '<p><strong>⚠ Lead Time Explanation (' + explanationScore + '/12):</strong> Good foundation but missing specific metrics. Reference 45-day lead time, $8.2M working capital, $2.8M expedited freight, 32% OTD, and $12M lost orders.</p>';
+            } else {
+                feedback += '<p><strong>✗ Lead Time Explanation (' + explanationScore + '/12):</strong> Insufficient detail. Must include specific data points and explain the operational chain reaction.</p>';
+            }
+
+            feedback += '</div>';
+
+            // Section 2: Root Cause Analysis (20 points)
+            const asianSpend = document.getElementById('asianSpend').value;
+            const asianDefectRate = document.getElementById('asianDefectRate').value;
+            const qualityCost = document.getElementById('qualityCost').value;
+            const capacityInteraction = document.getElementById('capacityInteraction').value;
+
+            feedback += '<div class="feedback-box success"><h3>Section 2: Root Cause Analysis</h3>';
+
+            // Q4: Asian spend percentage and defect rate (6 points total: 3 + 3)
+            const spendNum = parseNumber(asianSpend);
+            const defectNum = parseNumber(asianDefectRate);
+
+            if (spendNum >= 61 && spendNum <= 63) {
+                section2Score += 3;
+                feedback += '<p><strong>✓ Asian Supplier Spend (3/3):</strong> Correct—62% of component spend.</p>';
+            } else {
+                section2Score += 0;
+                feedback += '<p><strong>✗ Asian Supplier Spend (0/3):</strong> Incorrect. Materials state 62% of spend is from Asia.</p>';
+            }
+
+            if (defectNum >= 4.1 && defectNum <= 4.3) {
+                section2Score += 3;
+                feedback += '<p><strong>✓ Asian Defect Rate (3/3):</strong> Correct—4.2% defect rate.</p>';
+            } else {
+                section2Score += 0;
+                feedback += '<p><strong>✗ Asian Defect Rate (0/3):</strong> Incorrect. Materials state 4.2% defect rate for Asian suppliers.</p>';
+            }
+
+            // Q5: Quality cost calculation (6 points)
+            const qualityCostNum = parseNumber(qualityCost);
+            if (qualityCostNum >= 7.0 && qualityCostNum <= 7.4) {
+                section2Score += 6;
+                feedback += '<p><strong>✓ Total Quality Cost (6/6):</strong> Correct. $7.2M = $3.2M rework + $1.9M scrap + $2.1M returns.</p>';
+            } else if (qualityCostNum >= 6.5 && qualityCostNum <= 7.9) {
+                section2Score += 3;
+                feedback += '<p><strong>⚠ Total Quality Cost (3/6):</strong> Close. Sum all three components: rework ($3.2M) + scrap ($1.9M) + customer returns ($2.1M) = $7.2M.</p>';
+            } else {
+                section2Score += 0;
+                feedback += '<p><strong>✗ Total Quality Cost (0/6):</strong> Incorrect. Add rework, scrap, and customer returns from Bottleneck #3.</p>';
+            }
+
+            // Q6: Capacity interaction explanation (5 points)
+            const capacityWordCount = capacityInteraction.trim().split(/\s+/).length;
+            const has94Capacity = capacityInteraction.includes('94');
+            const hasOvertime = capacityInteraction.includes('1.8') || capacityInteraction.includes('overtime');
+            const hasRushOrders = capacityInteraction.includes('6M') || capacityInteraction.includes('6.0') || capacityInteraction.includes('rush');
+            const hasRework = capacityInteraction.includes('rework') || capacityInteraction.includes('8%');
+
+            let capacityScore = 0;
+            if (capacityWordCount >= 120) capacityScore += 2;
+            if (has94Capacity) capacityScore += 1;
+            if (hasOvertime) capacityScore += 1;
+            if (hasRushOrders) capacityScore += 1;
+            if (hasRework) capacityScore += 0.5;
+
+            section2Score += Math.min(5, capacityScore);
+            if (capacityScore >= 4) {
+                feedback += '<p><strong>✓ Capacity Interaction (' + Math.min(5, capacityScore).toFixed(1) + '/5):</strong> Good explanation of how bottlenecks interact and amplify problems.</p>';
+            } else {
+                feedback += '<p><strong>⚠ Capacity Interaction (' + Math.min(5, capacityScore).toFixed(1) + '/5):</strong> Needs more detail on how 94% utilization, quality defects, and lead times create compounding effects. Reference $1.8M overtime, $6M turned away, and rework impact.</p>';
+            }
+
+            feedback += '</div>';
+
+            // Section 3: Strategy Selection (25 points)
+            const highestROI = document.getElementById('highestROI').value;
+            const paybackPeriod = document.getElementById('paybackPeriod').value;
+            const strategyRecommendation = document.getElementById('strategyRecommendation').value;
+
+            feedback += '<div class="feedback-box success"><h3>Section 3: Improvement Strategy Selection</h3>';
+
+            // Q7: Highest ROI strategy (5 points)
+            if (highestROI === 'quality') {
+                section3Score += 5;
+                feedback += '<p><strong>✓ Highest ROI Strategy (5/5):</strong> Correct. Supplier Quality Program delivers 971% ROI, far exceeding the other options.</p>';
+            } else {
+                section3Score += 0;
+                feedback += '<p><strong>✗ Highest ROI Strategy (0/5):</strong> Incorrect. Supplier Quality Program has 971% ROI, the highest of all three strategies.</p>';
+            }
+
+            // Q8: Payback period (5 points)
+            if (paybackPeriod.includes('11')) {
+                section3Score += 5;
+                feedback += '<p><strong>✓ Blended Payback Period (5/5):</strong> Correct—11 months for all strategies combined.</p>';
+            } else if (paybackPeriod.includes('14') || paybackPeriod.includes('18') || paybackPeriod.includes('3')) {
+                section3Score += 2;
+                feedback += '<p><strong>⚠ Blended Payback Period (2/5):</strong> You may have selected one strategy\'s payback. The blended payback for all three strategies is 11 months.</p>';
+            } else {
+                section3Score += 0;
+                feedback += '<p><strong>✗ Blended Payback Period (0/5):</strong> Incorrect. Check the Financial Summary—blended payback is 11 months.</p>';
+            }
+
+            // Q9: Strategy recommendation (15 points)
+            const recWordCount = strategyRecommendation.trim().split(/\s+/).length;
+            const mentions971 = strategyRecommendation.includes('971');
+            const mentions3Month = strategyRecommendation.includes('3') && strategyRecommendation.includes('month');
+            const mentions14M = strategyRecommendation.includes('1.4');
+            const mentionsQuality = strategyRecommendation.toLowerCase().includes('quality');
+            const mentionsPayback = strategyRecommendation.toLowerCase().includes('payback');
+            const mentionsDefect = strategyRecommendation.includes('4.2') || strategyRecommendation.includes('1.8');
+
+            let recScore = 0;
+            if (recWordCount >= 150) recScore += 4;
+            else if (recWordCount >= 100) recScore += 2;
+            
+            if (mentionsQuality) recScore += 3;
+            if (mentions971) recScore += 2;
+            if (mentions3Month || mentionsPayback) recScore += 2;
+            if (mentions14M) recScore += 2;
+            if (mentionsDefect) recScore += 2;
+
+            section3Score += Math.min(15, recScore);
+            if (recScore >= 12) {
+                feedback += '<p><strong>✓ Strategy Recommendation (' + Math.min(15, recScore) + '/15):</strong> Excellent justification with specific data supporting the recommendation.</p>';
+            } else if (recScore >= 8) {
+                feedback += '<p><strong>⚠ Strategy Recommendation (' + Math.min(15, recScore) + '/15):</strong> Good reasoning but needs more specific numbers (971% ROI, 3-month payback, $1.4M investment, defect reduction from 4.2% to 1.8%).</p>';
+            } else {
+                feedback += '<p><strong>✗ Strategy Recommendation (' + Math.min(15, recScore) + '/15):</strong> Insufficient justification. Must include specific ROI, payback, investment, and benefit data from materials.</p>';
+            }
+
+            feedback += '</div>';
+
+            // Section 4: Implementation Planning (30 points)
+            const targetLeadTime = document.getElementById('targetLeadTime').value;
+            const otdTarget = document.getElementById('otdTarget').value;
+            const implementationPlan = document.getElementById('implementationPlan').value;
+
+            feedback += '<div class="feedback-box success"><h3>Section 4: Implementation Planning</h3>';
+
+            // Q10: Target lead time (5 points)
+            if (targetLeadTime.includes('28')) {
+                section4Score += 5;
+                feedback += '<p><strong>✓ 24-Month Lead Time Target (5/5):</strong> Correct—28 days.</p>';
+            } else {
+                section4Score += 0;
+                feedback += '<p><strong>✗ 24-Month Lead Time Target (0/5):</strong> Incorrect. Check the KPI table 24-month column—target is 28 days.</p>';
+            }
+
+            // Q11: OTD target (5 points)
+            if (otdTarget.includes('87')) {
+                section4Score += 5;
+                feedback += '<p><strong>✓ 12-Month OTD Target (5/5):</strong> Correct—87% on-time delivery.</p>';
+            } else {
+                section4Score += 0;
+                feedback += '<p><strong>✗ 12-Month OTD Target (0/5):</strong> Incorrect. KPI table shows 87% target at 12 months.</p>';
+            }
+
+            // Q12: Implementation roadmap (20 points)
+            const planWordCount = implementationPlan.trim().split(/\s+/).length;
+            const hasPhase1 = implementationPlan.toLowerCase().includes('phase 1') || implementationPlan.includes('month') && implementationPlan.includes('6');
+            const hasPhase2 = implementationPlan.toLowerCase().includes('phase 2') || implementationPlan.includes('7-12');
+            const hasQualityProgram = implementationPlan.toLowerCase().includes('quality') && implementationPlan.toLowerCase().includes('engineer');
+            const hasSMT = implementationPlan.includes('SMT') || implementationPlan.toLowerCase().includes('smt line');
+            const hasNearShoring = implementationPlan.includes('15%') || implementationPlan.toLowerCase().includes('north american');
+            const hasSavings = implementationPlan.includes('2.1') || implementationPlan.includes('5.8');
+            const hasDefectTargets = implementationPlan.includes('3.0') || implementationPlan.includes('2.2');
+
+            let planScore = 0;
+            if (planWordCount >= 200) planScore += 5;
+            else if (planWordCount >= 150) planScore += 3;
+            
+            if (hasPhase1) planScore += 3;
+            if (hasPhase2) planScore += 3;
+            if (hasQualityProgram) planScore += 2;
+            if (hasSMT) planScore += 2;
+            if (hasNearShoring) planScore += 2;
+            if (hasSavings) planScore += 2;
+            if (hasDefectTargets) planScore += 1;
+
+            section4Score += Math.min(20, planScore);
+            if (planScore >= 16) {
+                feedback += '<p><strong>✓ Implementation Roadmap (' + Math.min(20, planScore) + '/20):</strong> Comprehensive roadmap with specific phases, initiatives, timelines, and quantified outcomes.</p>';
+            } else if (planScore >= 10) {
+                feedback += '<p><strong>⚠ Implementation Roadmap (' + Math.min(20, planScore) + '/20):</strong> Good structure but missing specific details. Include: Phase 1 quality program + supplier qualification ($2.1M savings), Phase 2 SMT line + 15% near-shoring + AGV ($5.8M savings), defect reduction targets (3.0% → 2.2%).</p>';
+            } else {
+                feedback += '<p><strong>✗ Implementation Roadmap (' + Math.min(20, planScore) + '/20):</strong> Insufficient detail. Must outline 12-month phased approach with specific initiatives and quantified outcomes from materials.</p>';
+            }
+
+            feedback += '</div>';
+
+            // Calculate total and display
+            const totalScore = section1Score + section2Score + section3Score + section4Score;
+
+            document.getElementById('score1').textContent = section1Score.toFixed(1) + '/25';
+            document.getElementById('score2').textContent = section2Score.toFixed(1) + '/20';
+            document.getElementById('score3').textContent = section3Score.toFixed(1) + '/25';
+            document.getElementById('score4').textContent = section4Score.toFixed(1) + '/30';
+            document.getElementById('totalScore').textContent = totalScore.toFixed(0);
+
+            let category = '';
+            if (totalScore >= 90) {
+                category = 'Outstanding - Professional-Level Supply Chain Analysis';
+            } else if (totalScore >= 80) {
+                category = 'Strong - Solid Operations Understanding';
+            } else if (totalScore >= 70) {
+                category = 'Good - Competent Analysis';
+            } else if (totalScore >= 60) {
+                category = 'Adequate - Basic Framework Understanding';
+            } else {
+                category = 'Needs Improvement - Review Materials';
+            }
+
+            document.getElementById('scoreCategory').textContent = category;
+            document.getElementById('detailedFeedback').innerHTML = feedback;
+
+            showSection(5);
+        }
+
+        function downloadReport() {
+            const reportContent = `
+FLEXTECH MANUFACTURING - SUPPLY CHAIN ANALYSIS REPORT
+Generated: ${new Date().toLocaleDateString()}
+
+TOTAL SCORE: ${document.getElementById('totalScore').textContent}/100
+
+SCORE BREAKDOWN:
+- Section 1: Bottleneck Diagnosis: ${document.getElementById('score1').textContent}
+- Section 2: Root Cause Analysis: ${document.getElementById('score2').textContent}
+- Section 3: Strategy Selection: ${document.getElementById('score3').textContent}
+- Section 4: Implementation Planning: ${document.getElementById('score4').textContent}
+
+PERFORMANCE CATEGORY: ${document.getElementById('scoreCategory').textContent}
+
+YOUR RESPONSES:
+
+Section 1: Bottleneck Diagnosis
+1. Primary Bottleneck: ${document.getElementById('primaryBottleneck').value}
+2. Lead Time Cost Impact: ${document.getElementById('leadTimeCost').value}
+3. Lead Time Explanation: ${document.getElementById('leadTimeExplanation').value}
+
+Section 2: Root Cause Analysis
+4. Asian Supplier Spend: ${document.getElementById('asianSpend').value}
+   Asian Defect Rate: ${document.getElementById('asianDefectRate').value}
+5. Total Quality Cost: ${document.getElementById('qualityCost').value}
+6. Capacity Interaction: ${document.getElementById('capacityInteraction').value}
+
+Section 3: Strategy Selection
+7. Highest ROI Strategy: ${document.getElementById('highestROI').value}
+8. Blended Payback Period: ${document.getElementById('paybackPeriod').value}
+9. Strategy Recommendation: ${document.getElementById('strategyRecommendation').value}
+
+Section 4: Implementation Planning
+10. 24-Month Lead Time Target: ${document.getElementById('targetLeadTime').value}
+11. 12-Month OTD Target: ${document.getElementById('otdTarget').value}
+12. Implementation Roadmap: ${document.getElementById('implementationPlan').value}
+
+DETAILED FEEDBACK:
+${document.getElementById('detailedFeedback').innerText}
+            `;
+
+            const blob = new Blob([reportContent], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'FlexTech_Supply_Chain_Analysis_Report.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        function sendHeightToParent() {
+            try {
+                const height = document.body.scrollHeight + 100;
+                window.parent.postMessage({
+                    type: 'iframe-height',
+                    height: height
+                }, '*');
+            } catch (e) {
+                console.error('Error sending height:', e);
+            }
+        }
+        
+        window.addEventListener('load', function() {
+            setTimeout(sendHeightToParent, 500);
+            setTimeout(sendHeightToParent, 1500);
+        });
+
+        initSupabase();
+    </script>
+    
+    <div id="content-end-marker" style="height: 1px; margin: 0; padding: 0;"></div>
+</body>
+</html>
