@@ -1,0 +1,2531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Private Equity Simulation - Summit Field Services LBO - Cloverpath</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #2d8659;
+            --light-green: #7cb342;
+            --dark-green: #1b5e3a;
+            --light-green-dark: #5a9c2e;
+            --bg-light: #f5f9f7;
+            --text-dark: #1a1a1a;
+            --text-gray: #666;
+            --border-color: #e0e0e0;
+            --white: #ffffff;
+            --yellow: #ffc107;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            color: var(--white);
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .company-banner {
+            background: linear-gradient(135deg, #5a9c2e 0%, #7cb342 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .company-banner h2 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .company-banner p {
+            opacity: 0.9;
+        }
+
+        .quick-facts {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .quick-facts h3 {
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .facts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .fact-item {
+            padding: 15px;
+            border-radius: 8px;
+            background: var(--bg-light);
+        }
+
+        .fact-item.primary {
+            background: linear-gradient(135deg, rgba(45, 134, 89, 0.1) 0%, rgba(45, 134, 89, 0.05) 100%);
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .fact-item.warning {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);
+            border-left: 4px solid var(--yellow);
+        }
+
+        .fact-item.info {
+            background: linear-gradient(135deg, rgba(124, 179, 66, 0.1) 0%, rgba(124, 179, 66, 0.05) 100%);
+            border-left: 4px solid var(--light-green);
+        }
+
+        .fact-label {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            margin-bottom: 5px;
+        }
+
+        .fact-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        .alert-banner {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid var(--yellow);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .alert-banner strong {
+            color: var(--dark-green);
+        }
+
+        .progress-container {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-green) 0%, var(--light-green) 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        .section {
+            display: none;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 30px;
+        }
+
+        .section-header h2 {
+            color: var(--primary-green);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .section-header p {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+        }
+
+        .guide-box {
+            background: linear-gradient(135deg, rgba(45, 134, 89, 0.05) 0%, rgba(124, 179, 66, 0.05) 100%);
+            border: 2px solid var(--light-green);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .guide-box h3 {
+            color: var(--primary-green);
+            margin-bottom: 15px;
+        }
+
+        .guide-checklist {
+            display: grid;
+            gap: 10px;
+        }
+
+        .guide-item {
+            padding: 10px 15px;
+            background: white;
+            border-radius: 6px;
+            border-left: 3px solid var(--light-green);
+            font-weight: 500;
+        }
+
+        .materials-box {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .materials-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .materials-header h3 {
+            color: var(--text-dark);
+            font-size: 1.2rem;
+        }
+
+        .materials-toggle {
+            background: var(--primary-green);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+        }
+
+        .materials-content {
+            margin-top: 15px;
+            display: none;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .materials-content.show {
+            display: block;
+        }
+
+        .materials-content h4 {
+            color: var(--primary-green);
+            margin: 20px 0 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .materials-content p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .materials-content strong {
+            color: var(--dark-green);
+        }
+
+        .materials-content ul {
+            margin-left: 20px;
+        }
+
+        .materials-content li {
+            margin-bottom: 5px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            background: white;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .data-table th {
+            background: #5a9c2e;
+            color: white;
+            font-weight: 600;
+        }
+
+        .data-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .highlight-box {
+            background: #fef3c7;
+            border-left: 4px solid var(--yellow);
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 5px;
+            cursor: help;
+        }
+
+        .tooltip-icon {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            background: var(--primary-green);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 18px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 250px;
+            background-color: var(--text-dark);
+            color: white;
+            text-align: left;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -125px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            font-weight: normal;
+        }
+
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--text-dark) transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--primary-green);
+        }
+
+        .input-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .input-hint {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .example-box {
+            background: var(--bg-light);
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .example-header {
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+
+        .example-header:hover {
+            background: rgba(45, 134, 89, 0.05);
+        }
+
+        .example-header h4 {
+            color: var(--primary-green);
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .example-toggle {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+        }
+
+        .example-content {
+            padding: 0 15px 15px 15px;
+            display: none;
+        }
+
+        .example-content.show {
+            display: block;
+        }
+
+        .example-good {
+            border-left: 4px solid var(--light-green);
+        }
+
+        .example-bad {
+            border-left: 4px solid #f44336;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-green);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(45, 134, 89, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--primary-green);
+            border: 2px solid var(--primary-green);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-green);
+            color: var(--white);
+        }
+
+        .score-card {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--light-green) 100%);
+            color: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .score-number {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .score-breakdown {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-dark);
+        }
+
+        .score-item:last-child {
+            border-bottom: none;
+        }
+
+        .score-label {
+            font-weight: 600;
+        }
+
+        .score-value {
+            color: var(--primary-green);
+            font-weight: bold;
+        }
+
+        .feedback-box {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .feedback-box.warning {
+            border-left-color: #ff9800;
+            background: #fff3e0;
+        }
+
+        .feedback-box.error {
+            border-left-color: #f44336;
+            background: #ffebee;
+        }
+
+        .feedback-box.success {
+            border-left-color: var(--light-green);
+            background: #f1f8e9;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .btn-export {
+            background: var(--light-green);
+            color: var(--white);
+        }
+
+        .btn-export:hover {
+            background: var(--light-green-dark);
+        }
+
+        .framework-box {
+            background: white;
+            border: 2px solid var(--light-green);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .framework-box h4 {
+            color: var(--light-green-dark);
+            margin-bottom: 10px;
+        }
+
+        .calc-box {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .calc-box strong {
+            color: var(--primary-green);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                font-size: 14px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 20px 15px;
+                margin-bottom: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+                margin-bottom: 8px;
+            }
+
+            .header p {
+                font-size: 0.9rem;
+            }
+
+            .company-banner {
+                padding: 15px;
+            }
+
+            .company-banner h2 {
+                font-size: 1.3rem;
+                line-height: 1.3;
+                word-break: break-word;
+            }
+
+            .company-banner p {
+                font-size: 0.85rem;
+                line-height: 1.4;
+            }
+
+            .progress-container,
+            .section,
+            .quick-facts,
+            .guide-box,
+            .framework-box {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            .materials-box {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            .section-header {
+                padding-left: 15px;
+                margin-bottom: 20px;
+            }
+
+            .section-header h2 {
+                font-size: 1.4rem;
+            }
+
+            .section-header p {
+                font-size: 0.9rem;
+            }
+
+            .facts-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .fact-item {
+                padding: 12px;
+            }
+
+            .fact-label {
+                font-size: 0.7rem;
+            }
+
+            .fact-value {
+                font-size: 1.1rem;
+            }
+
+            .guide-checklist {
+                grid-template-columns: 1fr;
+            }
+
+            .materials-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .materials-header h3 {
+                font-size: 1.1rem;
+                min-width: 0;
+                flex: none;
+                width: 100%;
+                word-break: break-word;
+                line-height: 1.4;
+            }
+
+            .materials-toggle {
+                padding: 10px 16px;
+                font-size: 0.85rem;
+                align-self: flex-start;
+            }
+
+            .materials-content {
+                font-size: 0.9rem;
+                padding: 0;
+            }
+
+            .materials-content h4 {
+                font-size: 1.05rem;
+                margin: 15px 0 8px 0;
+            }
+
+            .materials-content p {
+                margin-bottom: 12px;
+                line-height: 1.6;
+            }
+
+            .materials-content ul {
+                margin-left: 15px;
+            }
+
+            .materials-content li {
+                margin-bottom: 8px;
+                line-height: 1.5;
+            }
+
+            .data-table {
+                font-size: 0.7rem;
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 8px 4px;
+                font-size: 0.7rem;
+            }
+
+            .data-table th {
+                white-space: nowrap;
+            }
+
+            .input-group {
+                margin: 15px 0;
+            }
+
+            .input-group label {
+                font-size: 0.95rem;
+            }
+
+            .input-group input,
+            .input-group textarea,
+            .input-group select {
+                padding: 10px;
+                font-size: 16px;
+            }
+
+            .input-group textarea {
+                min-height: 100px;
+            }
+
+            .checkbox-item {
+                padding: 12px 8px;
+                align-items: flex-start;
+            }
+
+            .checkbox-item input[type="checkbox"] {
+                margin-top: 2px;
+                flex-shrink: 0;
+            }
+
+            .checkbox-item label {
+                font-size: 0.9rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 14px 20px;
+                font-size: 1rem;
+            }
+
+            .tooltip-wrapper:hover .tooltip-text {
+                display: none;
+            }
+
+            .tooltip-icon {
+                display: none;
+            }
+
+            .calc-box {
+                font-size: 0.75rem;
+                padding: 12px;
+                word-break: break-word;
+            }
+
+            .example-box {
+                padding: 15px;
+                font-size: 0.9rem;
+            }
+
+            .example-good,
+            .example-bad {
+                padding: 10px;
+                font-size: 0.85rem;
+                word-break: break-word;
+            }
+
+            .highlight-box,
+            .feedback-box,
+            .alert-banner {
+                padding: 12px 15px;
+                font-size: 0.9rem;
+            }
+
+            .score-card {
+                padding: 20px 15px;
+            }
+
+            .score-number {
+                font-size: 3rem;
+                margin: 15px 0;
+            }
+
+            .score-breakdown {
+                padding: 15px;
+            }
+
+            .score-item {
+                padding: 10px 0;
+                font-size: 0.9rem;
+            }
+
+            .export-buttons {
+                flex-direction: column;
+            }
+
+            .framework-box h4,
+            .guide-box h3,
+            .materials-header h3 {
+                font-size: 1.1rem;
+            }
+
+            .materials-content table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .example-header,
+            .example-content {
+                word-break: break-word;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.3rem;
+            }
+
+            .company-banner {
+                padding: 12px;
+            }
+
+            .company-banner h2 {
+                font-size: 1.1rem;
+            }
+
+            .company-banner p {
+                font-size: 0.8rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.2rem;
+            }
+
+            .score-number {
+                font-size: 2.5rem;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 6px 3px;
+                font-size: 0.65rem;
+            }
+
+            .materials-header h3 {
+                font-size: 1rem;
+                line-height: 1.3;
+            }
+
+            .materials-toggle {
+                font-size: 0.8rem;
+                padding: 8px 14px;
+            }
+
+            .materials-content h4 {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Private Equity Simulation</h1>
+            <p>Evaluate LBO opportunity, build investment thesis, and model returns</p>
+        </div>
+
+        <div class="progress-container">
+            <h3>Your Progress</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text">
+                <span id="progressLabel">Introduction</span>
+                <span id="progressPercent">0% Complete</span>
+            </div>
+        </div>
+
+        <!-- Section 0: Introduction & Materials -->
+        <div class="section active" id="section0">
+            <div class="company-banner">
+                <h2>Summit Field Services</h2>
+                <p>Facilities Maintenance Services - LBO Target</p>
+            </div>
+
+            <div class="quick-facts">
+                <h3>Investment Opportunity Overview</h3>
+                <div class="facts-grid">
+                    <div class="fact-item primary">
+                        <div class="fact-label">Enterprise Value</div>
+                        <div class="fact-value">$238M</div>
+                    </div>
+                    <div class="fact-item info">
+                        <div class="fact-label">LTM EBITDA</div>
+                        <div class="fact-value">$28.0M</div>
+                    </div>
+                    <div class="fact-item warning">
+                        <div class="fact-label">Entry Multiple</div>
+                        <div class="fact-value">8.5x EBITDA</div>
+                    </div>
+                    <div class="fact-item info">
+                        <div class="fact-label">Revenue (LTM)</div>
+                        <div class="fact-value">$145M</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert-banner">
+                <strong>DEAL OPPORTUNITY:</strong> You are an Associate at Thoma Bravo (mid-market PE fund, $8B AUM) evaluating an LBO of Summit Field Services, a commercial facilities maintenance company serving office buildings, retail centers, and industrial facilities across the Southeast US. The seller (founder looking to retire) is asking $238M ($28M EBITDA × 8.5x). Your task is to assess comparable companies, build an investment thesis around a roll-up strategy, model the LBO returns, and make an invest/pass recommendation to the IC (Investment Committee).
+            </div>
+
+            <div class="section-header">
+                <h2>Deal Materials & Target Analysis</h2>
+                <p>Review all materials before beginning your investment analysis</p>
+            </div>
+
+            <div class="feedback-box success">
+                <h3 style="margin-bottom: 10px;">Your Role</h3>
+                <p>You are a <strong>Private Equity Associate</strong> leading the diligence workstream for the Summit Field Services opportunity. The Partner has asked you to complete: (1) comparable company analysis to validate the 8.5x entry multiple, (2) investment thesis with quantified value creation plan, (3) LBO model with 5-year return projections, and (4) risk assessment with mitigation strategies.</p>
+                <p style="margin-top: 10px;"><strong>Your Mission:</strong> Determine if Summit represents an attractive mid-market buyout opportunity. Build the case for a fragmented industry roll-up strategy, quantify EBITDA growth through add-on acquisitions and operational improvements, model exit scenarios, and calculate IRR/MOIC to justify the investment to the IC.</p>
+            </div>
+
+            <div class="guide-box">
+                <h3>PE Analysis Framework for This Deal:</h3>
+                <div class="guide-checklist">
+                    <div class="guide-item">Comparable Companies: Benchmark Summit's metrics against 6 public/private comps to validate valuation</div>
+                    <div class="guide-item">Investment Thesis: Articulate why this is an attractive platform for a roll-up strategy in fragmented market</div>
+                    <div class="guide-item">Value Creation: Quantify 5 levers (add-ons, pricing, efficiency, digital, scale) with EBITDA impact</div>
+                    <div class="guide-item">LBO Model: Build sources & uses, project 5-year EBITDA growth, calculate exit value and returns</div>
+                    <div class="guide-item">Risk & Exit: Assess key risks (integration, recession, labor) and optimize exit strategy</div>
+                </div>
+            </div>
+
+            <div class="materials-box" id="mat-deal">
+                <div class="materials-header" onclick="toggleMaterials('dealData')">
+                    <h3>Summit Field Services - Investment Materials</h3>
+                    <span class="materials-toggle">Click to View</span>
+                </div>
+                <div class="materials-content" id="dealData">
+                    <h4>Company Background - Summit Field Services</h4>
+                    <p><strong>Summit Field Services</strong> is a commercial facilities maintenance company headquartered in Charlotte, NC. Founded in 2008 by Mike Henderson (current CEO and 100% owner), Summit provides HVAC maintenance, electrical services, plumbing, janitorial services, and general building repairs to commercial clients. The company operates across 6 states in the Southeast (NC, SC, GA, FL, TN, VA) through 18 branch locations.</p>
+
+                    <p><strong>Business Model:</strong></p>
+                    <ul>
+                        <li><strong>Service Mix:</strong> 62% recurring maintenance contracts (annual/multi-year), 38% on-demand repair work</li>
+                        <li><strong>Customer Base:</strong> 1,850 active commercial clients across office buildings (45%), retail/shopping centers (28%), industrial facilities (18%), other (9%)</li>
+                        <li><strong>Geographic Footprint:</strong> Concentrated in Charlotte, Atlanta, Nashville, Miami metro areas; limited presence in secondary markets</li>
+                        <li><strong>Employees:</strong> 420 field technicians, 65 office/management staff</li>
+                    </ul>
+
+                    <p><strong>Financial Profile (LTM, unaudited):</strong></p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Amount</th>
+                                <th>Margin / Growth</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Revenue</td>
+                                <td>$145.2M</td>
+                                <td>+12.8% YoY</td>
+                            </tr>
+                            <tr>
+                                <td>Gross Profit</td>
+                                <td>$62.1M</td>
+                                <td>42.8% margin</td>
+                            </tr>
+                            <tr>
+                                <td>Adjusted EBITDA</td>
+                                <td>$28.0M</td>
+                                <td>19.3% margin</td>
+                            </tr>
+                            <tr>
+                                <td>EBITDA Adjustments</td>
+                                <td>+$2.2M</td>
+                                <td>(owner perks, one-time items)</td>
+                            </tr>
+                            <tr>
+                                <td>Capex</td>
+                                <td>$3.8M</td>
+                                <td>2.6% of revenue</td>
+                            </tr>
+                            <tr>
+                                <td>Net Working Capital</td>
+                                <td>$14.5M</td>
+                                <td>10% of revenue</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p><strong>Revenue Growth Analysis:</strong></p>
+                    <ul>
+                        <li>2020: $115M revenue</li>
+                        <li>2021: $122M (+6.1%)</li>
+                        <li>2022: $129M (+5.7%)</li>
+                        <li>2023 LTM: $145M (+12.8%)</li>
+                        <li>3-year CAGR: +8.0%</li>
+                    </ul>
+
+                    <p><strong>EBITDA Margin Expansion:</strong></p>
+                    <ul>
+                        <li>2020: 16.5% EBITDA margin</li>
+                        <li>2021: 17.2%</li>
+                        <li>2022: 18.1%</li>
+                        <li>2023 LTM: 19.3%</li>
+                        <li>Margin improvement driven by: pricing increases (2-3% annually), improved labor utilization, scale in procurement</li>
+                    </ul>
+
+                    <h4>Industry Overview - Facilities Maintenance Services</h4>
+
+                    <p><strong>Total Addressable Market (TAM):</strong></p>
+                    <ul>
+                        <li>US commercial facilities maintenance market: $285B annually</li>
+                        <li>Segment breakdown: HVAC (32%), Electrical (18%), Plumbing (15%), Janitorial (22%), General building repairs (13%)</li>
+                        <li>Market growth: 6.5% CAGR (2020-2025), driven by aging commercial real estate infrastructure and preference for outsourcing</li>
+                        <li>Geographic concentration: Southeast US represents 28% of national market ($80B), growing at 7.2% CAGR (faster than national average)</li>
+                    </ul>
+
+                    <p><strong>Competitive Landscape & Fragmentation:</strong></p>
+                    <ul>
+                        <li><strong>Highly Fragmented:</strong> Estimated 92,000 facilities maintenance operators nationwide; top 50 companies represent only 14% market share</li>
+                        <li><strong>Summit's Position:</strong> $145M revenue = 0.051% national share, 0.18% Southeast share → Significant runway for consolidation</li>
+                        <li><strong>Fragmentation Drivers:</strong> Low barriers to entry, regional service delivery model, limited capital requirements, sticky customer relationships favor local operators</li>
+                        <li><strong>Consolidation Trend:</strong> PE-backed roll-ups increasingly active; 127 facilities services M&A transactions in 2023 (up from 89 in 2020)</li>
+                    </ul>
+
+                    <p><strong>Key Industry Demand Drivers:</strong></p>
+                    <ul>
+                        <li><strong>Aging Infrastructure:</strong> Average age of US commercial buildings is 42 years; older buildings require 30-40% more maintenance spending</li>
+                        <li><strong>Outsourcing Trend:</strong> 68% of building owners now outsource maintenance (up from 52% in 2015); CFOs prefer OpEx over CapEx for building services</li>
+                        <li><strong>Regulatory Compliance:</strong> Increasing HVAC efficiency standards, electrical safety codes, and building certifications drive demand for specialized services</li>
+                        <li><strong>ESG Focus:</strong> Corporate sustainability goals require more frequent HVAC optimization, energy audits, and preventative maintenance</li>
+                    </ul>
+
+                    <h4>Comparable Company Analysis - Public & Private Comps</h4>
+
+                    <p>Analysis of 6 comparable facilities maintenance companies to benchmark Summit's financial profile and validate the 8.5x EBITDA entry multiple:</p>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Company</th>
+                                <th>Revenue</th>
+                                <th>EBITDA Margin</th>
+                                <th>Revenue Growth (3yr CAGR)</th>
+                                <th>EV/EBITDA Multiple</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>ABM Industries</strong> (public)</td>
+                                <td>$8.1B</td>
+                                <td>5.8%</td>
+                                <td>+3.2%</td>
+                                <td>10.2x</td>
+                            </tr>
+                            <tr>
+                                <td><strong>EMCOR Group</strong> (public)</td>
+                                <td>$11.2B</td>
+                                <td>6.4%</td>
+                                <td>+8.1%</td>
+                                <td>12.5x</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Comfort Systems USA</strong> (public)</td>
+                                <td>$4.8B</td>
+                                <td>9.2%</td>
+                                <td>+11.4%</td>
+                                <td>14.8x</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ServiceMaster</strong> (PE-backed)</td>
+                                <td>$3.2B</td>
+                                <td>16.5%</td>
+                                <td>+6.8%</td>
+                                <td>11.5x</td>
+                            </tr>
+                            <tr>
+                                <td><strong>FirstService Corp</strong> (public)</td>
+                                <td>$4.5B</td>
+                                <td>12.1%</td>
+                                <td>+9.2%</td>
+                                <td>13.2x</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Corrigan Company</strong> (private, PE-backed)</td>
+                                <td>$425M</td>
+                                <td>18.8%</td>
+                                <td>+14.2%</td>
+                                <td>9.8x</td>
+                            </tr>
+                            <tr style="background: #e8f5e9; font-weight: bold;">
+                                <td><strong>MEDIAN</strong></td>
+                                <td>$4.0B</td>
+                                <td>10.7%</td>
+                                <td>+8.0%</td>
+                                <td>11.9x</td>
+                            </tr>
+                            <tr style="background: #fff3e0; font-weight: bold;">
+                                <td><strong>Summit Field Services</strong></td>
+                                <td>$145M</td>
+                                <td>19.3%</td>
+                                <td>+8.0%</td>
+                                <td>8.5x (entry)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="highlight-box">
+                        <strong>Comparable Company Insights:</strong> Summit's 19.3% EBITDA margin is significantly above the 10.7% median, indicating superior operational efficiency and higher-quality earnings. The 8.5x entry multiple represents a 28% discount to the 11.9x median, justified by Summit's smaller scale ($145M vs. $4B median) and lower liquidity. However, Summit's margin profile and 8.0% growth rate match top-tier comparables, suggesting significant value creation potential if scale can be achieved through roll-up strategy.
+                    </div>
+
+                    <h4>Investment Thesis - Roll-Up Platform Strategy</h4>
+
+                    <p><strong>Core Thesis:</strong> Summit represents an ideal platform to execute a fragmented industry roll-up in the Southeast US facilities maintenance market. The combination of Summit's superior unit economics (19.3% margins vs. 10.7% median), proven management team, and highly fragmented competitive landscape ($80B Southeast market with 92,000 operators) creates a compelling opportunity to build a regional leader through aggressive M&A and organic growth.</p>
+
+                    <p><strong>Why Summit is an Attractive Platform:</strong></p>
+                    <ul>
+                        <li><strong>Best-in-Class Margins:</strong> 19.3% EBITDA margins vs. 10.7% comparable median demonstrate operational excellence that can be replicated across acquired companies</li>
+                        <li><strong>Recurring Revenue Base:</strong> 62% of revenue from multi-year maintenance contracts provides cash flow stability and predictable growth</li>
+                        <li><strong>Scalable Infrastructure:</strong> Centralized dispatch system, procurement platform, and back-office functions can absorb add-on acquisitions at minimal incremental cost</li>
+                        <li><strong>Strong Management:</strong> CEO Mike Henderson (25 years industry experience) committed to staying through transition; CFO and COO have track records executing 3 prior acquisitions</li>
+                        <li><strong>White Space Opportunity:</strong> Current presence in only 6 states with limited secondary market penetration; clear geographic expansion roadmap</li>
+                    </ul>
+
+                    <p><strong>Market Fragmentation Creates Roll-Up Opportunity:</strong></p>
+                    <ul>
+                        <li>92,000 facilities maintenance operators nationally; top 50 companies = only 14% market share</li>
+                        <li>Estimated 1,200 operators in Southeast US with $5-25M revenue (Summit's target acquisition profile)</li>
+                        <li>Typical seller profile: founder-owned, 15-25 years in operation, no succession plan, limited technology/systems</li>
+                        <li>Acquisition multiples for sub-$10M EBITDA targets: 5.0-6.5x (vs. Summit's 8.5x entry) creates arbitrage opportunity</li>
+                    </ul>
+
+                    <h4>Value Creation Plan - 5 Levers to Drive EBITDA Growth</h4>
+
+                    <p><strong>LEVER 1: Add-On Acquisitions (Target: 8 acquisitions over 5 years)</strong></p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Acquisition Profile</th>
+                                <th>Target Metrics</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Average acquisition size</td>
+                                <td>$8M revenue, $1.5M EBITDA (18.8% margin)</td>
+                            </tr>
+                            <tr>
+                                <td>Average purchase price</td>
+                                <td>6.0x EBITDA = $9M per deal</td>
+                            </tr>
+                            <tr>
+                                <td>Total capital deployed (8 deals)</td>
+                                <td>$72M</td>
+                            </tr>
+                            <tr>
+                                <td>Acquired EBITDA (year of acquisition)</td>
+                                <td>$12M (8 × $1.5M)</td>
+                            </tr>
+                            <tr>
+                                <td>Synergies & margin improvement</td>
+                                <td>+200bps margin improvement on acquired revenue through procurement scale, back-office consolidation</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total EBITDA Impact (Year 5)</strong></td>
+                                <td><strong>+$12.0M baseline + $1.3M synergies = +$13.3M</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p><strong>LEVER 2: Pricing Optimization</strong></p>
+                    <ul>
+                        <li><strong>Current State:</strong> Summit's pricing is 8-12% below market in certain service lines due to conservative legacy pricing model</li>
+                        <li><strong>Initiative:</strong> Implement value-based pricing for recurring contracts; annual 3-4% increases vs. historical 2%</li>
+                        <li><strong>Execution:</strong> Upgrade to dynamic pricing software; train sales team on value selling; target top 200 accounts for repricing</li>
+                        <li><strong>EBITDA Impact:</strong> +$6.2M by Year 5 (2% incremental price increase × $155M organic revenue base × 100% margin flow-through on pricing)</li>
+                    </ul>
+
+                    <p><strong>LEVER 3: Operational Efficiency</strong></p>
+                    <ul>
+                        <li><strong>Labor Utilization:</strong> Improve technician utilization from 72% to 78% through better scheduling and route optimization (+$2.8M EBITDA)</li>
+                        <li><strong>Procurement Scale:</strong> Centralize purchasing across all locations; negotiate national contracts with suppliers for 5-8% cost reduction (+$1.6M EBITDA)</li>
+                        <li><strong>Total EBITDA Impact:</strong> +$4.4M by Year 5</li>
+                    </ul>
+
+                    <p><strong>LEVER 4: Digital Dispatch & Customer Platform</strong></p>
+                    <ul>
+                        <li><strong>Investment:</strong> $2.5M technology investment in Years 1-2 for mobile dispatch app, customer portal, IoT sensors</li>
+                        <li><strong>Benefits:</strong> Reduce emergency callout response time from 4.2 hours → 2.8 hours; enable predictive maintenance upsell</li>
+                        <li><strong>EBITDA Impact:</strong> +$2.1M by Year 5 (higher customer retention, incremental service revenue from predictive maintenance contracts)</li>
+                    </ul>
+
+                    <p><strong>LEVER 5: Overhead Scale</strong></p>
+                    <ul>
+                        <li><strong>Current State:</strong> SG&A = 23.5% of revenue</li>
+                        <li><strong>Target:</strong> Leverage fixed overhead as revenue scales through M&A; target 20.0% SG&A by Year 5</li>
+                        <li><strong>EBITDA Impact:</strong> +$2.0M (3.5% × revenue growth spread over overhead base)</li>
+                    </ul>
+
+                    <div class="calc-box">
+                        <strong>Total Value Creation - EBITDA Bridge (Year 0 → Year 5):</strong><br><br>
+                        Year 0 Baseline EBITDA: $28.0M<br>
+                        + Organic Growth (5% annually on base): +$7.0M<br>
+                        + Add-On Acquisitions: +$13.3M<br>
+                        + Pricing Optimization: +$6.2M<br>
+                        + Operational Efficiency: +$4.4M<br>
+                        + Digital/Technology: +$2.1M<br>
+                        + Overhead Leverage: +$2.0M<br>
+                        <strong>Year 5 Pro Forma EBITDA: $63.0M</strong><br>
+                        <strong>Total EBITDA Growth: +$35.0M (+125%)</strong>
+                    </div>
+
+                    <h4>LBO Financial Model - Sources & Uses, Returns Analysis</h4>
+
+                    <p><strong>Transaction Structure - Sources & Uses of Funds:</strong></p>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>SOURCES</th>
+                                <th>Amount ($M)</th>
+                                <th>% of Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Equity Contribution (Thoma Bravo Fund VII)</td>
+                                <td>$105.8</td>
+                                <td>40.0%</td>
+                            </tr>
+                            <tr>
+                                <td>Senior Debt (Term Loan, 5.0x EBITDA @ 8.5% interest)</td>
+                                <td>$140.0</td>
+                                <td>52.9%</td>
+                            </tr>
+                            <tr>
+                                <td>Seller Note (2-year, 7.0% interest)</td>
+                                <td>$18.8</td>
+                                <td>7.1%</td>
+                            </tr>
+                            <tr style="font-weight: bold; background: #e8f5e9;">
+                                <td>TOTAL SOURCES</td>
+                                <td>$264.6</td>
+                                <td>100.0%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>USES</th>
+                                <th>Amount ($M)</th>
+                                <th>% of Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Purchase Price (Enterprise Value)</td>
+                                <td>$238.0</td>
+                                <td>89.9%</td>
+                            </tr>
+                            <tr>
+                                <td>Transaction Fees (Legal, Banking, Diligence)</td>
+                                <td>$7.1</td>
+                                <td>2.7%</td>
+                            </tr>
+                            <tr>
+                                <td>Financing Fees</td>
+                                <td>$4.2</td>
+                                <td>1.6%</td>
+                            </tr>
+                            <tr>
+                                <td>Working Capital Adjustment</td>
+                                <td>$0</td>
+                                <td>0%</td>
+                            </tr>
+                            <tr>
+                                <td>Cash to Balance Sheet</td>
+                                <td>$15.3</td>
+                                <td>5.8%</td>
+                            </tr>
+                            <tr style="font-weight: bold; background: #e8f5e9;">
+                                <td>TOTAL USES</td>
+                                <td>$264.6</td>
+                                <td>100.0%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p><strong>Key Transaction Metrics:</strong></p>
+                    <ul>
+                        <li><strong>Entry Multiple:</strong> 8.5x LTM EBITDA (28% discount to 11.9x comparable median)</li>
+                        <li><strong>Debt/EBITDA:</strong> 5.0x (including seller note); 5.7x total leverage</li>
+                        <li><strong>Equity Check:</strong> $105.8M (10% of Thoma Bravo Fund VII)</li>
+                        <li><strong>Debt Structure:</strong> Senior term loan amortizes 10% annually; seller note paid in full Year 2</li>
+                    </ul>
+
+                    <p><strong>5-Year Financial Projections:</strong></p>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Year 0</th>
+                                <th>Year 1</th>
+                                <th>Year 2</th>
+                                <th>Year 3</th>
+                                <th>Year 4</th>
+                                <th>Year 5</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Revenue</td>
+                                <td>$145M</td>
+                                <td>$162M</td>
+                                <td>$182M</td>
+                                <td>$208M</td>
+                                <td>$237M</td>
+                                <td>$265M</td>
+                            </tr>
+                            <tr>
+                                <td>EBITDA</td>
+                                <td>$28.0M</td>
+                                <td>$34.5M</td>
+                                <td>$42.8M</td>
+                                <td>$50.2M</td>
+                                <td>$56.8M</td>
+                                <td>$63.0M</td>
+                            </tr>
+                            <tr>
+                                <td>EBITDA Margin</td>
+                                <td>19.3%</td>
+                                <td>21.3%</td>
+                                <td>23.5%</td>
+                                <td>24.1%</td>
+                                <td>24.0%</td>
+                                <td>23.8%</td>
+                            </tr>
+                            <tr>
+                                <td>Net Debt</td>
+                                <td>$158.8M</td>
+                                <td>$145.2M</td>
+                                <td>$128.6M</td>
+                                <td>$107.8M</td>
+                                <td>$83.2M</td>
+                                <td>$55.0M</td>
+                            </tr>
+                            <tr>
+                                <td>Debt / EBITDA</td>
+                                <td>5.7x</td>
+                                <td>4.2x</td>
+                                <td>3.0x</td>
+                                <td>2.1x</td>
+                                <td>1.5x</td>
+                                <td>0.9x</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p><strong>Exit Scenarios & Return Analysis (Year 5 Exit):</strong></p>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Scenario</th>
+                                <th>Exit Multiple</th>
+                                <th>Enterprise Value</th>
+                                <th>Equity Value</th>
+                                <th>Gross MOIC</th>
+                                <th>IRR</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Bear Case</strong></td>
+                                <td>8.0x EBITDA</td>
+                                <td>$504M</td>
+                                <td>$449M</td>
+                                <td>2.4x</td>
+                                <td>19.2%</td>
+                            </tr>
+                            <tr style="background: #fff3e0;">
+                                <td><strong>Base Case</strong></td>
+                                <td>9.5x EBITDA</td>
+                                <td>$599M</td>
+                                <td>$544M</td>
+                                <td>3.2x</td>
+                                <td>26.1%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Bull Case</strong></td>
+                                <td>11.0x EBITDA</td>
+                                <td>$693M</td>
+                                <td>$638M</td>
+                                <td>4.0x</td>
+                                <td>32.0%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="highlight-box">
+                        <strong>Base Case Return Logic:</strong> 9.5x exit multiple (20% premium to 8.5x entry multiple, 20% discount to 11.9x comparable median) justified by: (1) $265M revenue scale achieved through M&A, (2) 23.8% EBITDA margin demonstrating operational excellence, (3) diversified geographic presence across Southeast, (4) proven management team with successful integration track record. Base case delivers 3.2x MOIC / 26% IRR, significantly above Thoma Bravo's 20% IRR fund target and mid-market PE median returns (22% IRR).
+                    </div>
+
+                    <h4>Investment Risks & Mitigation Strategies</h4>
+
+                    <p><strong>RISK 1: Integration Execution Risk (Probability: Medium | Impact: High)</strong></p>
+                    <ul>
+                        <li><strong>Risk Description:</strong> Acquiring 8 companies in 5 years requires flawless integration execution. Poor integration could result in customer attrition, technician turnover, and margin dilution rather than accretion.</li>
+                        <li><strong>Mitigation:</strong> Hire dedicated VP of M&A/Integration with prior roll-up experience; develop standardized 100-day integration playbook; limit acquisitions to 2 per year in Years 1-2 to build muscle memory before accelerating</li>
+                        <li><strong>Contingency:</strong> If integration struggles emerge, slow acquisition pace and focus on organic growth (5% annually) + margin improvement instead</li>
+                    </ul>
+
+                    <p><strong>RISK 2: Recession / Economic Downturn (Probability: Medium | Impact: Medium)</strong></p>
+                    <ul>
+                        <li><strong>Risk Description:</strong> Facilities maintenance is partially discretionary; economic downturn could cause customers to defer non-emergency repairs, impacting revenue and margin</li>
+                        <li><strong>Historical Context:</strong> During 2008-2009 recession, facilities maintenance spending declined -8% nationally but rebounded within 18 months</li>
+                        <li><strong>Mitigation:</strong> 62% revenue from recurring contracts provides downside protection; focus M&A on companies with higher recurring % to increase portfolio stability; maintain 1.5x+ debt/EBITDA headroom vs. covenant levels</li>
+                    </ul>
+
+                    <p><strong>RISK 3: Labor Inflation & Technician Availability (Probability: High | Impact: Medium)</strong></p>
+                    <ul>
+                        <li><strong>Risk Description:</strong> Skilled HVAC/electrical technicians are scarce; wage inflation averaging 5-6% annually in skilled trades could compress margins</li>
+                        <li><strong>Mitigation:</strong> Pass through labor cost increases via annual price escalators (90% of recurring contracts include CPI-linked pricing); invest in technician training program to develop talent internally; explore H1B sponsorship for international technicians</li>
+                    </ul>
+
+                    <p><strong>RISK 4: Regulatory / Licensing Changes (Probability: Low | Impact: Medium)</strong></p>
+                    <ul>
+                        <li><strong>Risk Description:</strong> Changes to HVAC refrigerant regulations, electrical licensing requirements, or environmental standards could require costly compliance investments</li>
+                        <li><strong>Mitigation:</strong> Maintain strong relationships with industry associations; budget $500K annually for compliance/training; regulatory changes typically phase in over 2-3 years providing lead time</li>
+                    </ul>
+
+                    <h4>Exit Strategy Considerations</h4>
+
+                    <p><strong>Exit Option 1: Strategic Sale to Larger Platform (Probability: 60%)</strong></p>
+                    <ul>
+                        <li><strong>Potential Buyers:</strong> ABM Industries, EMCOR, Comfort Systems, or other national facilities services platforms seeking Southeast presence</li>
+                        <li><strong>Rationale:</strong> By Year 5, Summit will have $265M revenue, 23.8% EBITDA margins, and platform infrastructure supporting $500M+ revenue. This profile is highly attractive to strategic buyers seeking to fill geographic white space or acquire best-in-class margins.</li>
+                        <li><strong>Expected Multiple:</strong> 10-12x EBITDA (strategic premium for synergies, platform capabilities)</li>
+                        <li><strong>Pros:</strong> Highest valuation potential; certainty of execution; no public market risk</li>
+                        <li><strong>Cons:</strong> Buyer pool limited; may require extended earnouts or employment commitments</li>
+                    </ul>
+
+                    <p><strong>Exit Option 2: Secondary Buyout to Larger PE Fund (Probability: 35%)</strong></p>
+                    <ul>
+                        <li><strong>Potential Buyers:</strong> Upper-mid-market or large-cap PE funds (KKR, Apollo, Carlyle) seeking platforms for further roll-up</li>
+                        <li><strong>Rationale:</strong> Summit's proven M&A playbook and margin improvement track record make it an ideal platform for a larger fund to execute next phase of growth (expand to additional regions, pursue larger add-ons)</li>
+                        <li><strong>Expected Multiple:</strong> 9-10x EBITDA</li>
+                        <li><strong>Pros:</strong> Competitive auction process; management continuity; potential for continued upside via rollover equity</li>
+                        <li><strong>Cons:</strong> Lower multiple than strategic; subject to debt market conditions</li>
+                    </ul>
+
+                    <p><strong>Exit Option 3: IPO (Probability: 5%)</strong></p>
+                    <ul>
+                        <li><strong>Rationale:</strong> If Summit achieves high end of projections ($300M+ revenue, 25%+ margins), IPO becomes viable to capture public market premium</li>
+                        <li><strong>Expected Multiple:</strong> 12-14x EBITDA (public market premium for growth + margin story)</li>
+                        <li><strong>Pros:</strong> Highest valuation; maintain partial ownership via retained stake; currency for future acquisitions</li>
+                        <li><strong>Cons:</strong> Requires $300M+ revenue scale; public market volatility; lockup periods; ongoing reporting burden</li>
+                        <li><strong>Decision Point:</strong> Reassess IPO viability in Year 3 based on achieved scale and public market conditions</li>
+                    </ul>
+
+                    <p><strong>Recommended Exit Strategy:</strong> Target strategic sale (Option 1) as primary path given highest probability of attractive valuation and execution certainty. Begin cultivating strategic relationships in Year 3; run dual-track process (strategic + secondary PE) in Year 5 to maximize competitive tension and valuation.</p>
+
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="nextSection()">Begin Investment Analysis →</button>
+            </div>
+        </div>
+
+        <!-- Section 1: Comparable Company Analysis -->
+        <div class="section" id="section1">
+            <div class="section-header">
+                <h2>Section 1: Comparable Company Analysis</h2>
+                <p>Benchmark Summit against public and private comps to validate valuation</p>
+            </div>
+
+            <div class="framework-box">
+                <h4>Comparable Company Methodology</h4>
+                <p>In PE, comparables serve two purposes:</p>
+                <ul>
+                    <li><strong>Entry Valuation:</strong> Validate that the purchase price is reasonable relative to peer trading multiples</li>
+                    <li><strong>Exit Valuation:</strong> Project exit multiple based on where similar companies trade</li>
+                </ul>
+                <p>Key metrics: EV/EBITDA multiple (primary valuation metric), EBITDA margin (quality of earnings), revenue growth (justifies multiple premium/discount)</p>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    1. What is the MEDIAN EV/EBITDA multiple for the 6 comparable companies?
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Extract from comparable company table. Find the median multiple across all 6 comps.</span>
+                    </span>
+                </label>
+                <input type="text" id="medianMultiple" placeholder="Enter multiple (e.g., 11.9x)">
+                <div class="input-hint">Must extract exact median from materials table</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    2. Summit's EBITDA margin is 19.3%. How does this compare to the comparable company median, and what does this indicate about Summit's operational quality?
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Compare Summit's 19.3% to the 10.7% comparable median. Explain what higher margins mean for earnings quality and value creation potential.</span>
+                    </span>
+                </label>
+                <input type="text" id="compMargin" placeholder="Enter comparable median margin (e.g., 10.7%)">
+                <textarea id="marginAnalysis" placeholder="Explain what Summit's 19.3% margin vs. comparable median indicates about operational efficiency and implications for value creation..." style="margin-top: 10px;"></textarea>
+                <div class="input-hint">Margin must match materials. Analysis minimum 80 words, explaining why high margins matter for LBO value creation.</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    3. The 8.5x entry multiple represents what percentage discount to the comparable median? Explain why this discount exists and whether it represents an attractive entry point.
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Calculate: (8.5x - median) / median. Then explain small-cap discount, liquidity discount, and why the discount creates value despite Summit's superior margins.</span>
+                    </span>
+                </label>
+                <input type="text" id="discountCalc" placeholder="Enter percentage discount (e.g., -28%)">
+                <textarea id="discountRationale" placeholder="Calculate the discount and explain why Summit trades below comparable median despite having superior margins. Reference scale, liquidity, and value creation opportunity..." style="margin-top: 10px;"></textarea>
+                <div class="input-hint">Minimum 100 words. Must calculate exact discount percentage and explain small-cap/illiquidity discount justification.</div>
+            </div>
+
+            <div class="example-box example-good">
+                <div class="example-header" onclick="toggleExample('example1')">
+                    <h4>Strong Response Example</h4>
+                    <span class="example-toggle">Click to View</span>
+                </div>
+                <div class="example-content" id="example1">
+                    <p>The 8.5x entry multiple represents a 28.6% discount to the 11.9x comparable median [(8.5 - 11.9) / 11.9 = -28.6%]. This discount is justified by three factors. First, Summit's $145M revenue is dramatically smaller than the $4.0B comparable median—public market investors demand a liquidity premium for larger, more liquid securities, and private buyers pay less for smaller assets that require more integration effort. Second, Summit lacks the geographic diversification of national platforms like ABM Industries ($8.1B, 10.2x) and EMCOR ($11.2B, 12.5x), concentrating risk in the Southeast region. Third, there's an inherent illiquidity discount for private companies versus public comparables that trade daily. However, this discount represents a compelling entry point because Summit's 19.3% EBITDA margin is 81% higher than the 10.7% comparable median, indicating significantly higher-quality earnings. The margin premium suggests that once Summit achieves scale through the roll-up strategy—growing from $145M to a projected $265M by Year 5—the valuation should converge toward comparable medians. The discount also creates multiple arbitrage: if we can acquire smaller targets at 5.0-6.5x and integrate them into Summit's 19.3% margin profile, we're buying at a discount to our own entry multiple. The combination of discounted entry, superior unit economics, and clear path to scale makes this an attractive investment despite the small-cap discount.</p>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="prevSection()">← Previous</button>
+                <button class="btn btn-primary" onclick="nextSection()">Next →</button>
+            </div>
+        </div>
+
+        <!-- Section 2: Investment Thesis & Value Creation -->
+        <div class="section" id="section2">
+            <div class="section-header">
+                <h2>Section 2: Investment Thesis & Value Creation Plan</h2>
+                <p>Articulate roll-up strategy and quantify EBITDA improvement levers</p>
+            </div>
+
+            <div class="framework-box">
+                <h4>PE Value Creation Framework</h4>
+                <p>Private equity creates value through three mechanisms:</p>
+                <ul>
+                    <li><strong>Revenue Growth:</strong> Organic expansion + M&A (typically 60-70% of value creation)</li>
+                    <li><strong>Margin Expansion:</strong> Operational improvements, pricing, efficiency (typically 20-30%)</li>
+                    <li><strong>Multiple Expansion:</strong> Exit at higher multiple than entry (typically 10-15%)</li>
+                </ul>
+                <p>Best investments have multiple value creation levers working in parallel, not dependent on a single driver.</p>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    4. According to the materials, how many add-on acquisitions is Summit targeting over the 5-year hold period, and what is the total EBITDA contribution from these add-ons in Year 5?
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Extract from Value Creation Plan - Lever 1. Find number of acquisitions and Year 5 EBITDA impact including synergies.</span>
+                    </span>
+                </label>
+                <input type="text" id="numAcquisitions" placeholder="Number of add-on acquisitions (e.g., 8)">
+                <input type="text" id="addonEBITDA" placeholder="Total EBITDA from add-ons in Year 5 (e.g., $13.3M)" style="margin-top: 10px;">
+                <div class="input-hint">Both numbers must match materials exactly</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    5. What is Summit's projected EBITDA in Year 5, and what is the total EBITDA growth from Year 0 to Year 5 in dollar terms and percentage terms?
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Find in EBITDA Bridge calculation. Year 0 = $28.0M, Year 5 = ?. Calculate dollar growth and percentage growth.</span>
+                    </span>
+                </label>
+                <input type="text" id="year5EBITDA" placeholder="Year 5 EBITDA (e.g., $63.0M)">
+                <input type="text" id="ebitdaGrowthPct" placeholder="EBITDA growth percentage (e.g., 125%)" style="margin-top: 10px;">
+                <div class="input-hint">Extract from EBITDA Bridge in materials. Calculate percentage: (Year 5 - Year 0) / Year 0</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    6. Build a comprehensive investment thesis for Summit that explains: (1) why the facilities maintenance market is attractive for roll-up, (2) why Summit is the right platform, (3) how the 5 value creation levers work together to achieve the Year 5 EBITDA target.
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Synthesize market fragmentation (92,000 operators, 14% top 50 share), Summit's advantages (19.3% margins, recurring revenue, scalable infrastructure), and the 5 levers with specific dollar impacts.</span>
+                    </span>
+                </label>
+                <textarea id="investmentThesis" placeholder="Articulate why this is an attractive PE investment. Address: market fragmentation and roll-up opportunity, Summit's platform advantages, the 5 value creation levers and their quantified impacts, why these levers are achievable..."></textarea>
+                <div class="input-hint">Minimum 200 words. Must reference market data (92,000 operators, fragmentation), Summit's margin advantage, and quantified EBITDA impacts for multiple levers.</div>
+            </div>
+
+            <div class="example-box example-good">
+                <div class="example-header" onclick="toggleExample('example2')">
+                    <h4>Strong Response Example</h4>
+                    <span class="example-toggle">Click to View</span>
+                </div>
+                <div class="example-content" id="example2">
+                    <p>Summit represents a textbook fragmented industry roll-up opportunity. The $285B US facilities maintenance market is served by 92,000 operators with the top 50 companies capturing only 14% market share—this extraordinary fragmentation creates a target-rich environment for consolidation. Within Summit's Southeast focus region, an estimated 1,200 operators with $5-25M revenue fit the ideal acquisition profile: founder-owned businesses with no succession plan and limited technology infrastructure. These targets typically trade at 5.0-6.5x EBITDA, well below Summit's 8.5x entry multiple, creating immediate arbitrage. Summit is the ideal platform to execute this roll-up for three reasons. First, its 19.3% EBITDA margin—81% above the 10.7% comparable median—demonstrates operational excellence that can be replicated across acquired companies. This isn't a low-margin commodity business; it's a high-quality operation with pricing power and efficient processes. Second, 62% of revenue comes from recurring multi-year maintenance contracts, providing cash flow stability to support aggressive M&A and reducing execution risk. Third, Summit has scalable infrastructure: centralized dispatch systems, established procurement relationships, and back-office functions that can absorb acquisitions at minimal incremental cost. The management team has successfully integrated 3 prior acquisitions, de-risking execution. The value creation plan leverages 5 complementary drivers. Lever 1 (add-on M&A) targets 8 acquisitions over 5 years, deploying $72M to acquire $12M of baseline EBITDA plus $1.3M in synergies from margin improvement, totaling +$13.3M. Lever 2 (pricing optimization) captures +$6.2M through moving from 2% to 3-4% annual price increases, exploiting Summit's current 8-12% below-market pricing in certain service lines. Lever 3 (operational efficiency) drives +$4.4M via improved technician utilization (72% → 78%) and centralized procurement. Lever 4 (digital transformation) invests $2.5M in dispatch technology and IoT sensors to improve response times and enable predictive maintenance upselling, contributing +$2.1M. Lever 5 (overhead leverage) reduces SG&A from 23.5% to 20.0% as revenue scales, adding +$2.0M. Combined with 5% organic growth on the base (+$7.0M), these levers grow EBITDA from $28.0M to $63.0M—a 125% increase. This thesis is compelling because the levers are mutually reinforcing rather than dependent on heroic assumptions: the M&A provides scale for procurement savings and overhead leverage, while operational improvements protect margins during rapid growth, and pricing power de-risks execution by providing a margin buffer.</p>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="prevSection()">← Previous</button>
+                <button class="btn btn-primary" onclick="nextSection()">Next →</button>
+            </div>
+        </div>
+
+        <!-- Section 3: LBO Model & Returns -->
+        <div class="section" id="section3">
+            <div class="section-header">
+                <h2>Section 3: LBO Modeling & Return Analysis</h2>
+                <p>Calculate equity value and projected IRR/MOIC for the investment</p>
+            </div>
+
+            <div class="framework-box">
+                <h4>LBO Returns Framework</h4>
+                <p>LBO returns are driven by:</p>
+                <ul>
+                    <li><strong>EBITDA Growth:</strong> Operational improvement + M&A drive exit enterprise value</li>
+                    <li><strong>Multiple Expansion:</strong> Exit at higher multiple than entry (requires quality/scale improvements)</li>
+                    <li><strong>Debt Paydown:</strong> Cash flow reduces debt, increasing equity value</li>
+                    <li><strong>Leverage:</strong> Higher initial debt amplifies equity returns (but increases risk)</li>
+                </ul>
+                <p>Target mid-market PE returns: 20-25% IRR, 2.5-3.5x MOIC over 5 years</p>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    7. What is the initial equity check required for this investment, and what percentage of the total sources does equity represent?
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Extract from Sources & Uses table. Find equity contribution amount and calculate % of total sources.</span>
+                    </span>
+                </label>
+                <input type="text" id="equityCheck" placeholder="Equity amount (e.g., $105.8M)">
+                <input type="text" id="equityPercent" placeholder="Equity % of sources (e.g., 40%)" style="margin-top: 10px;">
+                <div class="input-hint">Both must match Sources & Uses table exactly</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    8. In the BASE CASE scenario, what is the projected IRR and MOIC for this investment?
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Find in Exit Scenarios table. Base Case row shows exit multiple, equity value, MOIC, and IRR.</span>
+                    </span>
+                </label>
+                <input type="text" id="baseIRR" placeholder="Base Case IRR (e.g., 26.1%)">
+                <input type="text" id="baseMOIC" placeholder="Base Case MOIC (e.g., 3.2x)" style="margin-top: 10px;">
+                <div class="input-hint">Must extract exact figures from Base Case row in Exit Scenarios table</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    9. Walk through the logic of how the base case achieves a 9.5x exit multiple (premium to 8.5x entry). Then calculate the equity value at exit and explain why the MOIC is attractive relative to Thoma Bravo's target returns.
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Explain multiple expansion justification: scale from $145M → $265M revenue, margin maintenance at 23.8%, M&A track record. Show calculation: $63M EBITDA × 9.5x - $55M net debt = equity value. Compare 3.2x MOIC to typical PE targets.</span>
+                    </span>
+                </label>
+                <textarea id="returnsAnalysis" placeholder="Explain why 9.5x exit multiple is justified (reference $265M scale achieved, 23.8% margins, successful integration track record). Calculate equity value: Year 5 EBITDA × exit multiple - net debt. Assess whether 3.2x MOIC / 26% IRR meets PE return thresholds..."></textarea>
+                <div class="input-hint">Minimum 150 words. Must explain multiple expansion rationale, show equity value calculation, and assess return attractiveness vs. PE benchmarks.</div>
+            </div>
+
+            <div class="example-box example-good">
+                <div class="example-header" onclick="toggleExample('example3')">
+                    <h4>Strong Response Example</h4>
+                    <span class="example-toggle">Click to View</span>
+                </div>
+                <div class="example-content" id="example3">
+                    <p>The base case projects a 9.5x exit multiple, representing a 12% premium to the 8.5x entry multiple, justified by three fundamental improvements. First, Summit will have scaled from $145M to $265M in revenue (+83%) through a combination of organic growth and 8 successful add-on acquisitions, moving the company from subscale regional player toward national platform status. This scale matters because the comparable company analysis showed that larger platforms (EMCOR at $11.2B, FirstService at $4.5B) command 12-14x multiples while smaller operators trade at 9-10x—scale reduces risk and increases strategic buyer appetite. Second, Summit will have maintained best-in-class 23.8% EBITDA margins even while growing rapidly, demonstrating that the operational excellence isn't diluted by M&A. This margin profile remains 2x+ the comparable median, signaling that Summit has sustainable competitive advantages (pricing power, efficient operations, strong management) that justify a premium valuation. Third, the company will have a proven M&A integration playbook with 8 successful acquisitions completed, making it an attractive platform for either a strategic acquirer seeking to leverage that capability or a larger PE fund looking to execute a secondary buyout and continue the roll-up strategy. The equity value calculation: Year 5 EBITDA of $63.0M × 9.5x exit multiple = $598.5M enterprise value. Subtracting $55.0M net debt (reduced from $158.8M initial through cash flow generation) yields $543.5M equity value. Dividing by the $105.8M initial equity investment produces 3.2x gross MOIC, equivalent to 26.1% IRR over the 5-year hold period. This return profile is highly attractive relative to Thoma Bravo's 20% target fund IRR and exceeds the 22% median IRR for mid-market PE. The 3.2x MOIC provides meaningful margin of safety—even if the exit multiple compresses to 8.5x (no multiple expansion), the investment still delivers 2.4x MOIC / 19.2% IRR in the bear case, meeting minimum return thresholds. The base case is achievable because it requires only modest multiple expansion (+12%) driven by tangible scale and margin improvements, not heroic market assumptions.</p>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="prevSection()">← Previous</button>
+                <button class="btn btn-primary" onclick="nextSection()">Next →</button>
+            </div>
+        </div>
+
+        <!-- Section 4: Risk Assessment & Exit Strategy -->
+        <div class="section" id="section4">
+            <div class="section-header">
+                <h2>Section 4: Risk Mitigation & Exit Planning</h2>
+                <p>Assess investment risks and optimize exit strategy</p>
+            </div>
+
+            <div class="framework-box">
+                <h4>PE Risk Assessment Framework</h4>
+                <p>Effective risk analysis identifies:</p>
+                <ul>
+                    <li><strong>Probability:</strong> How likely is the risk to materialize? (Low/Medium/High)</li>
+                    <li><strong>Impact:</strong> If it occurs, how much does it hurt returns? (Low/Medium/High)</li>
+                    <li><strong>Mitigation:</strong> What actions reduce probability or impact?</li>
+                    <li><strong>Contingency:</strong> If mitigation fails, what's Plan B?</li>
+                </ul>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    10. According to the materials, which risk is classified as "High Probability" and what is the primary mitigation strategy?
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Review the 4 risks in materials. Identify which one has "Probability: High" and summarize its mitigation.</span>
+                    </span>
+                </label>
+                <select id="highProbRisk">
+                    <option value="">Select the high probability risk...</option>
+                    <option value="integration">Integration Execution Risk</option>
+                    <option value="recession">Recession / Economic Downturn</option>
+                    <option value="labor">Labor Inflation & Technician Availability</option>
+                    <option value="regulatory">Regulatory / Licensing Changes</option>
+                </select>
+                <textarea id="riskMitigation" placeholder="Summarize the primary mitigation strategy for this high-probability risk..." style="margin-top: 10px;"></textarea>
+                <div class="input-hint">Risk selection must match materials. Mitigation summary minimum 60 words.</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    11. What is the recommended primary exit strategy, and what is the probability assigned to this exit path?
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Review Exit Strategy section. Identify which exit option is "recommended" and its probability percentage.</span>
+                    </span>
+                </label>
+                <select id="exitStrategy">
+                    <option value="">Select recommended exit strategy...</option>
+                    <option value="strategic">Strategic Sale (60% probability)</option>
+                    <option value="secondary">Secondary Buyout (35% probability)</option>
+                    <option value="ipo">IPO (5% probability)</option>
+                </select>
+                <div class="input-hint">Must match recommended strategy from materials</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    12. Synthesize your final investment recommendation. Should Thoma Bravo invest in Summit Field Services? Address: valuation attractiveness, value creation feasibility, risk-adjusted returns, exit optionality, and overall risk/reward balance.
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Make an invest/pass recommendation with supporting rationale. Reference 8.5x entry (28% discount to comps), 125% EBITDA growth plan, 26% IRR base case, 19% bear case IRR, and diversified exit options. Acknowledge risks but explain why they're manageable.</span>
+                    </span>
+                </label>
+                <textarea id="finalRecommendation" placeholder="Provide your investment recommendation to the IC. Should we invest? Reference: entry valuation vs. comps, achievability of EBITDA growth plan, return profile (IRR/MOIC) across scenarios, key risks and mitigations, exit strategy confidence..."></textarea>
+                <div class="input-hint">Minimum 200 words. Must take clear invest/pass position with comprehensive rationale referencing financial metrics and risk assessment.</div>
+            </div>
+
+            <div class="example-box example-good">
+                <div class="example-header" onclick="toggleExample('example4')">
+                    <h4>Strong Response Example</h4>
+                    <span class="example-toggle">Click to View</span>
+                </div>
+                <div class="example-content" id="example4">
+                    <p>Strong recommend to invest. Summit Field Services represents a rare combination of attractive entry valuation, clear value creation roadmap, and strong downside protection that meets all IC criteria for mid-market deployment. On valuation, the 8.5x entry multiple is 28% below the 11.9x comparable median despite Summit having best-in-class 19.3% EBITDA margins (vs. 10.7% median). This discount is explained by small scale, not poor quality—we're buying operational excellence at a small-cap discount. The value creation plan is credible and diversified across 5 levers. The M&A component (+$13.3M EBITDA from 8 add-ons) benefits from Summit's proven integration capability (3 prior acquisitions) and highly fragmented target market (1,200 operators in Southeast at 5.0-6.5x multiples vs. our 8.5x entry). Pricing optimization (+$6.2M) exploits Summit's current 8-12% below-market pricing with minimal execution risk. Operational efficiency (+$4.4M) through technician utilization and procurement is standard PE playbook. The digital investment (+$2.1M) is modest but high-ROI. Even if we only achieve 70% of plan, we still hit $55M EBITDA vs. $63M target, supporting attractive returns. Return profile is compelling: base case 26.1% IRR / 3.2x MOIC significantly exceeds our 20% fund target and 22% mid-market median. Critically, the bear case (8.0x exit, only modest EBITDA growth) still delivers 19.2% IRR / 2.4x MOIC—this downside protection is rare and reflects both the discounted entry and high-quality earnings. Risk assessment is manageable. Integration risk is the primary concern but is mitigated by experienced management, standardized playbook, and phased acquisition approach (limit to 2 deals/year initially). Labor inflation risk is real (High probability) but addressed through CPI-linked pricing escalators in 90% of recurring contracts and internal training programs. Recession risk is partially hedged by 62% recurring revenue providing downside stability. Exit strategy is highly executable: 60% probability strategic sale to national platforms seeking Southeast presence (ABM, EMCOR, Comfort Systems are all logical buyers at 10-12x), 35% secondary PE, 5% IPO. Having multiple paths de-risks exit execution. The combination of 28% entry discount, 125% EBITDA growth potential, 26% IRR base case, 19% IRR bear case, and diversified exit optionality creates asymmetric risk/reward favoring investment. Recommend proceeding to final diligence and term sheet.</p>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="prevSection()">← Previous</button>
+                <button class="btn btn-primary" onclick="calculateScore()">Complete Investment Analysis →</button>
+            </div>
+        </div>
+
+        <!-- Section 5: Results -->
+        <div class="section" id="section5">
+            <div class="section-header">
+                <h2>Investment Analysis Complete</h2>
+                <p>Review your PE case performance</p>
+            </div>
+
+            <div class="score-card">
+                <h3>Your Total Score</h3>
+                <div class="score-number" id="totalScore">--</div>
+                <p id="scoreCategory">Calculating...</p>
+
+                <div class="score-breakdown">
+                    <div class="score-item">
+                        <span class="score-label">Section 1: Comparable Companies</span>
+                        <span class="score-value" id="score1">--/25</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-label">Section 2: Investment Thesis</span>
+                        <span class="score-value" id="score2">--/25</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-label">Section 3: LBO Model & Returns</span>
+                        <span class="score-value" id="score3">--/25</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-label">Section 4: Risk & Exit Strategy</span>
+                        <span class="score-value" id="score4">--/25</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="detailedFeedback"></div>
+
+            <div class="export-buttons">
+                <button class="btn btn-export" onclick="downloadReport()">Download Report</button>
+                <button class="btn btn-primary" onclick="location.reload()">Start New Analysis</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Supabase
+        let supabaseClient;
+        
+        function initSupabase() {
+            if (typeof window.supabase === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+                script.onload = () => {
+                    supabaseClient = window.supabase.createClient(
+                        'https://clhuplhaejneecbyhphh.supabase.co',
+                        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsaHVwbGhhZWpuZWVjYnlocGhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjY2OTI0NzMsImV4cCI6MjA0MjI2ODQ3M30.HCW1CV2BbA5DdCd_9Q_vEoMxA-NMkPtZG2qg3hJDZLo'
+                    );
+                    startApp();
+                };
+                document.head.appendChild(script);
+            } else {
+                supabaseClient = window.supabase.createClient(
+                    'https://clhuplhaejneecbyhphh.supabase.co',
+                    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsaHVwbGhhZWpuZWVjYnlocGhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjY2OTI0NzMsImV4cCI6MjA0MjI2ODQ3M30.HCW1CV2BbA5DdCd_9Q_vEoMxA-NMkPtZG2qg3hJDZLo'
+                );
+                startApp();
+            }
+        }
+
+        function startApp() {
+            getUserEmail();
+            updateProgress();
+        }
+
+        let userEmail = null;
+
+        function getUserEmail() {
+            try {
+                if (window.parent.$memberstackDom) {
+                    window.parent.$memberstackDom.getCurrentMember()
+                        .then(({ data: member }) => {
+                            if (member) {
+                                userEmail = member.auth.email;
+                                loadProgress();
+                            }
+                        });
+                } else if (localStorage.getItem('cloverpath_user_email')) {
+                    userEmail = localStorage.getItem('cloverpath_user_email');
+                    loadProgress();
+                } else {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    userEmail = urlParams.get('email');
+                    if (userEmail) {
+                        loadProgress();
+                    }
+                }
+            } catch (error) {
+                console.error('Error getting user email:', error);
+            }
+        }
+
+        async function loadProgress() {
+            if (!userEmail) return;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('simulation_progress')
+                    .select('*')
+                    .eq('user_email', userEmail)
+                    .eq('simulation_type', 'private_equity')
+                    .single();
+
+                if (data && data.progress_data) {
+                    const savedData = data.progress_data;
+                    Object.keys(savedData).forEach(key => {
+                        const element = document.getElementById(key);
+                        if (element) {
+                            if (element.type === 'checkbox') {
+                                element.checked = savedData[key];
+                            } else {
+                                element.value = savedData[key];
+                            }
+                        }
+                    });
+                    
+                    if (savedData.currentSection) {
+                        currentSection = savedData.currentSection;
+                        showSection(currentSection);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading progress:', error);
+            }
+        }
+
+        async function saveProgress() {
+            if (!userEmail) return;
+
+            const formData = {};
+            
+            document.querySelectorAll('input, textarea, select').forEach(element => {
+                if (element.id) {
+                    if (element.type === 'checkbox') {
+                        formData[element.id] = element.checked;
+                    } else {
+                        formData[element.id] = element.value;
+                    }
+                }
+            });
+
+            formData.currentSection = currentSection;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('simulation_progress')
+                    .upsert({
+                        user_email: userEmail,
+                        simulation_type: 'private_equity',
+                        progress_data: formData,
+                        last_updated: new Date().toISOString()
+                    }, {
+                        onConflict: 'user_email,simulation_type'
+                    });
+
+                if (error) throw error;
+            } catch (error) {
+                console.error('Error saving progress:', error);
+            }
+        }
+
+        document.addEventListener('input', () => {
+            clearTimeout(window.saveTimeout);
+            window.saveTimeout = setTimeout(saveProgress, 2000);
+        });
+
+        let currentSection = 0;
+        const totalSections = 6;
+
+        function updateProgress() {
+            const progress = (currentSection / (totalSections - 1)) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressPercent').textContent = Math.round(progress) + '% Complete';
+            
+            const labels = ['Introduction', 'Comparable Companies', 'Investment Thesis', 'LBO Model & Returns', 'Risk & Exit Strategy', 'Results'];
+            document.getElementById('progressLabel').textContent = labels[currentSection];
+        }
+
+        function showSection(index) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById('section' + index).classList.add('active');
+            currentSection = index;
+            updateProgress();
+            saveProgress();
+            
+            // Scroll parent window to top
+            try {
+                window.parent.postMessage({
+                    type: 'scroll-to-top'
+                }, '*');
+            } catch (e) {
+                console.error('Error scrolling parent:', e);
+            }
+            
+            setTimeout(function() {
+                const height = document.body.scrollHeight + 100;
+                window.parent.postMessage({
+                    type: 'iframe-height',
+                    height: height
+                }, '*');
+            }, 300);
+        }
+
+        function nextSection() {
+            if (currentSection < totalSections - 1) {
+                showSection(currentSection + 1);
+            }
+        }
+
+        function prevSection() {
+            if (currentSection > 0) {
+                showSection(currentSection - 1);
+            }
+        }
+
+        function toggleMaterials(id) {
+            const content = document.getElementById(id);
+            const box = content.closest('.materials-box');
+            content.classList.toggle('show');
+            
+            if (content.classList.contains('show')) {
+                box.querySelector('.materials-toggle').textContent = 'Click to Hide';
+            } else {
+                box.querySelector('.materials-toggle').textContent = 'Click to View';
+            }
+            
+            // Send height update after content expands/collapses
+            setTimeout(function() {
+                const height = document.body.scrollHeight + 100;
+                window.parent.postMessage({
+                    type: 'iframe-height',
+                    height: height
+                }, '*');
+            }, 100);
+        }
+
+        function toggleExample(id) {
+            const content = document.getElementById(id);
+            const header = content.previousElementSibling;
+            const toggle = header.querySelector('.example-toggle');
+            content.classList.toggle('show');
+            
+            if (content.classList.contains('show')) {
+                toggle.textContent = 'Click to Hide';
+            } else {
+                toggle.textContent = 'Click to View';
+            }
+            
+            // Send height update after content expands/collapses
+            setTimeout(function() {
+                const height = document.body.scrollHeight + 100;
+                window.parent.postMessage({
+                    type: 'iframe-height',
+                    height: height
+                }, '*');
+            }, 100);
+        }
+
+        function parseNumber(str) {
+            if (!str) return 0;
+            const cleaned = str.replace(/[$,MKmkxX%]/g, '');
+            const num = parseFloat(cleaned);
+            if (str.toLowerCase().includes('m')) return num;
+            if (str.toLowerCase().includes('k')) return num / 1000;
+            return num;
+        }
+
+        function calculateScore() {
+            let section1Score = 0;
+            let section2Score = 0;
+            let section3Score = 0;
+            let section4Score = 0;
+            let feedback = '';
+
+            // Section 1: Comparable Companies (25 points)
+            const medianMultiple = document.getElementById('medianMultiple').value;
+            const compMargin = document.getElementById('compMargin').value;
+            const marginAnalysis = document.getElementById('marginAnalysis').value;
+            const discountCalc = document.getElementById('discountCalc').value;
+            const discountRationale = document.getElementById('discountRationale').value;
+
+            feedback += '<div class="feedback-box success"><h3>Section 1: Comparable Company Analysis</h3>';
+
+            // Q1: Median multiple (6 points)
+            const multipleNum = parseNumber(medianMultiple);
+            if (multipleNum >= 11.8 && multipleNum <= 12.0) {
+                section1Score += 6;
+                feedback += '<p><strong>✓ Median EV/EBITDA (6/6):</strong> Correct. Median comparable multiple is 11.9x.</p>';
+            } else {
+                section1Score += 0;
+                feedback += '<p><strong>✗ Median EV/EBITDA (0/6):</strong> Incorrect. Review comparable table—median is 11.9x.</p>';
+            }
+
+            // Q2: Margin comparison (9 points: 3 for comp margin, 6 for analysis)
+            const marginNum = parseNumber(compMargin);
+            if (marginNum >= 10.5 && marginNum <= 10.9) {
+                section1Score += 3;
+                feedback += '<p><strong>✓ Comparable Median Margin (3/3):</strong> Correct—10.7%.</p>';
+            } else {
+                section1Score += 0;
+                feedback += '<p><strong>✗ Comparable Median Margin (0/3):</strong> Incorrect. Comparable median EBITDA margin is 10.7%.</p>';
+            }
+
+            const marginWordCount = marginAnalysis.trim().split(/\s+/).length;
+            const has19point3 = marginAnalysis.includes('19.3');
+            const has10point7 = marginAnalysis.includes('10.7');
+            const hasQuality = marginAnalysis.toLowerCase().includes('quality') || marginAnalysis.toLowerCase().includes('operational');
+            const hasValue = marginAnalysis.toLowerCase().includes('value creation') || marginAnalysis.toLowerCase().includes('margin');
+
+            let marginScore = 0;
+            if (marginWordCount >= 80) marginScore += 2;
+            if (has19point3 && has10point7) marginScore += 2;
+            if (hasQuality) marginScore += 1;
+            if (hasValue) marginScore += 1;
+
+            section1Score += marginScore;
+            if (marginScore >= 5) {
+                feedback += '<p><strong>✓ Margin Analysis (' + marginScore + '/6):</strong> Clear explanation of margin premium and value creation implications.</p>';
+            } else {
+                feedback += '<p><strong>⚠ Margin Analysis (' + marginScore + '/6):</strong> Needs more depth. Explain what 19.3% vs. 10.7% means for earnings quality and LBO value creation potential.</p>';
+            }
+
+            // Q3: Discount calculation (10 points: 4 for calc, 6 for rationale)
+            const discountNum = parseFloat(discountCalc.replace(/[^0-9.-]/g, ''));
+            if (discountNum >= -29 && discountNum <= -28) {
+                section1Score += 4;
+                feedback += '<p><strong>✓ Discount Calculation (4/4):</strong> Correct. -28.6% discount [(8.5 - 11.9) / 11.9].</p>';
+            } else if (discountNum >= -30 && discountNum <= -27) {
+                section1Score += 2;
+                feedback += '<p><strong>⚠ Discount Calculation (2/4):</strong> Close. Precise calculation: (8.5 - 11.9) / 11.9 = -28.6%.</p>';
+            } else {
+                section1Score += 0;
+                feedback += '<p><strong>✗ Discount Calculation (0/4):</strong> Incorrect. Calculate: (8.5x - 11.9x) / 11.9x.</p>';
+            }
+
+            const ratioWordCount = discountRationale.trim().split(/\s+/).length;
+            const hasScale = discountRationale.toLowerCase().includes('scale') || discountRationale.includes('145') || discountRationale.includes('$145M');
+            const hasLiquidity = discountRationale.toLowerCase().includes('liquidity') || discountRationale.toLowerCase().includes('illiquidity');
+            const hasOpportunity = discountRationale.toLowerCase().includes('attractive') || discountRationale.toLowerCase().includes('opportunity');
+            const hasMargins = discountRationale.includes('19.3') || discountRationale.includes('margin');
+
+            let ratioScore = 0;
+            if (ratioWordCount >= 100) ratioScore += 2;
+            if (hasScale) ratioScore += 1.5;
+            if (hasLiquidity) ratioScore += 1;
+            if (hasOpportunity) ratioScore += 1;
+            if (hasMargins) ratioScore += 0.5;
+
+            section1Score += Math.min(6, ratioScore);
+            if (ratioScore >= 5) {
+                feedback += '<p><strong>✓ Discount Rationale (' + Math.min(6, ratioScore).toFixed(1) + '/6):</strong> Strong explanation of small-cap discount and investment opportunity.</p>';
+            } else {
+                feedback += '<p><strong>⚠ Discount Rationale (' + Math.min(6, ratioScore).toFixed(1) + '/6):</strong> Needs more detail. Explain scale disadvantage ($145M vs. $4B median), liquidity discount, but why superior margins make this attractive entry.</p>';
+            }
+
+            feedback += '</div>';
+
+            // Section 2: Investment Thesis (25 points)
+            const numAcquisitions = document.getElementById('numAcquisitions').value;
+            const addonEBITDA = document.getElementById('addonEBITDA').value;
+            const year5EBITDA = document.getElementById('year5EBITDA').value;
+            const ebitdaGrowthPct = document.getElementById('ebitdaGrowthPct').value;
+            const investmentThesis = document.getElementById('investmentThesis').value;
+
+            feedback += '<div class="feedback-box success"><h3>Section 2: Investment Thesis & Value Creation</h3>';
+
+            // Q4: Add-on acquisitions (6 points: 3 + 3)
+            const numAcq = parseFloat(numAcquisitions);
+            if (numAcq === 8) {
+                section2Score += 3;
+                feedback += '<p><strong>✓ Number of Add-Ons (3/3):</strong> Correct—8 acquisitions targeted.</p>';
+            } else {
+                section2Score += 0;
+                feedback += '<p><strong>✗ Number of Add-Ons (0/3):</strong> Incorrect. Materials state 8 add-on acquisitions over 5 years.</p>';
+            }
+
+            const addonNum = parseNumber(addonEBITDA);
+            if (addonNum >= 13.2 && addonNum <= 13.4) {
+                section2Score += 3;
+                feedback += '<p><strong>✓ Add-On EBITDA Impact (3/3):</strong> Correct—$13.3M total including synergies.</p>';
+            } else {
+                section2Score += 0;
+                feedback += '<p><strong>✗ Add-On EBITDA Impact (0/3):</strong> Incorrect. Lever 1 shows $12.0M baseline + $1.3M synergies = $13.3M.</p>';
+            }
+
+            // Q5: Year 5 EBITDA and growth (6 points: 3 + 3)
+            const y5EBITDA = parseNumber(year5EBITDA);
+            if (y5EBITDA >= 62.5 && y5EBITDA <= 63.5) {
+                section2Score += 3;
+                feedback += '<p><strong>✓ Year 5 EBITDA (3/3):</strong> Correct—$63.0M.</p>';
+            } else {
+                section2Score += 0;
+                feedback += '<p><strong>✗ Year 5 EBITDA (0/3):</strong> Incorrect. EBITDA Bridge shows Year 5 = $63.0M.</p>';
+            }
+
+            const growthNum = parseFloat(ebitdaGrowthPct.replace(/[^0-9]/g, ''));
+            if (growthNum >= 124 && growthNum <= 126) {
+                section2Score += 3;
+                feedback += '<p><strong>✓ EBITDA Growth % (3/3):</strong> Correct—125% growth [(63.0 - 28.0) / 28.0].</p>';
+            } else {
+                section2Score += 0;
+                feedback += '<p><strong>✗ EBITDA Growth % (0/3):</strong> Incorrect. Calculate: ($63M - $28M) / $28M = 125%.</p>';
+            }
+
+            // Q6: Investment thesis (10 points)
+            const thesisWordCount = investmentThesis.trim().split(/\s+/).length;
+            const has92000 = investmentThesis.includes('92,000') || investmentThesis.includes('92000');
+            const hasFragmentation = investmentThesis.toLowerCase().includes('fragment');
+            const hasMarginAdvantage = investmentThesis.includes('19.3');
+            const hasLevers = investmentThesis.toLowerCase().includes('lever') || investmentThesis.includes('13.3') || investmentThesis.includes('6.2');
+            const hasRecurring = investmentThesis.includes('62%') || investmentThesis.toLowerCase().includes('recurring');
+
+            let thesisScore = 0;
+            if (thesisWordCount >= 200) thesisScore += 3;
+            else if (thesisWordCount >= 150) thesisScore += 2;
+            if (has92000 || hasFragmentation) thesisScore += 2;
+            if (hasMarginAdvantage) thesisScore += 2;
+            if (hasLevers) thesisScore += 2;
+            if (hasRecurring) thesisScore += 1;
+
+            section2Score += Math.min(10, thesisScore);
+            if (thesisScore >= 8) {
+                feedback += '<p><strong>✓ Investment Thesis (' + Math.min(10, thesisScore) + '/10):</strong> Comprehensive thesis covering market opportunity, platform advantages, and value creation levers.</p>';
+            } else {
+                feedback += '<p><strong>⚠ Investment Thesis (' + Math.min(10, thesisScore) + '/10):</strong> Good foundation but missing key elements. Include: market fragmentation (92,000 operators), Summit\'s 19.3% margin advantage, 5 value levers with dollar impacts.</p>';
+            }
+
+            feedback += '</div>';
+
+            // Section 3: LBO Model & Returns (25 points)
+            const equityCheck = document.getElementById('equityCheck').value;
+            const equityPercent = document.getElementById('equityPercent').value;
+            const baseIRR = document.getElementById('baseIRR').value;
+            const baseMOIC = document.getElementById('baseMOIC').value;
+            const returnsAnalysis = document.getElementById('returnsAnalysis').value;
+
+            feedback += '<div class="feedback-box success"><h3>Section 3: LBO Model & Returns</h3>';
+
+            // Q7: Equity check (6 points: 3 + 3)
+            const equityNum = parseNumber(equityCheck);
+            if (equityNum >= 105.5 && equityNum <= 106.0) {
+                section3Score += 3;
+                feedback += '<p><strong>✓ Equity Check (3/3):</strong> Correct—$105.8M.</p>';
+            } else {
+                section3Score += 0;
+                feedback += '<p><strong>✗ Equity Check (0/3):</strong> Incorrect. Sources & Uses shows $105.8M equity contribution.</p>';
+            }
+
+            const eqPct = parseFloat(equityPercent.replace(/[^0-9]/g, ''));
+            if (eqPct === 40) {
+                section3Score += 3;
+                feedback += '<p><strong>✓ Equity % (3/3):</strong> Correct—40.0% of total sources.</p>';
+            } else {
+                section3Score += 0;
+                feedback += '<p><strong>✗ Equity % (0/3):</strong> Incorrect. Equity = 40.0% of $264.6M total sources.</p>';
+            }
+
+            // Q8: Base case returns (6 points: 3 + 3)
+            const irrNum = parseFloat(baseIRR.replace(/[^0-9.]/g, ''));
+            if (irrNum >= 26.0 && irrNum <= 26.2) {
+                section3Score += 3;
+                feedback += '<p><strong>✓ Base Case IRR (3/3):</strong> Correct—26.1%.</p>';
+            } else {
+                section3Score += 0;
+                feedback += '<p><strong>✗ Base Case IRR (0/3):</strong> Incorrect. Exit Scenarios table shows 26.1% IRR.</p>';
+            }
+
+            const moicNum = parseFloat(baseMOIC.replace(/[^0-9.]/g, ''));
+            if (moicNum >= 3.1 && moicNum <= 3.3) {
+                section3Score += 3;
+                feedback += '<p><strong>✓ Base Case MOIC (3/3):</strong> Correct—3.2x.</p>';
+            } else {
+                section3Score += 0;
+                feedback += '<p><strong>✗ Base Case MOIC (0/3):</strong> Incorrect. Base Case shows 3.2x MOIC.</p>';
+            }
+
+            // Q9: Returns analysis (10 points)
+            const returnsWordCount = returnsAnalysis.trim().split(/\s+/).length;
+            const has9point5x = returnsAnalysis.includes('9.5');
+            const has265M = returnsAnalysis.includes('265');
+            const has23point8 = returnsAnalysis.includes('23.8');
+            const hasCalculation = returnsAnalysis.includes('63') && returnsAnalysis.includes('55');
+            const hasTarget = returnsAnalysis.includes('20%') || returnsAnalysis.toLowerCase().includes('target');
+
+            let returnsScore = 0;
+            if (returnsWordCount >= 150) returnsScore += 3;
+            else if (returnsWordCount >= 120) returnsScore += 2;
+            if (has9point5x) returnsScore += 1.5;
+            if (has265M || has23point8) returnsScore += 2;
+            if (hasCalculation) returnsScore += 2;
+            if (hasTarget) returnsScore += 1.5;
+
+            section3Score += Math.min(10, returnsScore);
+            if (returnsScore >= 8) {
+                feedback += '<p><strong>✓ Returns Analysis (' + Math.min(10, returnsScore) + '/10):</strong> Thorough explanation of multiple expansion logic and return attractiveness.</p>';
+            } else {
+                feedback += '<p><strong>⚠ Returns Analysis (' + Math.min(10, returnsScore) + '/10):</strong> Good analysis but needs more detail. Explain why 9.5x exit justified ($265M scale, 23.8% margins), show equity value calculation ($63M × 9.5x - $55M debt), compare to PE return targets.</p>';
+            }
+
+            feedback += '</div>';
+
+            // Section 4: Risk & Exit (25 points)
+            const highProbRisk = document.getElementById('highProbRisk').value;
+            const riskMitigation = document.getElementById('riskMitigation').value;
+            const exitStrategy = document.getElementById('exitStrategy').value;
+            const finalRecommendation = document.getElementById('finalRecommendation').value;
+
+            feedback += '<div class="feedback-box success"><h3>Section 4: Risk Assessment & Exit Strategy</h3>';
+
+            // Q10: High probability risk (8 points: 3 for risk, 5 for mitigation)
+            if (highProbRisk === 'labor') {
+                section4Score += 3;
+                feedback += '<p><strong>✓ High Probability Risk (3/3):</strong> Correct. Labor inflation is rated "High Probability".</p>';
+            } else {
+                section4Score += 0;
+                feedback += '<p><strong>✗ High Probability Risk (0/3):</strong> Incorrect. Review risk section—Labor Inflation is the "High Probability" risk.</p>';
+            }
+
+            const mitigationWordCount = riskMitigation.trim().split(/\s+/).length;
+            const hasPricing = riskMitigation.toLowerCase().includes('price') || riskMitigation.toLowerCase().includes('cpi');
+            const hasTraining = riskMitigation.toLowerCase().includes('training');
+
+            let mitigationScore = 0;
+            if (mitigationWordCount >= 60) mitigationScore += 2;
+            if (hasPricing) mitigationScore += 2;
+            if (hasTraining) mitigationScore += 1;
+
+            section4Score += Math.min(5, mitigationScore);
+            if (mitigationScore >= 4) {
+                feedback += '<p><strong>✓ Risk Mitigation (' + Math.min(5, mitigationScore) + '/5):</strong> Clear mitigation strategy.</p>';
+            } else {
+                feedback += '<p><strong>⚠ Risk Mitigation (' + Math.min(5, mitigationScore) + '/5):</strong> Needs more detail. Primary mitigations: CPI-linked pricing escalators in 90% of contracts, internal training programs.</p>';
+            }
+
+            // Q11: Exit strategy (5 points)
+            if (exitStrategy === 'strategic') {
+                section4Score += 5;
+                feedback += '<p><strong>✓ Recommended Exit (5/5):</strong> Correct. Strategic sale (60% probability) is the primary recommended exit.</p>';
+            } else {
+                section4Score += 0;
+                feedback += '<p><strong>✗ Recommended Exit (0/5):</strong> Incorrect. Materials recommend Strategic Sale as primary exit strategy (60% probability).</p>';
+            }
+
+            // Q12: Final recommendation (7 points)
+            const recWordCount = finalRecommendation.trim().split(/\s+/).length;
+            const hasInvestPass = finalRecommendation.toLowerCase().includes('invest') || finalRecommendation.toLowerCase().includes('recommend');
+            const hasValuation = finalRecommendation.includes('8.5') || finalRecommendation.includes('28%');
+            const hasReturns = finalRecommendation.includes('26') || finalRecommendation.includes('3.2');
+            const hasRisks = finalRecommendation.toLowerCase().includes('risk');
+            const hasExit = finalRecommendation.toLowerCase().includes('exit');
+
+            let recScore = 0;
+            if (recWordCount >= 200) recScore += 2;
+            else if (recWordCount >= 150) recScore += 1;
+            if (hasInvestPass) recScore += 1;
+            if (hasValuation) recScore += 1.5;
+            if (hasReturns) recScore += 1.5;
+            if (hasRisks) recScore += 0.5;
+            if (hasExit) recScore += 0.5;
+
+            section4Score += Math.min(7, recScore);
+            if (recScore >= 6) {
+                feedback += '<p><strong>✓ Final Recommendation (' + Math.min(7, recScore) + '/7):</strong> Comprehensive investment recommendation with supporting rationale.</p>';
+            } else {
+                feedback += '<p><strong>⚠ Final Recommendation (' + Math.min(7, recScore) + '/7):</strong> Good start but needs more detail. Include: invest/pass decision, valuation assessment (8.5x vs. 11.9x median), return profile (26% IRR base, 19% bear), key risks and mitigations, exit confidence.</p>';
+            }
+
+            feedback += '</div>';
+
+            // Calculate total and display
+            const totalScore = section1Score + section2Score + section3Score + section4Score;
+
+            document.getElementById('score1').textContent = section1Score.toFixed(1) + '/25';
+            document.getElementById('score2').textContent = section2Score.toFixed(1) + '/25';
+            document.getElementById('score3').textContent = section3Score.toFixed(1) + '/25';
+            document.getElementById('score4').textContent = section4Score.toFixed(1) + '/25';
+            document.getElementById('totalScore').textContent = totalScore.toFixed(0);
+
+            let category = '';
+            if (totalScore >= 90) {
+                category = 'Outstanding - PE Investment Professional Level';
+            } else if (totalScore >= 80) {
+                category = 'Strong - Solid LBO Analysis Skills';
+            } else if (totalScore >= 70) {
+                category = 'Good - Competent PE Framework Understanding';
+            } else if (totalScore >= 60) {
+                category = 'Adequate - Basic LBO Modeling Grasp';
+            } else {
+                category = 'Needs Improvement - Review Materials';
+            }
+
+            document.getElementById('scoreCategory').textContent = category;
+            document.getElementById('detailedFeedback').innerHTML = feedback;
+
+            showSection(5);
+        }
+
+        function downloadReport() {
+            const reportContent = `
+SUMMIT FIELD SERVICES LBO ANALYSIS - INVESTMENT REPORT
+Generated: ${new Date().toLocaleDateString()}
+
+TOTAL SCORE: ${document.getElementById('totalScore').textContent}/100
+
+SCORE BREAKDOWN:
+- Section 1: Comparable Company Analysis: ${document.getElementById('score1').textContent}
+- Section 2: Investment Thesis & Value Creation: ${document.getElementById('score2').textContent}
+- Section 3: LBO Model & Returns: ${document.getElementById('score3').textContent}
+- Section 4: Risk Assessment & Exit Strategy: ${document.getElementById('score4').textContent}
+
+PERFORMANCE CATEGORY: ${document.getElementById('scoreCategory').textContent}
+
+YOUR RESPONSES:
+
+Section 1: Comparable Company Analysis
+1. Median EV/EBITDA: ${document.getElementById('medianMultiple').value}
+2. Comparable Median Margin: ${document.getElementById('compMargin').value}
+   Margin Analysis: ${document.getElementById('marginAnalysis').value}
+3. Discount Calculation: ${document.getElementById('discountCalc').value}
+   Discount Rationale: ${document.getElementById('discountRationale').value}
+
+Section 2: Investment Thesis & Value Creation
+4. Number of Add-Ons: ${document.getElementById('numAcquisitions').value}
+   Add-On EBITDA Impact: ${document.getElementById('addonEBITDA').value}
+5. Year 5 EBITDA: ${document.getElementById('year5EBITDA').value}
+   EBITDA Growth %: ${document.getElementById('ebitdaGrowthPct').value}
+6. Investment Thesis: ${document.getElementById('investmentThesis').value}
+
+Section 3: LBO Model & Returns
+7. Equity Check: ${document.getElementById('equityCheck').value}
+   Equity %: ${document.getElementById('equityPercent').value}
+8. Base Case IRR: ${document.getElementById('baseIRR').value}
+   Base Case MOIC: ${document.getElementById('baseMOIC').value}
+9. Returns Analysis: ${document.getElementById('returnsAnalysis').value}
+
+Section 4: Risk Assessment & Exit Strategy
+10. High Probability Risk: ${document.getElementById('highProbRisk').value}
+    Risk Mitigation: ${document.getElementById('riskMitigation').value}
+11. Recommended Exit Strategy: ${document.getElementById('exitStrategy').value}
+12. Final Investment Recommendation: ${document.getElementById('finalRecommendation').value}
+
+DETAILED FEEDBACK:
+${document.getElementById('detailedFeedback').innerText}
+            `;
+
+            const blob = new Blob([reportContent], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Summit_Field_Services_LBO_Analysis.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        function sendHeightToParent() {
+            try {
+                const height = document.body.scrollHeight + 100;
+                window.parent.postMessage({
+                    type: 'iframe-height',
+                    height: height
+                }, '*');
+            } catch (e) {
+                console.error('Error sending height:', e);
+            }
+        }
+        
+        window.addEventListener('load', function() {
+            setTimeout(sendHeightToParent, 500);
+            setTimeout(sendHeightToParent, 1500);
+        });
+
+        initSupabase();
+    </script>
+    
+    <div id="content-end-marker" style="height: 1px; margin: 0; padding: 0;"></div>
+</body>
+</html>
