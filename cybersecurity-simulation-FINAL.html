@@ -1,0 +1,2150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybersecurity Simulation - TechNova Incident Response - Cloverpath</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #2d8659;
+            --light-green: #7cb342;
+            --dark-green: #1b5e3a;
+            --light-green-dark: #5a9c2e;
+            --bg-light: #f5f9f7;
+            --text-dark: #1a1a1a;
+            --text-gray: #666;
+            --border-color: #e0e0e0;
+            --white: #ffffff;
+            --yellow: #ffc107;
+            --red: #d32f2f;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            color: var(--white);
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .company-banner {
+            background: linear-gradient(135deg, #d32f2f 0%, #f44336 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .company-banner h2 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .company-banner p {
+            opacity: 0.9;
+        }
+
+        .quick-facts {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .quick-facts h3 {
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .facts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .fact-item {
+            padding: 15px;
+            border-radius: 8px;
+            background: var(--bg-light);
+        }
+
+        .fact-item.primary {
+            background: linear-gradient(135deg, rgba(45, 134, 89, 0.1) 0%, rgba(45, 134, 89, 0.05) 100%);
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .fact-item.warning {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);
+            border-left: 4px solid var(--yellow);
+        }
+
+        .fact-item.danger {
+            background: linear-gradient(135deg, rgba(211, 47, 47, 0.1) 0%, rgba(211, 47, 47, 0.05) 100%);
+            border-left: 4px solid var(--red);
+        }
+
+        .fact-item.info {
+            background: linear-gradient(135deg, rgba(124, 179, 66, 0.1) 0%, rgba(124, 179, 66, 0.05) 100%);
+            border-left: 4px solid var(--light-green);
+        }
+
+        .fact-label {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            margin-bottom: 5px;
+        }
+
+        .fact-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        .alert-banner {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border-left: 4px solid var(--red);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .alert-banner strong {
+            color: var(--red);
+        }
+
+        .progress-container {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-green) 0%, var(--light-green) 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        .section {
+            display: none;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 30px;
+        }
+
+        .section-header h2 {
+            color: var(--primary-green);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .section-header p {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+        }
+
+        .guide-box {
+            background: linear-gradient(135deg, rgba(45, 134, 89, 0.05) 0%, rgba(124, 179, 66, 0.05) 100%);
+            border: 2px solid var(--light-green);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .guide-box h3 {
+            color: var(--primary-green);
+            margin-bottom: 15px;
+        }
+
+        .guide-checklist {
+            display: grid;
+            gap: 10px;
+        }
+
+        .guide-item {
+            padding: 10px 15px;
+            background: white;
+            border-radius: 6px;
+            border-left: 3px solid var(--light-green);
+            font-weight: 500;
+        }
+
+        .materials-box {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .materials-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .materials-header h3 {
+            color: var(--text-dark);
+            font-size: 1.2rem;
+        }
+
+        .materials-toggle {
+            background: var(--primary-green);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+        }
+
+        .materials-content {
+            margin-top: 15px;
+            display: none;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .materials-content.show {
+            display: block;
+        }
+
+        .materials-content h4 {
+            color: var(--primary-green);
+            margin: 20px 0 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .materials-content p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .materials-content strong {
+            color: var(--dark-green);
+        }
+
+        .materials-content ul {
+            margin-left: 20px;
+        }
+
+        .materials-content li {
+            margin-bottom: 5px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            background: white;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .data-table th {
+            background: #5a9c2e;
+            color: white;
+            font-weight: 600;
+        }
+
+        .data-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .highlight-box {
+            background: #fef3c7;
+            border-left: 4px solid var(--yellow);
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .critical-box {
+            background: #ffebee;
+            border-left: 4px solid var(--red);
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 5px;
+            cursor: help;
+        }
+
+        .tooltip-icon {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            background: var(--primary-green);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 18px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 250px;
+            background-color: var(--text-dark);
+            color: white;
+            text-align: left;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -125px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            font-weight: normal;
+        }
+
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--text-dark) transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--primary-green);
+        }
+
+        .input-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .input-hint {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .example-box {
+            background: var(--bg-light);
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .example-header {
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+
+        .example-header:hover {
+            background: rgba(45, 134, 89, 0.05);
+        }
+
+        .example-header h4 {
+            color: var(--primary-green);
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .example-toggle {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+        }
+
+        .example-content {
+            padding: 0 15px 15px 15px;
+            display: none;
+        }
+
+        .example-content.show {
+            display: block;
+        }
+
+        .example-good {
+            border-left: 4px solid var(--light-green);
+        }
+
+        .example-bad {
+            border-left: 4px solid #f44336;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-green);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(45, 134, 89, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--primary-green);
+            border: 2px solid var(--primary-green);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-green);
+            color: var(--white);
+        }
+
+        .score-card {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--light-green) 100%);
+            color: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .score-number {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .score-breakdown {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-dark);
+        }
+
+        .score-item:last-child {
+            border-bottom: none;
+        }
+
+        .score-label {
+            font-weight: 600;
+        }
+
+        .score-value {
+            color: var(--primary-green);
+            font-weight: bold;
+        }
+
+        .feedback-box {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .feedback-box.warning {
+            border-left-color: #ff9800;
+            background: #fff3e0;
+        }
+
+        .feedback-box.error {
+            border-left-color: #f44336;
+            background: #ffebee;
+        }
+
+        .feedback-box.success {
+            border-left-color: var(--light-green);
+            background: #f1f8e9;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .btn-export {
+            background: var(--light-green);
+            color: var(--white);
+        }
+
+        .btn-export:hover {
+            background: var(--light-green-dark);
+        }
+
+        .framework-box {
+            background: white;
+            border: 2px solid var(--light-green);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .framework-box h4 {
+            color: var(--light-green-dark);
+            margin-bottom: 10px;
+        }
+
+        .timeline-box {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .timeline-box strong {
+            color: var(--primary-green);
+        }
+
+        .severity-high {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+
+        .severity-medium {
+            color: #f57c00;
+            font-weight: bold;
+        }
+
+        .severity-low {
+            color: #388e3c;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            body { font-size: 14px; }
+            .container { padding: 10px; }
+            .header { padding: 20px 15px; }
+            .header h1 { font-size: 1.5rem; }
+            .company-banner { padding: 15px; }
+            .company-banner h2 { font-size: 1.3rem; line-height: 1.3; word-break: break-word; }
+            .progress-container, .section, .materials-box, .guide-box, .framework-box { padding: 15px; }
+            .facts-grid, .guide-checklist { grid-template-columns: 1fr; }
+            .materials-header { flex-direction: column; gap: 12px; }
+            .materials-header h3 { font-size: 1.1rem; width: 100%; word-break: break-word; }
+            .materials-toggle { padding: 10px 16px; align-self: flex-start; }
+            .data-table { font-size: 0.7rem; display: block; overflow-x: auto; }
+            .input-group input, .input-group textarea { padding: 10px; font-size: 16px; }
+            .button-group { flex-direction: column; }
+            .btn { width: 100%; padding: 14px 20px; }
+            .tooltip-icon { display: none; }
+        }
+        @media (max-width: 480px) {
+            .header h1 { font-size: 1.3rem; }
+            .company-banner h2 { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Cybersecurity Incident Response Simulation</h1>
+            <p>Analyze security breach, assess risks, and execute containment plan</p>
+        </div>
+
+        <div class="progress-container">
+            <h3>Your Progress</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text">
+                <span id="progressLabel">Introduction</span>
+                <span id="progressPercent">0% Complete</span>
+            </div>
+        </div>
+
+        <!-- Section 0: Introduction & Materials -->
+        <div class="section active" id="section0">
+            <div class="company-banner">
+                <h2>⚠ ACTIVE SECURITY INCIDENT ⚠</h2>
+                <p>TechNova - Multiple Attack Vectors Detected</p>
+            </div>
+
+            <div class="quick-facts">
+                <h3>Incident Overview - First 4 Hours</h3>
+                <div class="facts-grid">
+                    <div class="fact-item danger">
+                        <div class="fact-label">Compromised Email Accounts</div>
+                        <div class="fact-value">12 accounts</div>
+                    </div>
+                    <div class="fact-item danger">
+                        <div class="fact-label">Failed Login Attempts (HR DB)</div>
+                        <div class="fact-value">34 attempts</div>
+                    </div>
+                    <div class="fact-item warning">
+                        <div class="fact-label">Suspicious Downloads</div>
+                        <div class="fact-value">3 executables</div>
+                    </div>
+                    <div class="fact-item info">
+                        <div class="fact-label">Time Since First Alert</div>
+                        <div class="fact-value">3h 36min</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert-banner">
+                <strong>SITUATION:</strong> You are a Junior Cybersecurity Analyst at TechNova, a SaaS platform with 500 employees and 285,000 customer records. At 07:42 this morning, the SOC received the first alert of unusual email activity. It is now 11:18, and multiple attack vectors have been identified. The CISO has assigned you to lead the initial triage and response. You have 4 hours to contain the incident before it escalates. Your analysis will determine whether TechNova suffers a catastrophic data breach or successfully defends its systems.
+            </div>
+
+            <div class="section-header">
+                <h2>Incident Materials & System Architecture</h2>
+                <p>Review all forensic data before beginning your response</p>
+            </div>
+
+            <div class="feedback-box success">
+                <h3 style="margin-bottom: 10px;">Your Role & Mission</h3>
+                <p>You are a <strong>Junior Cybersecurity Analyst</strong> in TechNova's Security Operations Center (SOC). The Senior Analyst is on vacation, and the CISO needs an immediate threat assessment and containment plan. Your responsibilities: (1) Classify the threat using MITRE ATT&CK framework, (2) Assess risk to critical assets using Impact × Likelihood scoring, (3) Build NIST-compliant incident response plan, (4) Define forensic investigation approach.</p>
+                <p style="margin-top: 10px;"><strong>Success Criteria:</strong> Contain the threat before data exfiltration occurs, preserve forensic evidence, minimize business disruption, and prevent reinfection. Speed matters—attackers are active in the environment right now.</p>
+            </div>
+
+            <div class="guide-box">
+                <h3>Incident Response Framework (NIST):</h3>
+                <div class="guide-checklist">
+                    <div class="guide-item">Preparation: Ensure tools, team, and procedures are ready (pre-incident)</div>
+                    <div class="guide-item">Detection & Analysis: Identify scope, classify threat, assess impact</div>
+                    <div class="guide-item">Containment: Stop spread, preserve evidence, isolate affected systems</div>
+                    <div class="guide-item">Eradication: Remove threat actor access, malware, and backdoors</div>
+                    <div class="guide-item">Recovery: Restore systems, monitor for reinfection, validate integrity</div>
+                    <div class="guide-item">Post-Incident: Lessons learned, improve defenses, update procedures</div>
+                </div>
+            </div>
+
+            <div class="materials-box" id="mat-incident">
+                <div class="materials-header" onclick="toggleMaterials('incidentData')">
+                    <h3>TechNova Incident Response Materials</h3>
+                    <span class="materials-toggle">Click to View</span>
+                </div>
+                <div class="materials-content" id="incidentData">
+                    <h4>Company Background - TechNova</h4>
+                    <p><strong>TechNova</strong> is a B2B SaaS platform providing project management and collaboration tools to mid-market companies. Founded in 2016, TechNova has grown to 500 employees across engineering (220), sales/marketing (150), customer success (80), and corporate functions (50). The company generates $45M ARR with 2,400 enterprise customers.</p>
+
+                    <p><strong>Technology Stack:</strong></p>
+                    <ul>
+                        <li><strong>Cloud Infrastructure:</strong> AWS (us-east-1 primary region), 145 EC2 instances, S3 for object storage, RDS for databases</li>
+                        <li><strong>Critical Systems:</strong> Customer database (PostgreSQL, 285K user records), HR system (BambooHR, 500 employee records with SSN/banking), source code repository (GitHub Enterprise), customer file storage (S3 + CloudFront), public website/marketing site</li>
+                        <li><strong>Security Posture:</strong> Basic: firewall rules, antivirus on endpoints, email filtering (Proofpoint), VPN for remote access (no MFA on VPN), password policy (8 chars min, no MFA on most accounts)</li>
+                        <li><strong>Logging & Monitoring:</strong> Splunk SIEM (7-day retention), AWS CloudTrail enabled, endpoint detection via CrowdStrike Falcon on 60% of devices</li>
+                    </ul>
+
+                    <h4>Incident Timeline - First 4 Hours</h4>
+
+                    <div class="timeline-box">
+                        <strong>07:42 AM</strong> - Proofpoint email security flags 12 outbound emails from employee accounts containing suspicious links. Automated alert sent to SOC.<br><br>
+                        <strong>08:15 AM</strong> - SOC analyst reviews alert, confirms 12 employee email accounts (sales and marketing teams) sent identical phishing emails to external contacts. Emails purport to be from TechNova leadership with "Urgent: New Compensation Policy" subject line.<br><br>
+                        <strong>08:47 AM</strong> - AWS CloudTrail shows 34 failed SSH login attempts on HR database server (10.0.2.15) from 3 external IP addresses: 185.220.101.47 (Russia), 116.62.18.234 (China), 179.43.155.92 (Brazil). Attempts use valid employee usernames with incorrect passwords (credential stuffing attack).<br><br>
+                        <strong>09:23 AM</strong> - CrowdStrike Falcon EDR alerts on 3 suspicious executable downloads to corporate file server (S3 bucket: technova-internal-docs). Files named: "Q4_Financial_Report.exe", "HR_Handbook_2024.exe", "Client_Contracts.exe".<br><br>
+                        <strong>10:05 AM</strong> - Network monitoring detects unusual outbound traffic from 2 employee workstations (10.0.5.42, 10.0.5.67) to external IP 104.21.35.88 (Cloudflare CDN, possible C2 infrastructure). Traffic volume: 2.3 GB uploaded over 15 minutes.<br><br>
+                        <strong>10:38 AM</strong> - GitHub audit log shows unauthorized repository access attempt from IP 185.220.101.47 (same Russian IP attacking HR database). Attempt failed due to 2FA requirement on GitHub account.<br><br>
+                        <strong>11:18 AM (CURRENT TIME)</strong> - CISO escalates to you. Senior Analyst unavailable. You have 4 hours to contain before business hours end and executives demand answers.
+                    </div>
+
+                    <h4>Detailed Alert Log - Categorized by System</h4>
+
+                    <p><strong>ALERT CATEGORY 1: Compromised Email Accounts (12 accounts)</strong></p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Employee Email</th>
+                                <th>Department</th>
+                                <th>Phishing Email Sent To</th>
+                                <th>Email Content</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="84f7e5f6e5ecaaeeebeceaf7ebeac4f0e1e7eceaebf2e5aae7ebe9">[email&#160;protected]</a></td>
+                                <td>Sales</td>
+                                <td>45 external contacts</td>
+                                <td>"Urgent: New Compensation Policy" + malicious link to fake TechNova portal (technova-portal[.]com)</td>
+                            </tr>
+                            <tr>
+                                <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="aac7c3c9c2cbcfc684c9c2cfc4eadecfc9c2c4c5dccb84c9c5c7">[email&#160;protected]</a></td>
+                                <td>Marketing</td>
+                                <td>38 external contacts</td>
+                                <td>Same content, same malicious link</td>
+                            </tr>
+                            <tr>
+                                <td>[10 additional accounts]</td>
+                                <td>Sales/Marketing</td>
+                                <td>~400 total recipients</td>
+                                <td>Identical phishing campaign</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p><strong>Analysis:</strong> Attackers gained access to 12 employee email accounts (likely through credential stuffing or password reuse from prior breaches). Used accounts to send convincing phishing emails to TechNova's customer base and partners. This is a <strong>business email compromise (BEC)</strong> attack designed to steal credentials from TechNova's customers and damage reputation.</p>
+
+                    <p><strong>ALERT CATEGORY 2: Failed Login Attempts - HR Database (34 attempts)</strong></p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Source IP</th>
+                                <th>Country</th>
+                                <th>Username Targeted</th>
+                                <th>Attempts</th>
+                                <th>Time Window</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>185.220.101.47</td>
+                                <td>Russia</td>
+                                <td>db_admin, hr_admin, root</td>
+                                <td>18</td>
+                                <td>08:47-09:12 (25 min)</td>
+                            </tr>
+                            <tr>
+                                <td>116.62.18.234</td>
+                                <td>China</td>
+                                <td>hr_admin, backup_user</td>
+                                <td>12</td>
+                                <td>08:52-09:18 (26 min)</td>
+                            </tr>
+                            <tr>
+                                <td>179.43.155.92</td>
+                                <td>Brazil</td>
+                                <td>root, postgres</td>
+                                <td>4</td>
+                                <td>09:05-09:11 (6 min)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p><strong>Analysis:</strong> Coordinated <strong>credential stuffing attack</strong> targeting HR database containing 500 employee records with SSN, banking information, and salaries. Attackers used lists of common usernames and passwords (likely obtained from public data breaches). Attack failed due to strong database passwords, but demonstrates attackers know TechNova's internal architecture. <span class="severity-high">HIGH PRIORITY</span> - If successful, attackers would have access to sensitive PII.</p>
+
+                    <p><strong>ALERT CATEGORY 3: Suspicious Executable Downloads (3 files)</strong></p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Filename</th>
+                                <th>Size</th>
+                                <th>Upload Time</th>
+                                <th>Uploaded By</th>
+                                <th>EDR Detection</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Q4_Financial_Report.exe</td>
+                                <td>2.8 MB</td>
+                                <td>09:23 AM</td>
+                                <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f993988a9697d7929094b98d9c9a9197968f98d79a9694">[email&#160;protected]</a></td>
+                                <td>Flagged: Ransomware indicators (Lockbit 3.0 signature)</td>
+                            </tr>
+                            <tr>
+                                <td>HR_Handbook_2024.exe</td>
+                                <td>1.4 MB</td>
+                                <td>09:25 AM</td>
+                                <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="137f7a60723d617c77617a74667669536776707b7d7c65723d707c7e">[email&#160;protected]</a></td>
+                                <td>Flagged: Obfuscated PowerShell dropper</td>
+                            </tr>
+                            <tr>
+                                <td>Client_Contracts.exe</td>
+                                <td>3.1 MB</td>
+                                <td>09:27 AM</td>
+                                <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7e1b1317120750091f0a0d11103e0a1b1d161011081f501d1113">[email&#160;protected]</a></td>
+                                <td>Flagged: Credential harvester + keylogger</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p><strong>Analysis:</strong> Three employees downloaded and executed malicious files disguised as legitimate business documents. CrowdStrike Falcon detected and quarantined files before execution, but this indicates a <strong>spear-phishing campaign</strong> successfully delivered malware to employee workstations. Files show hallmarks of ransomware staging—attackers are preparing for data encryption. <span class="severity-high">CRITICAL PRIORITY</span> - If ransomware deploys, entire company could be locked out of systems.</p>
+
+                    <div class="critical-box">
+                        <strong>⚠ CRITICAL FINDING:</strong> Network traffic analysis shows 2 workstations (10.0.5.42, 10.0.5.67) uploaded 2.3 GB of data to external IP 104.21.35.88 between 10:05-10:20 AM. This occurred AFTER the executables were quarantined, suggesting attackers already established a beachhead in TechNova's network through a separate vector (possibly via the 12 compromised email accounts). Data exfiltration is actively occurring.
+                    </div>
+
+                    <h4>MITRE ATT&CK Framework Mapping</h4>
+
+                    <p>Map observed attacker behaviors to industry-standard threat taxonomy:</p>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>MITRE Tactic</th>
+                                <th>Technique ID</th>
+                                <th>Technique Name</th>
+                                <th>Evidence in TechNova Incident</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Initial Access</strong></td>
+                                <td>T1566.002</td>
+                                <td>Phishing: Spearphishing Link</td>
+                                <td>12 compromised email accounts sent phishing emails; 3 employees downloaded malicious executables</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Initial Access</strong></td>
+                                <td>T1078</td>
+                                <td>Valid Accounts</td>
+                                <td>34 failed login attempts using real employee usernames (credential stuffing)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Execution</strong></td>
+                                <td>T1204.002</td>
+                                <td>User Execution: Malicious File</td>
+                                <td>Employees executed .exe files disguised as business documents</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Persistence</strong></td>
+                                <td>T1078.003</td>
+                                <td>Valid Accounts: Local Accounts</td>
+                                <td>Attackers attempting to establish persistent access via compromised credentials</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Credential Access</strong></td>
+                                <td>T1110.004</td>
+                                <td>Brute Force: Credential Stuffing</td>
+                                <td>34 automated login attempts on HR database from 3 external IPs</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Collection</strong></td>
+                                <td>T1005</td>
+                                <td>Data from Local System</td>
+                                <td>2.3 GB uploaded from 2 workstations—likely harvesting files for exfiltration</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Exfiltration</strong></td>
+                                <td>T1041</td>
+                                <td>Exfiltration Over C2 Channel</td>
+                                <td>2.3 GB data uploaded to 104.21.35.88 (Cloudflare CDN, possible C2 infrastructure)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Impact</strong></td>
+                                <td>T1486</td>
+                                <td>Data Encrypted for Impact</td>
+                                <td>Ransomware indicators in Q4_Financial_Report.exe (Lockbit 3.0 signature)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="highlight-box">
+                        <strong>Threat Classification:</strong> This is a <strong>multi-stage advanced persistent threat (APT)</strong> with characteristics of both financially-motivated cybercrime (ransomware) and espionage (data exfiltration). The attack demonstrates sophistication: coordinated credential stuffing from 3 countries, targeted spear-phishing with legitimate-looking file names, and simultaneous data exfiltration while staging ransomware. This is NOT an opportunistic attack—TechNova was deliberately targeted, possibly due to its customer base or intellectual property value.
+                    </div>
+
+                    <h4>Critical Asset Inventory & Risk Assessment</h4>
+
+                    <p><strong>TechNova's Crown Jewels (in priority order):</strong></p>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Asset</th>
+                                <th>Data Stored</th>
+                                <th>Current Risk Level</th>
+                                <th>Impact if Compromised</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Customer Database</strong></td>
+                                <td>285K customer records: names, emails, payment info, usage data</td>
+                                <td><span class="severity-high">HIGH</span></td>
+                                <td>Regulatory fines (GDPR, CCPA), customer churn, class-action lawsuit, reputation damage. Estimated cost: $15-25M</td>
+                            </tr>
+                            <tr>
+                                <td><strong>HR System (BambooHR)</strong></td>
+                                <td>500 employee records: SSN, banking details, salaries, performance reviews</td>
+                                <td><span class="severity-high">HIGH</span></td>
+                                <td>Identity theft for employees, regulatory fines, employee morale collapse. Estimated cost: $2-5M</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Source Code Repository</strong></td>
+                                <td>Proprietary SaaS platform code, algorithms, API keys, infrastructure configs</td>
+                                <td><span class="severity-medium">MEDIUM</span></td>
+                                <td>Competitive disadvantage, exposure of vulnerabilities, IP theft. Estimated cost: $5-10M</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Customer File Storage (S3)</strong></td>
+                                <td>Customer-uploaded documents, contracts, project files (2.8 TB)</td>
+                                <td><span class="severity-high">HIGH</span></td>
+                                <td>Customer data breach, loss of trust, contractual liability. Estimated cost: $3-8M</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Internal Email (Microsoft 365)</strong></td>
+                                <td>Business communications, customer emails, internal strategy discussions</td>
+                                <td><span class="severity-medium">MEDIUM</span></td>
+                                <td>BEC attacks, competitive intelligence leak, customer relationship damage. Estimated cost: $1-3M</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p><strong>Risk Scoring Methodology:</strong></p>
+                    <ul>
+                        <li><strong>Impact:</strong> Financial cost + regulatory penalties + reputation damage (1-5 scale)</li>
+                        <li><strong>Likelihood:</strong> Evidence of active attack + security controls in place (1-5 scale)</li>
+                        <li><strong>Risk Score:</strong> Impact × Likelihood = Total Risk (1-25 scale)</li>
+                    </ul>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Asset</th>
+                                <th>Impact (1-5)</th>
+                                <th>Likelihood (1-5)</th>
+                                <th>Risk Score</th>
+                                <th>Priority</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background: #ffebee;">
+                                <td>HR System</td>
+                                <td>5</td>
+                                <td>5</td>
+                                <td><strong>25</strong></td>
+                                <td><span class="severity-high">CRITICAL</span> - 34 active attack attempts</td>
+                            </tr>
+                            <tr style="background: #ffebee;">
+                                <td>Customer File Storage</td>
+                                <td>5</td>
+                                <td>5</td>
+                                <td><strong>25</strong></td>
+                                <td><span class="severity-high">CRITICAL</span> - 2.3 GB already exfiltrated from S3</td>
+                            </tr>
+                            <tr style="background: #fff3e0;">
+                                <td>Customer Database</td>
+                                <td>5</td>
+                                <td>4</td>
+                                <td><strong>20</strong></td>
+                                <td><span class="severity-high">HIGH</span> - Attackers probing, no breach yet</td>
+                            </tr>
+                            <tr style="background: #fff3e0;">
+                                <td>Internal Email</td>
+                                <td>4</td>
+                                <td>5</td>
+                                <td><strong>20</strong></td>
+                                <td><span class="severity-high">HIGH</span> - 12 accounts already compromised</td>
+                            </tr>
+                            <tr style="background: #fef3c7;">
+                                <td>Source Code Repository</td>
+                                <td>4</td>
+                                <td>3</td>
+                                <td><strong>12</strong></td>
+                                <td><span class="severity-medium">MEDIUM</span> - Attack failed due to 2FA</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>NIST Cybersecurity Framework - Response Stages</h4>
+
+                    <p><strong>STAGE 1: DETECTION & ANALYSIS (Currently in this phase)</strong></p>
+                    <ul>
+                        <li>Objective: Determine attack scope, threat actor TTPs, affected systems, and IOCs (Indicators of Compromise)</li>
+                        <li>TechNova Status: Initial triage complete. Attack vectors identified: BEC + credential stuffing + ransomware staging + data exfiltration</li>
+                        <li>Next Steps: Preserve forensic evidence, document timeline, classify threat severity</li>
+                    </ul>
+
+                    <p><strong>STAGE 2: CONTAINMENT (Immediate priority - next 4 hours)</strong></p>
+                    <ul>
+                        <li><strong>Short-Term Containment:</strong> Stop active threats without destroying evidence
+                            <ul>
+                                <li>Isolate compromised workstations (10.0.5.42, 10.0.5.67) from network</li>
+                                <li>Force password reset on 12 compromised email accounts + enable MFA</li>
+                                <li>Block external IPs at firewall (185.220.101.47, 116.62.18.234, 179.43.155.92, 104.21.35.88)</li>
+                                <li>Disable VPN access for affected users until credentials verified</li>
+                            </ul>
+                        </li>
+                        <li><strong>Long-Term Containment:</strong> Strengthen defenses while preparing for eradication
+                            <ul>
+                                <li>Deploy EDR to remaining 40% of endpoints without coverage</li>
+                                <li>Enable MFA on all critical systems (HR database, GitHub, AWS console, customer database)</li>
+                                <li>Increase SIEM log retention from 7 days to 90 days for forensic analysis</li>
+                                <li>Segment network: Create DMZ for HR/finance systems, isolate from general employee network</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <p><strong>STAGE 3: ERADICATION (Post-containment - 24-48 hours)</strong></p>
+                    <ul>
+                        <li>Remove attacker presence from environment:
+                            <ul>
+                                <li>Wipe and reimage 2 compromised workstations</li>
+                                <li>Rotate ALL employee passwords (500 users) + AWS API keys + database credentials</li>
+                                <li>Remove any backdoors, webshells, or persistence mechanisms</li>
+                                <li>Verify no lateral movement to additional systems via SIEM/EDR logs</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <p><strong>STAGE 4: RECOVERY (48-72 hours post-containment)</strong></p>
+                    <ul>
+                        <li>Restore affected systems to production:
+                            <ul>
+                                <li>Bring workstations back online with enhanced monitoring</li>
+                                <li>Restore email accounts with mandatory security awareness training for affected users</li>
+                                <li>Validate data integrity on customer database and file storage</li>
+                                <li>Monitor for 30 days for reinfection indicators</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <p><strong>STAGE 5: POST-INCIDENT ACTIVITY (Ongoing)</strong></p>
+                    <ul>
+                        <li>Lessons learned meeting with CISO, IT, Legal, PR</li>
+                        <li>Update incident response playbook based on gaps identified</li>
+                        <li>Mandatory security training for all employees on phishing recognition</li>
+                        <li>Budget request: Upgrade security stack (SIEM retention, EDR coverage, email security)</li>
+                    </ul>
+
+                    <h4>Investigation Tools & Techniques</h4>
+
+                    <p><strong>SIEM Queries (Splunk):</strong></p>
+                    <div class="timeline-box">
+                        # Find all login attempts from external IPs in past 24 hours<br>
+                        index=security sourcetype=ssh | where src_ip NOT LIKE "10.0.*" | stats count by src_ip, user, dest<br><br>
+                        
+                        # Identify unusual data transfers (>500MB) from internal hosts<br>
+                        index=network sourcetype=netflow | where bytes_out > 500000000 | table _time, src_ip, dest_ip, bytes_out<br><br>
+                        
+                        # Correlate failed logins followed by successful login (credential compromise indicator)<br>
+                        index=authentication action=failure OR action=success | transaction user maxspan=30m | where eventcount > 5
+                    </div>
+
+                    <p><strong>EDR Forensics (CrowdStrike Falcon):</strong></p>
+                    <ul>
+                        <li>Process tree analysis: Identify parent processes that spawned malicious executables</li>
+                        <li>Memory dump: Extract running processes from compromised workstations for malware analysis</li>
+                        <li>File integrity monitoring: Compare system files against known-good hashes</li>
+                        <li>Network connections: List all external IPs contacted by compromised hosts</li>
+                    </ul>
+
+                    <p><strong>Email Header Analysis:</strong></p>
+                    <ul>
+                        <li>Examine "Received" headers to trace email path and identify spoofed sender</li>
+                        <li>Check SPF/DKIM/DMARC authentication results—did phishing emails pass validation?</li>
+                        <li>Extract embedded URLs and submit to VirusTotal for reputation check</li>
+                        <li>Identify all recipients of phishing campaign for notification</li>
+                    </ul>
+
+                    <p><strong>Threat Intelligence Enrichment:</strong></p>
+                    <ul>
+                        <li>Submit malicious IPs (185.220.101.47, etc.) to AbuseIPDB and Shodan for context</li>
+                        <li>Check file hashes (Q4_Financial_Report.exe) against malware databases (VirusTotal, Hybrid Analysis)</li>
+                        <li>Search for Lockbit 3.0 ransomware IOCs (domains, C2 infrastructure) in TechNova's logs</li>
+                        <li>Query OSINT sources for recent campaigns targeting SaaS companies</li>
+                    </ul>
+
+                    <h4>Communication & Escalation Plan</h4>
+
+                    <p><strong>INTERNAL COMMUNICATIONS (Immediate - within 4 hours):</strong></p>
+                    <ul>
+                        <li><strong>To CISO:</strong> Executive summary with risk score, containment actions taken, estimated timeline for resolution</li>
+                        <li><strong>To IT Operations:</strong> Technical details on network isolation, password resets, system lockdowns required</li>
+                        <li><strong>To Affected Employees:</strong> Notification that accounts were compromised, mandatory password reset + security training</li>
+                        <li><strong>To All Employees:</strong> General security alert (without causing panic): "IT investigating suspicious activity, expect password reset in next 24 hours"</li>
+                    </ul>
+
+                    <p><strong>EXTERNAL COMMUNICATIONS (If data breach confirmed - 72 hours):</strong></p>
+                    <ul>
+                        <li><strong>To Customers:</strong> Breach notification (if PII compromised), steps TechNova is taking, credit monitoring offer</li>
+                        <li><strong>To Regulators:</strong> GDPR requires notification within 72 hours if EU citizen data breached; CCPA requires "without unreasonable delay"</li>
+                        <li><strong>To Law Enforcement:</strong> FBI Cyber Division if attack appears state-sponsored or organized cybercrime</li>
+                        <li><strong>To Insurance:</strong> Notify cyber insurance carrier to initiate claims process</li>
+                    </ul>
+
+                    <p><strong>LEGAL/PR CONSIDERATIONS:</strong></p>
+                    <ul>
+                        <li>Privilege communications with legal counsel (attorney-client privilege protects forensic findings)</li>
+                        <li>Do NOT publicly disclose incident until legal review complete</li>
+                        <li>Prepare FAQ for customer questions, media inquiries</li>
+                        <li>Coordinate with PR firm on messaging strategy</li>
+                    </ul>
+
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="nextSection()">Begin Incident Response →</button>
+            </div>
+        </div>
+
+        <!-- Section 1: Threat Classification & Initial Assessment -->
+        <div class="section" id="section1">
+            <div class="section-header">
+                <h2>Section 1: Threat Classification & Initial Assessment</h2>
+                <p>Identify attack type, map to MITRE ATT&CK, and assess scope</p>
+            </div>
+
+            <div class="framework-box">
+                <h4>MITRE ATT&CK Framework</h4>
+                <p>Industry-standard framework for classifying adversary tactics and techniques. Enables defenders to:</p>
+                <ul>
+                    <li><strong>Speak common language:</strong> "T1566.002 Phishing" is universally understood</li>
+                    <li><strong>Understand attacker progression:</strong> Initial Access → Execution → Persistence → Exfiltration</li>
+                    <li><strong>Build defenses:</strong> Map controls to specific techniques (e.g., MFA blocks T1078 Valid Accounts)</li>
+                </ul>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    1. Based on the incident materials, what is the PRIMARY threat classification for this attack?
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Consider multiple attack vectors: compromised emails (BEC), failed logins (credential stuffing), malicious executables (ransomware staging), data exfiltration (2.3 GB). What ties these together?</span>
+                    </span>
+                </label>
+                <select id="threatType">
+                    <option value="">Select primary threat type...</option>
+                    <option value="phishing">Simple phishing campaign</option>
+                    <option value="ransomware">Ransomware attack only</option>
+                    <option value="apt">Advanced Persistent Threat (APT) - multi-stage coordinated attack</option>
+                    <option value="ddos">Distributed Denial of Service (DDoS)</option>
+                    <option value="insider">Insider threat / rogue employee</option>
+                </select>
+                <div class="input-hint">Consider the sophistication and coordination of multiple simultaneous attack vectors</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    2. How many MITRE ATT&CK techniques are explicitly documented in the incident materials?
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Count distinct technique IDs (e.g., T1566.002, T1078, T1110.004) listed in the MITRE ATT&CK mapping table.</span>
+                    </span>
+                </label>
+                <input type="text" id="mitreTechCount" placeholder="Enter number of techniques (e.g., 8)">
+                <div class="input-hint">Extract from MITRE ATT&CK Framework Mapping table in materials</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    3. Explain what the 2.3 GB data exfiltration indicates about the attack's objectives and timeline. Why is this the most critical finding?
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Data exfiltration occurred AFTER ransomware was quarantined, suggesting attackers had separate access. Why does exfiltration before encryption matter? What does volume indicate?</span>
+                    </span>
+                </label>
+                <textarea id="exfiltrationAnalysis" placeholder="Analyze the significance of 2.3 GB data exfiltration: What does this tell you about attacker intent? Why did exfiltration occur after ransomware was blocked? What data might have been stolen? Why is this more dangerous than just ransomware..."></textarea>
+                <div class="input-hint">Minimum 120 words. Must explain double-extortion tactic and implications for TechNova</div>
+            </div>
+
+            <div class="example-box example-good">
+                <div class="example-header" onclick="toggleExample('example1')">
+                    <h4>Strong Response Example</h4>
+                    <span class="example-toggle">Click to View</span>
+                </div>
+                <div class="example-content" id="example1">
+                    <p>The 2.3 GB data exfiltration is the most critical finding because it represents a double-extortion ransomware attack—attackers are stealing data BEFORE encrypting it. This is significant for three reasons. First, the exfiltration occurred between 10:05-10:20 AM, after CrowdStrike Falcon quarantined the ransomware executables at 09:23-09:27 AM. This proves the attackers had established a separate persistence mechanism (likely through the 12 compromised email accounts), meaning the ransomware was just one attack vector, not the only one. The attackers maintained access even after their malware was blocked, demonstrating sophistication and preparation. Second, 2.3 GB is substantial—it could contain the entire customer database (285K records), sensitive HR data, or proprietary source code. This volume suggests targeted data theft, not opportunistic file grabbing. The attackers knew what they wanted and had time to stage it for exfiltration. Third, and most critically, double-extortion fundamentally changes the threat model. Traditional ransomware relies on encryption: pay the ransom or lose access to your data. Companies with good backups can refuse to pay. But when attackers exfiltrate data first, they can threaten to publicly release it even if TechNova restores from backups. This means TechNova faces regulatory fines (GDPR, CCPA), customer lawsuits, and reputation damage regardless of whether systems are restored. The attackers have leverage even if we successfully defend against the ransomware. This is why exfiltration is more dangerous than encryption alone—it creates liability that can't be solved with backups or disaster recovery.</p>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="prevSection()">← Previous</button>
+                <button class="btn btn-primary" onclick="nextSection()">Next →</button>
+            </div>
+        </div>
+
+        <!-- Section 2: Risk Assessment & Asset Prioritization -->
+        <div class="section" id="section2">
+            <div class="section-header">
+                <h2>Section 2: Risk Assessment & Asset Prioritization</h2>
+                <p>Score threats using Impact × Likelihood and prioritize response</p>
+            </div>
+
+            <div class="framework-box">
+                <h4>Risk Scoring Methodology</h4>
+                <p>Effective triage requires quantifying risk to make data-driven decisions:</p>
+                <ul>
+                    <li><strong>Impact (1-5):</strong> Financial + regulatory + reputation damage if compromised</li>
+                    <li><strong>Likelihood (1-5):</strong> Evidence of active attack + existing security controls</li>
+                    <li><strong>Risk Score:</strong> Impact × Likelihood = Priority (1-25 scale)</li>
+                </ul>
+                <p>Focus resources on highest-risk assets first, even if other issues seem more visible.</p>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    4. According to the risk scoring table in materials, which TWO assets have a risk score of 25 (CRITICAL priority)?
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Review risk scoring table. Two assets have Impact=5, Likelihood=5, Risk Score=25.</span>
+                    </span>
+                </label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <select id="criticalAsset1">
+                        <option value="">Select first critical asset...</option>
+                        <option value="customer_db">Customer Database</option>
+                        <option value="hr_system">HR System</option>
+                        <option value="source_code">Source Code Repository</option>
+                        <option value="file_storage">Customer File Storage</option>
+                        <option value="email">Internal Email</option>
+                    </select>
+                    <select id="criticalAsset2">
+                        <option value="">Select second critical asset...</option>
+                        <option value="customer_db">Customer Database</option>
+                        <option value="hr_system">HR System</option>
+                        <option value="source_code">Source Code Repository</option>
+                        <option value="file_storage">Customer File Storage</option>
+                        <option value="email">Internal Email</option>
+                    </select>
+                </div>
+                <div class="input-hint">Both must have Risk Score = 25 in materials table</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    5. The HR System has 34 active attack attempts. The Customer Database has 0 active attempts but contains 285K records. Using the risk scoring methodology, explain why HR System should be prioritized HIGHER despite the Customer Database containing more sensitive data.
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Compare Impact (both =5) vs. Likelihood. HR System is under active attack (Likelihood=5), Customer Database is not yet targeted (Likelihood=4). Why does active attack change priority?</span>
+                    </span>
+                </label>
+                <textarea id="riskPrioritization" placeholder="Explain why active attack attempts on HR System make it higher priority than Customer Database, even though Customer Database has more records. Reference Impact vs. Likelihood scoring, and explain real-world implication of 'actively under attack'..."></textarea>
+                <div class="input-hint">Minimum 100 words. Must explain Likelihood scoring and why stopping active attacks takes precedence</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    6. Build a prioritized action list for the first 60 minutes of response. For each critical asset, specify ONE immediate containment action with justification.
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">For each critical asset (HR System, File Storage, Email, Customer DB), define one actionable step that can be taken in next 60 minutes. Be specific: not "improve security" but "block IPs X, Y, Z at firewall".</span>
+                    </span>
+                </label>
+                <textarea id="actionList" placeholder="List prioritized containment actions for first 60 minutes. For each action: (1) Which asset it protects, (2) Specific action (e.g., 'Block IP 185.220.101.47 at firewall'), (3) Why this action is effective, (4) Expected outcome. Order by priority..."></textarea>
+                <div class="input-hint">Minimum 150 words. Must include specific technical actions for multiple assets, not generic responses</div>
+            </div>
+
+            <div class="example-box example-good">
+                <div class="example-header" onclick="toggleExample('example2')">
+                    <h4>Strong Response Example</h4>
+                    <span class="example-toggle">Click to View</span>
+                </div>
+                <div class="example-content" id="example2">
+                    <p>First 60 minutes prioritized action list:<br><br>
+                    
+                    <strong>Priority 1 - HR System (Risk Score 25, active attack):</strong> Immediately block all three attacking IP addresses (185.220.101.47, 116.62.18.234, 179.43.155.92) at the perimeter firewall and create a deny rule for the entire /24 subnet of each IP to prevent attackers from simply changing to a nearby address. Then enable AWS Security Group rule to restrict SSH access to HR database server (10.0.2.15) to ONLY the internal IT team's IP range (e.g., 10.0.1.0/24). This stops the 34 active login attempts immediately while preserving access for legitimate administrators. Expected outcome: Terminate active attack in progress, prevent any future attempts from same threat actor infrastructure. This is highest priority because attackers are actively trying to breach the system containing employee SSNs and banking information.<br><br>
+                    
+                    <strong>Priority 2 - Customer File Storage (Risk Score 25, active exfiltration):</strong> Immediately isolate the two compromised workstations (10.0.5.42 and 10.0.5.67) by disabling their network interfaces via CrowdStrike Falcon remote agent or physically disconnecting network cables if remote access fails. Then enable CloudTrail logging alerts for any S3 GetObject or ListBucket API calls from these IP addresses and block their IAM credentials. This stops the ongoing 2.3 GB data exfiltration that's actively occurring. Expected outcome: Halt data theft in progress, prevent attackers from accessing additional files in S3 bucket. This is second priority because data is actively being stolen right now—every minute of delay means more data loss.<br><br>
+                    
+                    <strong>Priority 3 - Internal Email (Risk Score 20, 12 compromised accounts):</strong> Force immediate password reset on all 12 compromised email accounts via Microsoft 365 admin console, then enable mandatory MFA (Microsoft Authenticator app) before allowing re-login. Simultaneously revoke all active OAuth tokens for these accounts to terminate any persistent sessions attackers might have. Expected outcome: Kick attackers out of email accounts, prevent continued phishing campaign or lateral movement. This is third priority because while serious, the phishing emails have already been sent—containment now limits future damage.<br><br>
+                    
+                    <strong>Priority 4 - Customer Database (Risk Score 20, not yet under attack):</strong> Enable AWS RDS database activity monitoring (DAM) with real-time alerting for any SELECT queries that return >1000 rows (indicator of bulk data extraction). Then rotate the database master password and update it in application configurations. Expected outcome: Early warning system if attackers shift focus to customer database, plus credential rotation removes any leaked credentials from circulation. This is fourth priority because there's no evidence of active attack yet—we're being proactive rather than reactive here.</p>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="prevSection()">← Previous</button>
+                <button class="btn btn-primary" onclick="nextSection()">Next →</button>
+            </div>
+        </div>
+
+        <!-- Section 3: Incident Response Action Plan -->
+        <div class="section" id="section3">
+            <div class="section-header">
+                <h2>Section 3: Incident Response Action Plan</h2>
+                <p>Build NIST-compliant response plan with containment, eradication, and recovery phases</p>
+            </div>
+
+            <div class="framework-box">
+                <h4>NIST Incident Response Lifecycle</h4>
+                <p>Structured approach to handling security incidents:</p>
+                <ul>
+                    <li><strong>Containment:</strong> Stop spread, preserve evidence (short-term + long-term)</li>
+                    <li><strong>Eradication:</strong> Remove threat actor access, malware, and persistence mechanisms</li>
+                    <li><strong>Recovery:</strong> Restore systems, validate integrity, monitor for reinfection</li>
+                </ul>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    7. According to NIST framework in materials, what is the difference between "short-term containment" and "long-term containment"? Provide one example of each from the TechNova incident.
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Short-term = immediate actions to stop active threat. Long-term = strengthen defenses while preparing for eradication. Find examples in STAGE 2: CONTAINMENT section.</span>
+                    </span>
+                </label>
+                <textarea id="containmentTypes" placeholder="Define short-term vs. long-term containment and provide specific examples from TechNova incident materials for each..."></textarea>
+                <div class="input-hint">Minimum 80 words. Must include definitions and concrete examples from materials</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    8. In the Eradication phase, the plan calls for rotating "ALL employee passwords (500 users) + AWS API keys + database credentials." Why is this necessary even though only 12 email accounts were confirmed compromised?
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Consider: attackers had access to email for unknown duration, could have harvested credentials via keyloggers, and demonstrated knowledge of internal architecture. Why assume larger compromise?</span>
+                    </span>
+                </label>
+                <textarea id="credentialRotation" placeholder="Explain why full credential rotation for all 500 employees is necessary. Reference: unknown dwell time, potential keyloggers from executables, principle of 'assume breach', and cost of not rotating vs. cost of false negatives..."></textarea>
+                <div class="input-hint">Minimum 100 words. Must explain security principle behind comprehensive credential rotation</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    9. Build a comprehensive 4-phase incident response plan for TechNova covering: (1) Short-term containment (0-4 hours), (2) Long-term containment (4-24 hours), (3) Eradication (24-48 hours), (4) Recovery (48-72 hours). Include specific actions, responsible teams, and success criteria for each phase.
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Structure by phases from materials. Each phase needs: specific technical actions, who executes (SOC, IT, CISO), how to verify success. Use materials' NIST stages as template.</span>
+                    </span>
+                </label>
+                <textarea id="responsePlan" placeholder="Build detailed 4-phase response plan. For each phase specify: Timeline, Specific actions (isolate systems, rotate credentials, deploy controls), Responsible teams, Success criteria (how do we know phase is complete?), Dependencies on prior phases..."></textarea>
+                <div class="input-hint">Minimum 250 words. Must include all 4 phases with specific technical actions and validation criteria from materials</div>
+            </div>
+
+            <div class="example-box example-good">
+                <div class="example-header" onclick="toggleExample('example3')">
+                    <h4>Strong Response Example</h4>
+                    <span class="example-toggle">Click to View</span>
+                </div>
+                <div class="example-content" id="example3">
+                    <p><strong>PHASE 1: SHORT-TERM CONTAINMENT (0-4 hours, immediate actions)</strong><br>
+                    Timeline: Execute by 3:00 PM today (4 hours from now, 11:18 AM current time)<br>
+                    Objective: Stop active attacks and data exfiltration while preserving forensic evidence<br>
+                    Actions: (1) Network isolation: Physically disconnect or disable network adapters on 2 compromised workstations (10.0.5.42, 10.0.5.67) to halt 2.3 GB data exfiltration. Do NOT power off systems—preserve memory for forensic analysis. (2) Firewall blocking: Create deny rules for 3 attacking IPs (185.220.101.47, 116.62.18.234, 179.43.155.92) and the C2 server IP (104.21.35.88) at perimeter firewall. (3) Email lockdown: Force password reset on 12 compromised email accounts via M365 admin panel; revoke all active OAuth tokens; enable mandatory MFA before re-access. (4) Database access restriction: Modify AWS Security Group for HR database (10.0.2.15) to allow SSH only from IT admin subnet (10.0.1.0/24), blocking all external access. (5) Evidence preservation: Take memory dumps from 2 compromised workstations using CrowdStrike Falcon; export SIEM logs from past 7 days to external storage; screenshot all alert dashboards.<br>
+                    Responsible Teams: SOC (lead), IT Operations (network changes), CISO (authorization for aggressive actions)<br>
+                    Success Criteria: Zero ongoing data exfiltration confirmed via netflow monitoring; no new failed login attempts on HR database; no new phishing emails sent from compromised accounts; all forensic evidence securely preserved<br><br>
+                    
+                    <strong>PHASE 2: LONG-TERM CONTAINMENT (4-24 hours, strengthen defenses)</strong><br>
+                    Timeline: Complete by 11:00 AM tomorrow<br>
+                    Objective: Harden environment to prevent reinfection and lateral movement while preparing for eradication<br>
+                    Actions: (1) MFA deployment: Enable mandatory MFA on all critical systems—AWS console, HR database SSH access, GitHub Enterprise, VPN login, customer database admin panel. Use Duo Security for centralized MFA management. (2) EDR expansion: Deploy CrowdStrike Falcon to remaining 40% of endpoints (200 devices) without coverage; prioritize finance, HR, and executive workstations. (3) Network segmentation: Create VLAN for HR/finance systems (10.0.2.0/24); implement firewall rules requiring VPN + MFA for access from general employee network (10.0.5.0/24). (4) SIEM enhancement: Increase Splunk log retention from 7 days to 90 days; enable real-time alerting for: failed login attempts >3 in 10 min, large data transfers >100MB outbound, process execution of .exe files from user download folders. (5) Email security upgrade: Configure Proofpoint to quarantine all emails with executable attachments (.exe, .scr, .bat); enable Advanced Threat Protection for URL rewriting and sandbox analysis.<br>
+                    Responsible Teams: IT Security (lead), Network Engineering (segmentation), IT Operations (MFA rollout)<br>
+                    Success Criteria: 100% of critical systems require MFA; all endpoints have EDR deployed and reporting to console; network segmentation tested and validated; SIEM alerting confirmed operational<br><br>
+                    
+                    <strong>PHASE 3: ERADICATION (24-48 hours, remove attacker presence)</strong><br>
+                    Timeline: Complete by 11:00 AM in 2 days<br>
+                    Objective: Remove all attacker access, malware, and persistence mechanisms from environment<br>
+                    Actions: (1) Workstation reimaging: Wipe and rebuild 2 compromised workstations (10.0.5.42, 10.0.5.67) from gold image; reinstall applications; restore user data from pre-infection backup. (2) Comprehensive credential rotation: Force password reset for ALL 500 employees (not just 12 compromised accounts)—use automated script via Active Directory; rotate ALL AWS IAM access keys and secret keys; change database master passwords for customer DB, HR DB, and all application databases. (3) Malware removal: Use CrowdStrike Falcon to scan all 500 endpoints for IOCs associated with Lockbit 3.0 ransomware; quarantine any additional malware discovered; verify clean status via secondary scan with Microsoft Defender. (4) Backdoor hunting: Review all scheduled tasks, startup items, and services across Windows/Mac/Linux systems for persistence mechanisms; check for webshells in web server directories; audit AWS IAM for unauthorized roles or users. (5) Log analysis: Complete forensic timeline using SIEM—identify first compromise, lateral movement, data accessed; confirm no additional compromised accounts beyond original 12.<br>
+                    Responsible Teams: SOC (forensic analysis), IT Operations (credential rotation, system rebuilds), Security Engineering (backdoor hunting)<br>
+                    Success Criteria: All affected systems rebuilt and validated clean; 100% credential rotation complete; no persistence mechanisms detected; forensic timeline complete documenting full attack chain<br><br>
+                    
+                    <strong>PHASE 4: RECOVERY (48-72 hours, restore operations)</strong><br>
+                    Timeline: Complete by 11:00 AM in 3 days<br>
+                    Objective: Return systems to production with enhanced monitoring and user training<br>
+                    Actions: (1) System restoration: Return 2 rebuilt workstations to users after mandatory security training; restore email access for 12 affected users after MFA enrollment and password change verified. (2) Enhanced monitoring: Deploy 30-day intensive monitoring—flag any login from affected user accounts, any access to S3 buckets from new IPs, any process execution matching ransomware IOCs. Create dedicated Splunk dashboard for incident-related alerts. (3) User training: Mandatory 30-minute security awareness training for all 500 employees covering: phishing recognition, password hygiene, MFA usage, suspicious file identification. Track completion via LMS. (4) External communication: If data breach confirmed (2.3 GB exfiltration contained PII), send notification emails to affected customers within 72 hours per GDPR/CCPA; offer 1 year credit monitoring; publish transparency report on TechNova blog. (5) Validation testing: Conduct penetration test from external firm to verify remediation effective; attempt to replicate original attack vectors; validate MFA enforcement and network segmentation.<br>
+                    Responsible Teams: IT Operations (restoration), HR (training coordination), Legal/PR (external comms), CISO (validation testing)<br>
+                    Success Criteria: All affected users back in production; zero reinfection indicators detected; 100% employee training completion; external validation (pentest) confirms controls effective; customer/regulatory notifications sent if required</p>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="prevSection()">← Previous</button>
+                <button class="btn btn-primary" onclick="nextSection()">Next →</button>
+            </div>
+        </div>
+
+        <!-- Section 4: Investigation & Post-Incident Analysis -->
+        <div class="section" id="section4">
+            <div class="section-header">
+                <h2>Section 4: Forensic Investigation & Lessons Learned</h2>
+                <p>Define investigation approach and identify process improvements</p>
+            </div>
+
+            <div class="framework-box">
+                <h4>Forensic Investigation Goals</h4>
+                <p>Effective forensics answers five questions:</p>
+                <ul>
+                    <li><strong>What happened?</strong> Complete timeline of attacker actions</li>
+                    <li><strong>How did they get in?</strong> Initial access vector and vulnerabilities exploited</li>
+                    <li><strong>What did they access?</strong> Data viewed, stolen, or modified</li>
+                    <li><strong>How do we prevent recurrence?</strong> Root cause and remediation</li>
+                    <li><strong>Can we attribute?</strong> Threat actor identity (if possible)</li>
+                </ul>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    10. Which SIEM query from the materials would be most effective for identifying if attackers gained access to additional accounts beyond the known 12 compromised emails?
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Review the 3 example Splunk queries in Investigation Tools section. Which one detects credential compromise pattern?</span>
+                    </span>
+                </label>
+                <select id="siemQuery">
+                    <option value="">Select most effective query...</option>
+                    <option value="external_logins">Find all login attempts from external IPs</option>
+                    <option value="large_transfers">Identify unusual data transfers >500MB</option>
+                    <option value="failed_then_success">Correlate failed logins followed by successful login</option>
+                </select>
+                <div class="input-hint">Choose query that indicates credential compromise (multiple failed attempts then success = credential stuffing worked)</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    11. Post-incident review identifies that TechNova's VPN had no MFA requirement, allowing attackers to use stolen credentials for remote access. What are THREE specific security improvements TechNova should implement to prevent similar attacks?
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Think beyond just "add MFA." Consider: authentication, network architecture, monitoring, employee training, email security, endpoint protection. Be specific and actionable.</span>
+                    </span>
+                </label>
+                <textarea id="securityImprovements" placeholder="List 3 specific security improvements with rationale. For each: (1) What control to implement (be specific, not generic), (2) Which attack vector it prevents, (3) Estimated cost/complexity (low/medium/high), (4) Priority for implementation..."></textarea>
+                <div class="input-hint">Minimum 120 words total across 3 improvements. Must be specific, actionable recommendations with clear justification</div>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    12. Write an executive summary for the CISO that synthesizes: (1) What happened (attack summary), (2) Business impact (data at risk, financial exposure), (3) Root causes (security gaps that enabled attack), (4) Response effectiveness (what worked, what didn't), (5) Recommended investments to prevent recurrence.
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Executive summary should be concise but comprehensive. Use specific data from materials (12 accounts, 2.3 GB, 34 attempts). Frame in business terms, not just technical jargon.</span>
+                    </span>
+                </label>
+                <textarea id="executiveSummary" placeholder="Write CISO-level executive summary. Use clear, business-focused language. Include: incident overview, scope of compromise, estimated financial impact, root cause analysis, response timeline and effectiveness, strategic recommendations with cost/benefit..."></textarea>
+                <div class="input-hint">Minimum 250 words. Must balance technical accuracy with executive-level clarity and business impact framing</div>
+            </div>
+
+            <div class="example-box example-good">
+                <div class="example-header" onclick="toggleExample('example4')">
+                    <h4>Strong Response Example</h4>
+                    <span class="example-toggle">Click to View</span>
+                </div>
+                <div class="example-content" id="example4">
+                    <p><strong>EXECUTIVE SUMMARY: TechNova Security Incident - January 5, 2024</strong><br><br>
+                    
+                    <strong>Incident Overview:</strong> On January 5 at 07:42, TechNova detected a sophisticated multi-vector cyberattack targeting our customer data, HR systems, and internal infrastructure. The attack involved 12 compromised employee email accounts sending phishing campaigns, 34 automated login attempts on our HR database from foreign IPs (Russia, China, Brazil), three ransomware executables delivered to employee workstations, and 2.3 GB of data actively exfiltrated to external servers. This represents an advanced persistent threat (APT) with hallmarks of organized cybercrime, not opportunistic hacking. The attack was contained within 4 hours before catastrophic data breach occurred, but the incident exposed significant security gaps requiring immediate investment.<br><br>
+                    
+                    <strong>Scope of Compromise:</strong> 12 employee email accounts (sales/marketing teams) were compromised and used to send ~400 phishing emails to TechNova customers and partners, creating reputation risk and potential customer credential theft. Three employees downloaded ransomware executables (Lockbit 3.0 variant), but CrowdStrike Falcon quarantined malware before execution—this was our primary successful defense. Most concerning: 2.3 GB of data was exfiltrated from 2 workstations to attacker-controlled servers between 10:05-10:20 AM. Forensic analysis is ongoing to determine exact data stolen, but risk includes customer contracts, internal documents, and potentially source code. HR database containing 500 employee SSNs and banking information was targeted but NOT successfully breached due to strong passwords and firewall rules. Customer database (285K records) was NOT directly attacked but remains at risk if attackers maintained persistent access.<br><br>
+                    
+                    <strong>Financial Impact Assessment:</strong> Direct costs: $350K incident response (internal labor + external forensics firm + legal counsel), $50K CrowdStrike EDR deployment to remaining endpoints, $200K mandatory security awareness training for all employees. Potential costs if data breach confirmed: $2-5M regulatory fines (GDPR/CCPA violations if customer PII was exfiltrated), $1-3M customer credit monitoring and notification, $5-15M in customer churn and reputation damage, potential class-action lawsuit exposure. Total estimated exposure: $8-23M if worst-case breach confirmed. Insurance covers up to $10M under cyber policy (minus $250K deductible). Avoided costs through successful containment: $50M+ if ransomware had encrypted all systems and customer database had been stolen—our response prevented catastrophic outcome.<br><br>
+                    
+                    <strong>Root Cause Analysis:</strong> Three critical security gaps enabled this attack: (1) No MFA on VPN or most internal systems—attackers used stolen credentials (likely from third-party breaches) to access email accounts and attempt database logins. MFA would have blocked 100% of credential-based attacks. (2) Incomplete EDR deployment—only 60% of endpoints had CrowdStrike Falcon; the 40% gap included workstations that downloaded malware. EDR on those systems would have provided earlier detection. (3) Insufficient email security—Proofpoint basic plan doesn't sandbox attachments or rewrite URLs; advanced plan ($15K/year) would have detected malicious executables before delivery. (4) Weak network segmentation—HR/finance systems on same network as general employees, allowing lateral movement if attacker gained workstation access. (5) Inadequate SIEM logging—7-day retention insufficient for forensic investigation; couldn't trace full attack timeline because logs expired.<br><br>
+                    
+                    <strong>Response Effectiveness:</strong> What worked: SOC detected initial phishing within 33 minutes; CrowdStrike Falcon successfully quarantined ransomware before execution; strong database passwords prevented HR system breach; rapid containment (4 hours) stopped data exfiltration before terabytes were stolen. What didn't work: No automated alerting on large data transfers—2.3 GB exfiltration occurred undetected for 15 minutes until manual review; no MFA meant compromised credentials granted full access; 40% EDR gap allowed malware delivery to go unmonitored initially; SIEM log retention too short to reconstruct full attack timeline (attackers likely had access days/weeks before we detected them).<br><br>
+                    
+                    <strong>Strategic Recommendations:</strong> Immediate investments (0-30 days, $500K budget): (1) Deploy MFA across ALL systems (VPN, AWS, M365, GitHub, databases)—$50K implementation + $10K/year licenses. This single control would have prevented 80% of this attack. (2) Complete CrowdStrike Falcon deployment to 100% of endpoints—$50K for remaining 200 licenses. (3) Upgrade Proofpoint to Advanced Threat Protection tier—$15K/year for sandbox analysis and URL rewriting. (4) Increase SIEM retention to 90 days and add real-time alerting for large data transfers—$30K Splunk license upgrade. Medium-term investments (30-90 days, $300K): Implement Zero Trust network architecture with micro-segmentation isolating HR/finance systems; hire additional SOC analyst to provide 24/7 coverage (currently 8am-6pm only); conduct third-party penetration test to validate remediation. Long-term strategy (6-12 months): Security awareness training program with quarterly phishing simulations; formal incident response retainer with external firm for future events; consider cyber insurance policy limit increase from $10M to $25M given growing threat landscape. Total investment: $800K in Year 1, $150K annually thereafter. This is 1.8% of revenue but prevents $20M+ downside risk.</p>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="prevSection()">← Previous</button>
+                <button class="btn btn-primary" onclick="calculateScore()">Complete Incident Response →</button>
+            </div>
+        </div>
+
+        <!-- Section 5: Results -->
+        <div class="section" id="section5">
+            <div class="section-header">
+                <h2>Incident Response Complete</h2>
+                <p>Review your cybersecurity performance</p>
+            </div>
+
+            <div class="score-card">
+                <h3>Your Total Score</h3>
+                <div class="score-number" id="totalScore">--</div>
+                <p id="scoreCategory">Calculating...</p>
+
+                <div class="score-breakdown">
+                    <div class="score-item">
+                        <span class="score-label">Section 1: Threat Classification</span>
+                        <span class="score-value" id="score1">--/25</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-label">Section 2: Risk Assessment</span>
+                        <span class="score-value" id="score2">--/25</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-label">Section 3: Response Plan</span>
+                        <span class="score-value" id="score3">--/25</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-label">Section 4: Investigation & Analysis</span>
+                        <span class="score-value" id="score4">--/25</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="detailedFeedback"></div>
+
+            <div class="export-buttons">
+                <button class="btn btn-export" onclick="downloadReport()">Download Report</button>
+                <button class="btn btn-primary" onclick="location.reload()">Start New Analysis</button>
+            </div>
+        </div>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // Initialize Supabase
+        let supabaseClient;
+        
+        function initSupabase() {
+            if (typeof window.supabase === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+                script.onload = () => {
+                    supabaseClient = window.supabase.createClient(
+                        'https://clhuplhaejneecbyhphh.supabase.co',
+                        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsaHVwbGhhZWpuZWVjYnlocGhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjY2OTI0NzMsImV4cCI6MjA0MjI2ODQ3M30.HCW1CV2BbA5DdCd_9Q_vEoMxA-NMkPtZG2qg3hJDZLo'
+                    );
+                    startApp();
+                };
+                document.head.appendChild(script);
+            } else {
+                supabaseClient = window.supabase.createClient(
+                    'https://clhuplhaejneecbyhphh.supabase.co',
+                    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsaHVwbGhhZWpuZWVjYnlocGhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjY2OTI0NzMsImV4cCI6MjA0MjI2ODQ3M30.HCW1CV2BbA5DdCd_9Q_vEoMxA-NMkPtZG2qg3hJDZLo'
+                );
+                startApp();
+            }
+        }
+
+        function startApp() {
+            getUserEmail();
+            updateProgress();
+        }
+
+        let userEmail = null;
+
+        function getUserEmail() {
+            try {
+                if (window.parent.$memberstackDom) {
+                    window.parent.$memberstackDom.getCurrentMember()
+                        .then(({ data: member }) => {
+                            if (member) {
+                                userEmail = member.auth.email;
+                                loadProgress();
+                            }
+                        });
+                } else if (localStorage.getItem('cloverpath_user_email')) {
+                    userEmail = localStorage.getItem('cloverpath_user_email');
+                    loadProgress();
+                } else {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    userEmail = urlParams.get('email');
+                    if (userEmail) {
+                        loadProgress();
+                    }
+                }
+            } catch (error) {
+                console.error('Error getting user email:', error);
+            }
+        }
+
+        async function loadProgress() {
+            if (!userEmail) return;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('simulation_progress')
+                    .select('*')
+                    .eq('user_email', userEmail)
+                    .eq('simulation_type', 'cybersecurity')
+                    .single();
+
+                if (data && data.progress_data) {
+                    const savedData = data.progress_data;
+                    Object.keys(savedData).forEach(key => {
+                        const element = document.getElementById(key);
+                        if (element) {
+                            if (element.type === 'checkbox') {
+                                element.checked = savedData[key];
+                            } else {
+                                element.value = savedData[key];
+                            }
+                        }
+                    });
+                    
+                    if (savedData.currentSection) {
+                        currentSection = savedData.currentSection;
+                        showSection(currentSection);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading progress:', error);
+            }
+        }
+
+        async function saveProgress() {
+            if (!userEmail) return;
+
+            const formData = {};
+            
+            document.querySelectorAll('input, textarea, select').forEach(element => {
+                if (element.id) {
+                    if (element.type === 'checkbox') {
+                        formData[element.id] = element.checked;
+                    } else {
+                        formData[element.id] = element.value;
+                    }
+                }
+            });
+
+            formData.currentSection = currentSection;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('simulation_progress')
+                    .upsert({
+                        user_email: userEmail,
+                        simulation_type: 'cybersecurity',
+                        progress_data: formData,
+                        last_updated: new Date().toISOString()
+                    }, {
+                        onConflict: 'user_email,simulation_type'
+                    });
+
+                if (error) throw error;
+            } catch (error) {
+                console.error('Error saving progress:', error);
+            }
+        }
+
+        document.addEventListener('input', () => {
+            clearTimeout(window.saveTimeout);
+            window.saveTimeout = setTimeout(saveProgress, 2000);
+        });
+
+        let currentSection = 0;
+        const totalSections = 6;
+
+        function updateProgress() {
+            const progress = (currentSection / (totalSections - 1)) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressPercent').textContent = Math.round(progress) + '% Complete';
+            
+            const labels = ['Introduction', 'Threat Classification', 'Risk Assessment', 'Response Plan', 'Investigation & Analysis', 'Results'];
+            document.getElementById('progressLabel').textContent = labels[currentSection];
+        }
+
+        function showSection(index) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById('section' + index).classList.add('active');
+            currentSection = index;
+            updateProgress();
+            window.scrollTo(0, 0);
+            saveProgress();
+            
+            setTimeout(function() {
+                const height = document.body.scrollHeight + 100;
+                window.parent.postMessage({
+                    type: 'iframe-height',
+                    height: height
+                }, '*');
+            }, 300);
+        }
+
+        function nextSection() {
+            if (currentSection < totalSections - 1) {
+                showSection(currentSection + 1);
+            }
+        }
+
+        function prevSection() {
+            if (currentSection > 0) {
+                showSection(currentSection - 1);
+            }
+        }
+
+        function toggleMaterials(id) {
+            const content = document.getElementById(id);
+            const box = content.closest('.materials-box');
+            content.classList.toggle('show');
+            
+            if (content.classList.contains('show')) {
+                box.querySelector('.materials-toggle').textContent = 'Click to Hide';
+            } else {
+                box.querySelector('.materials-toggle').textContent = 'Click to View';
+            }
+        }
+
+        function toggleExample(id) {
+            const content = document.getElementById(id);
+            const header = content.previousElementSibling;
+            const toggle = header.querySelector('.example-toggle');
+            content.classList.toggle('show');
+            
+            if (content.classList.contains('show')) {
+                toggle.textContent = 'Click to Hide';
+            } else {
+                toggle.textContent = 'Click to View';
+            }
+        }
+
+        function calculateScore() {
+            let section1Score = 0;
+            let section2Score = 0;
+            let section3Score = 0;
+            let section4Score = 0;
+            let feedback = '';
+
+            // Section 1: Threat Classification (25 points)
+            const threatType = document.getElementById('threatType').value;
+            const mitreTechCount = document.getElementById('mitreTechCount').value;
+            const exfiltrationAnalysis = document.getElementById('exfiltrationAnalysis').value;
+
+            feedback += '<div class="feedback-box success"><h3>Section 1: Threat Classification & Initial Assessment</h3>';
+
+            // Q1: Threat type (6 points)
+            if (threatType === 'apt') {
+                section1Score += 6;
+                feedback += '<p><strong>✓ Threat Classification (6/6):</strong> Correct. This is an Advanced Persistent Threat with coordinated multi-vector attack.</p>';
+            } else {
+                section1Score += 0;
+                feedback += '<p><strong>✗ Threat Classification (0/6):</strong> Incorrect. Multiple coordinated attack vectors (BEC + credential stuffing + ransomware + exfiltration) indicate APT, not simple phishing or single-vector attack.</p>';
+            }
+
+            // Q2: MITRE technique count (6 points)
+            const techCount = parseInt(mitreTechCount);
+            if (techCount === 8) {
+                section1Score += 6;
+                feedback += '<p><strong>✓ MITRE Technique Count (6/6):</strong> Correct—8 distinct techniques mapped in materials table.</p>';
+            } else {
+                section1Score += 0;
+                feedback += '<p><strong>✗ MITRE Technique Count (0/6):</strong> Incorrect. Review MITRE ATT&CK mapping table—8 technique IDs are documented.</p>';
+            }
+
+            // Q3: Exfiltration analysis (13 points)
+            const exfilWordCount = exfiltrationAnalysis.trim().split(/\s+/).length;
+            const hasDoubleExtortion = exfiltrationAnalysis.toLowerCase().includes('double') || exfiltrationAnalysis.toLowerCase().includes('extortion');
+            const has2point3GB = exfiltrationAnalysis.includes('2.3');
+            const hasTimeline = exfiltrationAnalysis.includes('10:') || exfiltrationAnalysis.toLowerCase().includes('after');
+            const hasLeverage = exfiltrationAnalysis.toLowerCase().includes('leverage') || exfiltrationAnalysis.toLowerCase().includes('ransom');
+            const hasBackup = exfiltrationAnalysis.toLowerCase().includes('backup');
+
+            let exfilScore = 0;
+            if (exfilWordCount >= 120) exfilScore += 3;
+            else if (exfilWordCount >= 90) exfilScore += 2;
+            if (hasDoubleExtortion) exfilScore += 3;
+            if (has2point3GB) exfilScore += 2;
+            if (hasTimeline) exfilScore += 2;
+            if (hasLeverage) exfilScore += 2;
+            if (hasBackup) exfilScore += 1;
+
+            section1Score += Math.min(13, exfilScore);
+            if (exfilScore >= 11) {
+                feedback += '<p><strong>✓ Exfiltration Analysis (' + Math.min(13, exfilScore) + '/13):</strong> Strong explanation of double-extortion tactic and strategic implications.</p>';
+            } else {
+                feedback += '<p><strong>⚠ Exfiltration Analysis (' + Math.min(13, exfilScore) + '/13):</strong> Needs more detail. Explain double-extortion (steal data + encrypt), why 2.3 GB exfiltration after ransomware blocked proves separate access, and why this creates leverage even if backups work.</p>';
+            }
+
+            feedback += '</div>';
+
+            // Section 2: Risk Assessment (25 points)
+            const criticalAsset1 = document.getElementById('criticalAsset1').value;
+            const criticalAsset2 = document.getElementById('criticalAsset2').value;
+            const riskPrioritization = document.getElementById('riskPrioritization').value;
+            const actionList = document.getElementById('actionList').value;
+
+            feedback += '<div class="feedback-box success"><h3>Section 2: Risk Assessment & Asset Prioritization</h3>';
+
+            // Q4: Critical assets (8 points: 4 + 4)
+            const correctAssets = ['hr_system', 'file_storage'];
+            let assetScore = 0;
+            if (correctAssets.includes(criticalAsset1)) {
+                assetScore += 4;
+                feedback += '<p><strong>✓ Critical Asset #1 (4/4):</strong> Correct—' + (criticalAsset1 === 'hr_system' ? 'HR System' : 'Customer File Storage') + ' has Risk Score 25.</p>';
+            } else {
+                feedback += '<p><strong>✗ Critical Asset #1 (0/4):</strong> Incorrect. Review risk scoring table—HR System and Customer File Storage both have Risk Score 25.</p>';
+            }
+            if (correctAssets.includes(criticalAsset2) && criticalAsset2 !== criticalAsset1) {
+                assetScore += 4;
+                feedback += '<p><strong>✓ Critical Asset #2 (4/4):</strong> Correct—' + (criticalAsset2 === 'hr_system' ? 'HR System' : 'Customer File Storage') + ' has Risk Score 25.</p>';
+            } else {
+                feedback += '<p><strong>✗ Critical Asset #2 (0/4):</strong> Incorrect. Must select the other asset with Risk Score 25.</p>';
+            }
+            section2Score += assetScore;
+
+            // Q5: Risk prioritization (7 points)
+            const riskWordCount = riskPrioritization.trim().split(/\s+/).length;
+            const hasLikelihood = riskPrioritization.toLowerCase().includes('likelihood');
+            const has34Attempts = riskPrioritization.includes('34');
+            const hasActive = riskPrioritization.toLowerCase().includes('active');
+            const hasScoring = riskPrioritization.includes('5') || riskPrioritization.includes('=');
+
+            let riskScore = 0;
+            if (riskWordCount >= 100) riskScore += 2;
+            if (hasLikelihood) riskScore += 2;
+            if (has34Attempts) riskScore += 1;
+            if (hasActive) riskScore += 1;
+            if (hasScoring) riskScore += 1;
+
+            section2Score += Math.min(7, riskScore);
+            if (riskScore >= 6) {
+                feedback += '<p><strong>✓ Risk Prioritization (' + Math.min(7, riskScore) + '/7):</strong> Clear explanation of Likelihood-based priority.</p>';
+            } else {
+                feedback += '<p><strong>⚠ Risk Prioritization (' + Math.min(7, riskScore) + '/7):</strong> Needs more detail. Explain: HR System Likelihood=5 (34 active attacks) vs. Customer DB Likelihood=4 (not yet targeted). Active attack takes precedence even if other asset has more data.</p>';
+            }
+
+            // Q6: Action list (10 points)
+            const actionWordCount = actionList.trim().split(/\s+/).length;
+            const hasIP = actionList.includes('185') || actionList.toLowerCase().includes('block') || actionList.toLowerCase().includes('firewall');
+            const hasWorkstation = actionList.includes('10.0.5') || actionList.toLowerCase().includes('isolate');
+            const hasPassword = actionList.toLowerCase().includes('password') || actionList.toLowerCase().includes('reset');
+            const hasPriority = actionList.toLowerCase().includes('priority') || actionList.toLowerCase().includes('first');
+            const hasSpecific = actionList.toLowerCase().includes('because') || actionList.toLowerCase().includes('expected');
+
+            let actionScore = 0;
+            if (actionWordCount >= 150) actionScore += 3;
+            else if (actionWordCount >= 120) actionScore += 2;
+            if (hasIP) actionScore += 2;
+            if (hasWorkstation) actionScore += 2;
+            if (hasPassword) actionScore += 1;
+            if (hasPriority) actionScore += 1;
+            if (hasSpecific) actionScore += 1;
+
+            section2Score += Math.min(10, actionScore);
+            if (actionScore >= 8) {
+                feedback += '<p><strong>✓ Action List (' + Math.min(10, actionScore) + '/10):</strong> Comprehensive prioritized containment actions.</p>';
+            } else {
+                feedback += '<p><strong>⚠ Action List (' + Math.min(10, actionScore) + '/10):</strong> Good start but needs more specificity. Include: block attacker IPs at firewall, isolate workstations 10.0.5.42/67, force password reset on compromised accounts, with specific justification for priority order.</p>';
+            }
+
+            feedback += '</div>';
+
+            // Section 3: Response Plan (25 points)
+            const containmentTypes = document.getElementById('containmentTypes').value;
+            const credentialRotation = document.getElementById('credentialRotation').value;
+            const responsePlan = document.getElementById('responsePlan').value;
+
+            feedback += '<div class="feedback-box success"><h3>Section 3: Incident Response Action Plan</h3>';
+
+            // Q7: Containment types (6 points)
+            const contWordCount = containmentTypes.trim().split(/\s+/).length;
+            const hasShortTerm = containmentTypes.toLowerCase().includes('short');
+            const hasLongTerm = containmentTypes.toLowerCase().includes('long');
+            const hasExample = containmentTypes.toLowerCase().includes('isolate') || containmentTypes.toLowerCase().includes('mfa');
+
+            let contScore = 0;
+            if (contWordCount >= 80) contScore += 2;
+            if (hasShortTerm && hasLongTerm) contScore += 2;
+            if (hasExample) contScore += 2;
+
+            section3Score += Math.min(6, contScore);
+            if (contScore >= 5) {
+                feedback += '<p><strong>✓ Containment Types (' + Math.min(6, contScore) + '/6):</strong> Clear definitions with examples.</p>';
+            } else {
+                feedback += '<p><strong>⚠ Containment Types (' + Math.min(6, contScore) + '/6):</strong> Needs clearer distinction. Short-term = immediate stop threat (isolate workstations), Long-term = strengthen defenses (deploy MFA, network segmentation).</p>';
+            }
+
+            // Q8: Credential rotation (7 points)
+            const credWordCount = credentialRotation.trim().split(/\s+/).length;
+            const hasDwellTime = credentialRotation.toLowerCase().includes('dwell') || credentialRotation.toLowerCase().includes('duration');
+            const hasKeylogger = credentialRotation.toLowerCase().includes('keylog');
+            const hasAssumeBreach = credentialRotation.toLowerCase().includes('assume');
+            const has500 = credentialRotation.includes('500');
+
+            let credScore = 0;
+            if (credWordCount >= 100) credScore += 2;
+            if (hasDwellTime) credScore += 2;
+            if (hasKeylogger) credScore += 2;
+            if (hasAssumeBreach || has500) credScore += 1;
+
+            section3Score += Math.min(7, credScore);
+            if (credScore >= 6) {
+                feedback += '<p><strong>✓ Credential Rotation (' + Math.min(7, credScore) + '/7):</strong> Strong rationale for comprehensive rotation.</p>';
+            } else {
+                feedback += '<p><strong>⚠ Credential Rotation (' + Math.min(7, credScore) + '/7):</strong> Needs more depth. Explain: unknown dwell time (attackers may have had access for days/weeks), keyloggers in executables could have captured credentials, "assume breach" principle requires full rotation.</p>';
+            }
+
+            // Q9: Response plan (12 points)
+            const planWordCount = responsePlan.trim().split(/\s+/).length;
+            const hasPhases = (responsePlan.match(/phase/gi) || []).length >= 4;
+            const hasPlanTimeline = responsePlan.includes('hour') || responsePlan.includes('24');
+            const hasActions = responsePlan.toLowerCase().includes('isolate') || responsePlan.toLowerCase().includes('rotate');
+            const hasTeams = responsePlan.toLowerCase().includes('soc') || responsePlan.toLowerCase().includes('team');
+            const hasSuccess = responsePlan.toLowerCase().includes('success') || responsePlan.toLowerCase().includes('criteria');
+
+            let planScore = 0;
+            if (planWordCount >= 250) planScore += 4;
+            else if (planWordCount >= 200) planScore += 3;
+            if (hasPhases) planScore += 2;
+            if (hasPlanTimeline) planScore += 2;
+            if (hasActions) planScore += 2;
+            if (hasTeams) planScore += 1;
+            if (hasSuccess) planScore += 1;
+
+            section3Score += Math.min(12, planScore);
+            if (planScore >= 10) {
+                feedback += '<p><strong>✓ Response Plan (' + Math.min(12, planScore) + '/12):</strong> Comprehensive 4-phase plan with specific actions.</p>';
+            } else {
+                feedback += '<p><strong>⚠ Response Plan (' + Math.min(12, planScore) + '/12):</strong> Good structure but needs more detail. Each phase needs: timeline, specific technical actions (not generic), responsible teams, success criteria. Use NIST stages from materials as template.</p>';
+            }
+
+            feedback += '</div>';
+
+            // Section 4: Investigation & Analysis (25 points)
+            const siemQuery = document.getElementById('siemQuery').value;
+            const securityImprovements = document.getElementById('securityImprovements').value;
+            const executiveSummary = document.getElementById('executiveSummary').value;
+
+            feedback += '<div class="feedback-box success"><h3>Section 4: Forensic Investigation & Post-Incident</h3>';
+
+            // Q10: SIEM query (6 points)
+            if (siemQuery === 'failed_then_success') {
+                section4Score += 6;
+                feedback += '<p><strong>✓ SIEM Query Selection (6/6):</strong> Correct. Failed-then-success correlation detects credential compromise pattern.</p>';
+            } else {
+                section4Score += 0;
+                feedback += '<p><strong>✗ SIEM Query Selection (0/6):</strong> Incorrect. Query that correlates failed logins followed by successful login identifies credential stuffing attacks that worked.</p>';
+            }
+
+            // Q11: Security improvements (8 points)
+            const improvWordCount = securityImprovements.trim().split(/\s+/).length;
+            const hasMFA = securityImprovements.toLowerCase().includes('mfa') || securityImprovements.toLowerCase().includes('multi-factor');
+            const hasEDR = securityImprovements.toLowerCase().includes('edr') || securityImprovements.toLowerCase().includes('endpoint');
+            const hasSegment = securityImprovements.toLowerCase().includes('segment') || securityImprovements.toLowerCase().includes('network');
+            const hasJustification = securityImprovements.toLowerCase().includes('prevent') || securityImprovements.toLowerCase().includes('because');
+
+            let improvScore = 0;
+            if (improvWordCount >= 120) improvScore += 2;
+            if (hasMFA) improvScore += 2;
+            if (hasEDR || hasSegment) improvScore += 2;
+            if (hasJustification) improvScore += 2;
+
+            section4Score += Math.min(8, improvScore);
+            if (improvScore >= 7) {
+                feedback += '<p><strong>✓ Security Improvements (' + Math.min(8, improvScore) + '/8):</strong> Clear, actionable recommendations.</p>';
+            } else {
+                feedback += '<p><strong>⚠ Security Improvements (' + Math.min(8, improvScore) + '/8):</strong> Needs more specificity. Recommend: MFA on all systems (blocks credential-based attacks), complete EDR deployment (early malware detection), network segmentation (limits lateral movement). Include cost/priority.</p>';
+            }
+
+            // Q12: Executive summary (11 points)
+            const execWordCount = executiveSummary.trim().split(/\s+/).length;
+            const hasIncident = executiveSummary.toLowerCase().includes('attack') || executiveSummary.toLowerCase().includes('incident');
+            const hasImpact = executiveSummary.includes('$') || executiveSummary.toLowerCase().includes('financial');
+            const hasRootCause = executiveSummary.toLowerCase().includes('mfa') || executiveSummary.toLowerCase().includes('gap');
+            const hasResponse = executiveSummary.toLowerCase().includes('contain') || executiveSummary.toLowerCase().includes('hour');
+            const hasRecommend = executiveSummary.toLowerCase().includes('recommend') || executiveSummary.toLowerCase().includes('invest');
+
+            let execScore = 0;
+            if (execWordCount >= 250) execScore += 3;
+            else if (execWordCount >= 200) execScore += 2;
+            if (hasIncident) execScore += 2;
+            if (hasImpact) execScore += 2;
+            if (hasRootCause) execScore += 2;
+            if (hasResponse) execScore += 1;
+            if (hasRecommend) execScore += 1;
+
+            section4Score += Math.min(11, execScore);
+            if (execScore >= 9) {
+                feedback += '<p><strong>✓ Executive Summary (' + Math.min(11, execScore) + '/11):</strong> Comprehensive CISO-level summary with business framing.</p>';
+            } else {
+                feedback += '<p><strong>⚠ Executive Summary (' + Math.min(11, execScore) + '/11):</strong> Good foundation but needs more structure. Include: incident overview (what happened), business impact ($$ exposure), root causes (MFA gap, EDR gap), response effectiveness (what worked/didn\'t), strategic recommendations with costs.</p>';
+            }
+
+            feedback += '</div>';
+
+            // Calculate total and display
+            const totalScore = section1Score + section2Score + section3Score + section4Score;
+
+            document.getElementById('score1').textContent = section1Score.toFixed(1) + '/25';
+            document.getElementById('score2').textContent = section2Score.toFixed(1) + '/25';
+            document.getElementById('score3').textContent = section3Score.toFixed(1) + '/25';
+            document.getElementById('score4').textContent = section4Score.toFixed(1) + '/25';
+            document.getElementById('totalScore').textContent = totalScore.toFixed(0);
+
+            let category = '';
+            if (totalScore >= 90) {
+                category = 'Outstanding - Senior Security Analyst Level';
+            } else if (totalScore >= 80) {
+                category = 'Strong - Competent Incident Responder';
+            } else if (totalScore >= 70) {
+                category = 'Good - Solid Security Foundation';
+            } else if (totalScore >= 60) {
+                category = 'Adequate - Basic IR Understanding';
+            } else {
+                category = 'Needs Improvement - Review Materials';
+            }
+
+            document.getElementById('scoreCategory').textContent = category;
+            document.getElementById('detailedFeedback').innerHTML = feedback;
+
+            showSection(5);
+        }
+
+        function downloadReport() {
+            const reportContent = `
+TECHNOVA INCIDENT RESPONSE ANALYSIS - SECURITY REPORT
+Generated: ${new Date().toLocaleDateString()}
+
+TOTAL SCORE: ${document.getElementById('totalScore').textContent}/100
+
+SCORE BREAKDOWN:
+- Section 1: Threat Classification & Initial Assessment: ${document.getElementById('score1').textContent}
+- Section 2: Risk Assessment & Asset Prioritization: ${document.getElementById('score2').textContent}
+- Section 3: Incident Response Action Plan: ${document.getElementById('score3').textContent}
+- Section 4: Forensic Investigation & Post-Incident: ${document.getElementById('score4').textContent}
+
+PERFORMANCE CATEGORY: ${document.getElementById('scoreCategory').textContent}
+
+YOUR RESPONSES:
+
+Section 1: Threat Classification
+1. Primary Threat Type: ${document.getElementById('threatType').value}
+2. MITRE Technique Count: ${document.getElementById('mitreTechCount').value}
+3. Exfiltration Analysis: ${document.getElementById('exfiltrationAnalysis').value}
+
+Section 2: Risk Assessment
+4. Critical Asset #1: ${document.getElementById('criticalAsset1').value}
+   Critical Asset #2: ${document.getElementById('criticalAsset2').value}
+5. Risk Prioritization: ${document.getElementById('riskPrioritization').value}
+6. Action List: ${document.getElementById('actionList').value}
+
+Section 3: Response Plan
+7. Containment Types: ${document.getElementById('containmentTypes').value}
+8. Credential Rotation Rationale: ${document.getElementById('credentialRotation').value}
+9. Full Response Plan: ${document.getElementById('responsePlan').value}
+
+Section 4: Investigation & Analysis
+10. SIEM Query: ${document.getElementById('siemQuery').value}
+11. Security Improvements: ${document.getElementById('securityImprovements').value}
+            `;
+            
+            const blob = new Blob([reportContent], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `TechNova_Incident_Response_${Date.now()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        function sendHeightToParent() {
+            try {
+                const height = document.body.scrollHeight + 100;
+                window.parent.postMessage({
+                    type: 'iframe-height',
+                    height: height
+                }, '*');
+            } catch (e) {
+                console.error('Error sending height:', e);
+            }
+        }
+        
+        window.addEventListener('load', function() {
+            setTimeout(sendHeightToParent, 500);
+            setTimeout(sendHeightToParent, 1500);
+        });
+
+        initSupabase();
+    </script>
+    
+    <div id="content-end-marker" style="height: 1px; margin: 0; padding: 0;"></div>
+</body>
+</html>
