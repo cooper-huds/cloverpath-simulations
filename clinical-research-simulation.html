@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Research Coordination Simulation - Children's Research Institute - Cloverpath</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Global overflow protection */
+        body, html {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        /* Ensure all text respects boundaries */
+        p, h1, h2, h3, h4, h5, h6, li, td, th, div, span {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+        }
+
+        :root {
+            --primary-green: #2d8659;
+            --light-green: #7cb342;
+            --dark-green: #1b5e3a;
+            --light-green-dark: #5a9c2e;
+            --bg-light: #f5f9f7;
+            --text-dark: #1a1a1a;
+            --text-gray: #666;
+            --border-color: #e0e0e0;
+            --white: #ffffff;
+            --yellow: #ffc107;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            color: var(--white);
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .progress-container {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-green) 0%, var(--light-green) 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        .company-banner {
+            background: linear-gradient(135deg, #5a9c2e 0%, #7cb342 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            word-wrap: break-word;
+        }
+
+        .company-banner h2 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            line-height: 1.2;
+        }
+
+        .company-banner p {
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .trial-info {
+            background: white;
+            border: 2px solid var(--primary-green);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .trial-info h3 {
+            color: var(--primary-green);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .trial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .trial-stat {
+            padding: 12px;
+            background: var(--bg-light);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .trial-stat strong {
+            display: block;
+            color: var(--primary-green);
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+        }
+
+        .trial-stat span {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .section {
+            display: none;
+            background: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary-green);
+        }
+
+        .section-header h2 {
+            color: var(--primary-green);
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .materials-box {
+            background: var(--white);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .materials-header {
+            background: var(--white);
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .materials-header:hover {
+            background: var(--bg-light);
+        }
+
+        .materials-header h3 {
+            color: var(--primary-green);
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        .materials-toggle {
+            font-size: 1.5rem;
+            color: var(--primary-green);
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+
+        .materials-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .materials-content.open {
+            max-height: 5000px;
+        }
+
+        .materials-inner {
+            padding: 25px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-green);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 5px;
+            color: var(--text-gray);
+            cursor: help;
+        }
+
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-dark);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-right: 10px;
+        }
+
+        .btn-primary {
+            background: var(--primary-green);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-green);
+            border: 2px solid var(--primary-green);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-light);
+        }
+
+        .feedback-box {
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .feedback-box.success {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+        }
+
+        .feedback-box.warning {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+        }
+
+        .feedback-box.error {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .data-table th {
+            background: var(--light-green-dark);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover {
+            background: var(--bg-light);
+        }
+
+        .score-card {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--light-green) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .score-card h2 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .score-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .score-item {
+            background: white;
+            color: var(--text-dark);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .score-item h4 {
+            color: var(--primary-green);
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .company-banner h2 {
+                font-size: 1.5rem;
+            }
+
+            .trial-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Clinical Research Coordination Simulation</h1>
+            <p>Manage a pediatric asthma clinical trial from recruitment to data analysis</p>
+        </div>
+
+        <div class="progress-container">
+            <h3>Your Progress</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text">
+                <span id="progressLabel">Introduction</span>
+                <span id="progressPercent">0% Complete</span>
+            </div>
+        </div>
+
+        <div class="company-banner">
+            <h2>Children's Research Institute</h2>
+            <p>Clinical Research Department - Respiratory Studies Division</p>
+        </div>
+
+        <!-- Section 0: Introduction & Materials -->
+        <div class="section active" id="section0">
+            <div class="section-header">
+                <h2>Welcome to Your Clinical Research Assignment</h2>
+                <p>Review the trial materials and prepare to coordinate this important pediatric study</p>
+            </div>
+
+            <div class="feedback-box success">
+                <h3 style="margin-bottom: 10px;">Your Role</h3>
+                <p><strong>Position:</strong> Clinical Research Coordinator Intern</p>
+                <p><strong>Principal Investigator:</strong> Dr. Sarah Martinez, MD, PhD</p>
+                <p><strong>Trial Duration:</strong> 6-month recruitment period (target: 75 participants)</p>
+                <p><strong>Your Mission:</strong> Support all aspects of the trial from patient screening to data management while ensuring regulatory compliance and participant safety.</p>
+            </div>
+
+            <div class="trial-info">
+                <h3>Trial Overview: BREATHE-EASY Phase II Study</h3>
+                <p><strong>Protocol ID:</strong> MCHR-2026-RESP-001</p>
+                <p><strong>Study Design:</strong> Randomized, double-blind, placebo-controlled trial evaluating efficacy of investigational inhaled biologic (BioBreath-200) for moderate-to-severe pediatric asthma</p>
+                
+                <div class="trial-grid">
+                    <div class="trial-stat">
+                        <strong>Target Enrollment</strong>
+                        <span>75 participants</span>
+                    </div>
+                    <div class="trial-stat">
+                        <strong>Age Range</strong>
+                        <span>6-17 years</span>
+                    </div>
+                    <div class="trial-stat">
+                        <strong>Study Duration</strong>
+                        <span>24 weeks per participant</span>
+                    </div>
+                    <div class="trial-stat">
+                        <strong>Trial Phase</strong>
+                        <span>Phase II</span>
+                    </div>
+                    <div class="trial-stat">
+                        <strong>IRB Approval Date</strong>
+                        <span>January 15, 2026</span>
+                    </div>
+                    <div class="trial-stat">
+                        <strong>Enrollment Deadline</strong>
+                        <span>July 15, 2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="materials-box">
+                <div class="materials-header" onclick="toggleMaterials()">
+                    <h3>Trial Materials & Documentation</h3>
+                    <span class="materials-toggle" id="materialsToggle">+</span>
+                </div>
+                <div class="materials-content" id="materialsContent">
+                    <div class="materials-inner">
+                        <h4 style="color: var(--primary-green); margin-bottom: 15px;">Protocol Summary</h4>
+                        
+                        <p><strong>Primary Objective:</strong> Evaluate the efficacy of BioBreath-200 in reducing asthma exacerbation rates in children with moderate-to-severe asthma compared to placebo.</p>
+                        
+                        <p style="margin-top: 15px;"><strong>Secondary Objectives:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Assess improvements in lung function (FEV1% predicted)</li>
+                            <li>Evaluate quality of life using Pediatric Asthma Quality of Life Questionnaire (PAQLQ)</li>
+                            <li>Monitor safety and tolerability of BioBreath-200</li>
+                            <li>Measure reduction in rescue inhaler use</li>
+                        </ul>
+
+                        <h4 style="color: var(--primary-green); margin: 25px 0 15px 0;">Inclusion Criteria</h4>
+                        <ul style="margin-left: 20px;">
+                            <li>Age 6-17 years (inclusive)</li>
+                            <li>Physician-diagnosed asthma for ≥12 months</li>
+                            <li>≥2 exacerbations requiring oral corticosteroids in past 12 months</li>
+                            <li>FEV1 40-80% predicted at screening</li>
+                            <li>Currently on moderate-dose inhaled corticosteroids (ICS) ± long-acting beta-agonist (LABA)</li>
+                            <li>Parent/guardian able to provide informed consent; assent from participants ≥7 years</li>
+                        </ul>
+
+                        <h4 style="color: var(--primary-green); margin: 25px 0 15px 0;">Exclusion Criteria</h4>
+                        <ul style="margin-left: 20px;">
+                            <li>Other chronic lung diseases (cystic fibrosis, bronchiectasis)</li>
+                            <li>Smoking history or household exposure to >10 cigarettes/day</li>
+                            <li>Use of biologics (omalizumab, mepolizumab) within 6 months</li>
+                            <li>Severe asthma exacerbation requiring hospitalization within 4 weeks</li>
+                            <li>Known allergy to study drug components</li>
+                            <li>Pregnancy (for post-menarchal females)</li>
+                        </ul>
+
+                        <h4 style="color: var(--primary-green); margin: 25px 0 15px 0;">Study Schedule</h4>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Visit</th>
+                                    <th>Week</th>
+                                    <th>Procedures</th>
+                                    <th>Duration</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Screening</td>
+                                    <td>-2</td>
+                                    <td>Consent, medical history, spirometry, bloodwork</td>
+                                    <td>90 min</td>
+                                </tr>
+                                <tr>
+                                    <td>Baseline</td>
+                                    <td>0</td>
+                                    <td>Randomization, first dose, PAQLQ, safety labs</td>
+                                    <td>120 min</td>
+                                </tr>
+                                <tr>
+                                    <td>Week 4</td>
+                                    <td>4</td>
+                                    <td>Spirometry, adverse events, study drug accountability</td>
+                                    <td>60 min</td>
+                                </tr>
+                                <tr>
+                                    <td>Week 12</td>
+                                    <td>12</td>
+                                    <td>Spirometry, PAQLQ, safety labs, adverse events</td>
+                                    <td>90 min</td>
+                                </tr>
+                                <tr>
+                                    <td>Week 24 (End)</td>
+                                    <td>24</td>
+                                    <td>Final spirometry, PAQLQ, safety labs, study closeout</td>
+                                    <td>120 min</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4 style="color: var(--primary-green); margin: 25px 0 15px 0;">Patient Database Overview</h4>
+                        <p>Our hospital's asthma clinic has 428 active pediatric patients. Here's the current database breakdown:</p>
+                        
+                        <table class="data-table" style="margin-top: 15px;">
+                            <thead>
+                                <tr>
+                                    <th>Age Group</th>
+                                    <th>Total Patients</th>
+                                    <th>Moderate-Severe Asthma</th>
+                                    <th>On ICS+LABA</th>
+                                    <th>≥2 Exacerbations/Year</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>6-8 years</td>
+                                    <td>98</td>
+                                    <td>42</td>
+                                    <td>28</td>
+                                    <td>18</td>
+                                </tr>
+                                <tr>
+                                    <td>9-12 years</td>
+                                    <td>156</td>
+                                    <td>72</td>
+                                    <td>54</td>
+                                    <td>38</td>
+                                </tr>
+                                <tr>
+                                    <td>13-17 years</td>
+                                    <td>174</td>
+                                    <td>86</td>
+                                    <td>62</td>
+                                    <td>44</td>
+                                </tr>
+                                <tr style="background: var(--bg-light); font-weight: 600;">
+                                    <td>TOTAL</td>
+                                    <td>428</td>
+                                    <td>200</td>
+                                    <td>144</td>
+                                    <td>100</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4 style="color: var(--primary-green); margin: 25px 0 15px 0;">Regulatory Requirements</h4>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>IRB Reporting:</strong> All serious adverse events (SAEs) must be reported to IRB within 24 hours</li>
+                            <li><strong>Data Management:</strong> Case Report Forms (CRFs) must be completed within 48 hours of each visit</li>
+                            <li><strong>Monitoring Visits:</strong> Sponsor monitors will audit 100% of consent forms and 25% of source documents quarterly</li>
+                            <li><strong>Drug Accountability:</strong> Study drug logs must be reconciled monthly</li>
+                            <li><strong>Protocol Deviations:</strong> All deviations must be documented and reported to PI within 24 hours</li>
+                        </ul>
+
+                        <h4 style="color: var(--primary-green); margin: 25px 0 15px 0;">Recruitment Challenges</h4>
+                        <p><strong>Current Status (Week 8 of recruitment):</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Patients screened: 32</li>
+                            <li>Screen failures: 14 (44% failure rate)</li>
+                            <li>Enrolled: 18 participants</li>
+                            <li>Target enrollment pace: 3.1 patients/week needed to reach 75 by deadline</li>
+                            <li>Current pace: 2.3 patients/week (25% behind target)</li>
+                        </ul>
+
+                        <p style="margin-top: 15px;"><strong>Common Screen Failure Reasons:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>FEV1 >80% (too well-controlled): 5 patients</li>
+                            <li>Recent biologic use: 3 patients</li>
+                            <li>Only 1 exacerbation in past year: 4 patients</li>
+                            <li>Parent declined participation: 2 patients</li>
+                        </ul>
+
+                        <h4 style="color: var(--primary-green); margin: 25px 0 15px 0;">Budget & Compensation</h4>
+                        <p><strong>Per-Patient Payment:</strong> $1,200 from sponsor (covers all visits)</p>
+                        <p><strong>Participant Compensation:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Screening visit: $50 gift card</li>
+                            <li>Each study visit: $75 gift card</li>
+                            <li>Completion bonus: $100 gift card</li>
+                            <li>Total per participant: $525</li>
+                            <li>Parking validation provided for all visits</li>
+                        </ul>
+
+                        <h4 style="color: var(--primary-green); margin: 25px 0 15px 0;">Safety Monitoring</h4>
+                        <p><strong>Data Safety Monitoring Board (DSMB) Stopping Rules:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>≥2 anaphylactic reactions → immediate trial suspension</li>
+                            <li>>15% treatment-related SAEs → trial review</li>
+                            <li>Exacerbation rate in treatment arm >1.5x placebo → futility analysis</li>
+                        </ul>
+
+                        <p style="margin-top: 15px;"><strong>Adverse Events to Monitor:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Injection site reactions (expected in ~40%)</li>
+                            <li>Upper respiratory tract infections</li>
+                            <li>Headaches</li>
+                            <li>Nausea/vomiting</li>
+                            <li>Worsening asthma symptoms (requires immediate PI notification)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="showSection(1)">Begin Simulation →</button>
+        </div>
+
+        <!-- Section 1: Patient Screening & Recruitment (25 points) -->
+        <div class="section" id="section1">
+            <div class="section-header">
+                <h2>Section 1: Patient Screening & Recruitment Strategy</h2>
+                <p>Analyze the patient database and develop an effective recruitment plan</p>
+            </div>
+
+            <div class="feedback-box warning">
+                <strong>Current Challenge:</strong> You're 8 weeks into recruitment with only 18 enrolled (need 75 total by Week 26). Screen failure rate is 44%. Dr. Martinez has asked you to develop a strategy to accelerate enrollment.
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Q1: How many potentially eligible patients exist in your database?
+                    <span class="tooltip" data-tooltip="Review the patient database table in materials"</span>
+                </label>
+                <input type="number" id="eligiblePatients" placeholder="Enter number of potentially eligible patients">
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Q2: At the current enrollment pace of 2.3 patients/week, how many total participants will you enroll by the deadline (Week 26)?
+                    <span class="tooltip" data-tooltip="18 weeks remaining × 2.3 patients/week + already enrolled"</span>
+                </label>
+                <input type="number" id="projectedEnrollment" placeholder="Enter projected total enrollment">
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Q3: What minimum screening rate (patients screened per week) do you need to achieve your enrollment goal of 75 participants?
+                    <span class="tooltip" data-tooltip="Consider: 44% screen failure rate, 18 weeks remaining, need 57 more enrollees"</span>
+                </label>
+                <input type="number" id="screeningRate" step="0.1" placeholder="Enter patients/week (e.g., 5.5)">
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Q4: Recruitment Strategy - Describe your plan to accelerate enrollment (150+ words)
+                    <span class="tooltip" data-tooltip="Consider: database outreach, reducing screen failures, physician referrals, family communication"</span>
+                </label>
+                <textarea id="recruitmentStrategy" placeholder="Outline specific tactics to reach 75 participants by Week 26. Address: (1) How to identify and contact eligible patients, (2) Strategies to reduce 44% screen failure rate, (3) Communication approach with families, (4) Timeline and milestones"></textarea>
+            </div>
+
+            <button class="btn btn-secondary" onclick="showSection(0)">← Back</button>
+            <button class="btn btn-primary" onclick="showSection(2)">Next Section →</button>
+        </div>
+
+        <!-- Section 2: Informed Consent & Regulatory Compliance (20 points) -->
+        <div class="section" id="section2">
+            <div class="section-header">
+                <h2>Section 2: Informed Consent & Regulatory Compliance</h2>
+                <p>Navigate the consent process and ensure protocol adherence</p>
+            </div>
+
+            <div class="feedback-box success">
+                <p><strong>Scenario:</strong> You have a family (Martinez family) scheduled for a screening visit tomorrow. The patient is Sofia Martinez, age 9, diagnosed with asthma 2 years ago. She meets all inclusion criteria based on chart review.</p>
+                <p style="margin-top: 10px;"><strong>Complication:</strong> Sofia's parents are divorced. Her mother has sole legal custody, but her father wants to be present at the consent visit and is asking detailed questions about the study.</p>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Q5: Who must legally sign the informed consent form for Sofia's participation?
+                </label>
+                <select id="consentSigner">
+                    <option value="">-- Select Answer --</option>
+                    <option value="mother">Mother only (sole legal custody holder)</option>
+                    <option value="both">Both parents must sign</option>
+                    <option value="either">Either parent can sign</option>
+                    <option value="sofia">Sofia can consent herself at age 9</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Q6: What additional document must Sofia provide given her age?
+                </label>
+                <select id="assentRequired">
+                    <option value="">-- Select Answer --</option>
+                    <option value="none">No additional document needed</option>
+                    <option value="assent">Pediatric assent form (age ≥7 years)</option>
+                    <option value="parent">Second parent signature</option>
+                    <option value="notary">Notarized consent</option>
+                </select>
+            </div>
+
+            <div class="feedback-box warning" style="margin-top: 25px;">
+                <p><strong>Protocol Deviation Scenario:</strong> You've just reviewed visit data for Participant #012. The Week 4 visit was conducted on Day 32 instead of Day 28 (±3-day visit window). The spirometry was completed, but the safety labs were accidentally skipped. The participant is scheduled to return for Week 12 visit next month.</p>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Q7: Is the late visit (Day 32 instead of Day 28 ±3) considered a protocol deviation?
+                </label>
+                <select id="visitDeviation">
+                    <option value="">-- Select Answer --</option>
+                    <option value="yes">Yes - outside visit window, must be reported</option>
+                    <option value="no">No - within acceptable range</option>
+                    <option value="minor">Minor deviation, no reporting needed</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Q8: Action Plan - How would you handle the missed safety labs? (100+ words)
+                    <span class="tooltip" data-tooltip="Consider: PI notification, make-up procedures, CRF documentation, monitoring impact"</span>
+                </label>
+                <textarea id="deviationPlan" placeholder="Describe immediate actions, documentation requirements, and how to prevent similar deviations. Include: (1) Timeline for PI notification, (2) Whether to schedule make-up labs, (3) CRF documentation, (4) Prevention strategy"></textarea>
+            </div>
+
+            <button class="btn btn-secondary" onclick="showSection(1)">← Back</button>
+            <button class="btn btn-primary" onclick="showSection(3)">Next Section →</button>
+        </div>
+
+        <!-- Section 3: Adverse Event Management (25 points) -->
+        <div class="section" id="section3">
+            <div class="section-header">
+                <h2>Section 3: Adverse Event Management & Safety Monitoring</h2>
+                <p>Assess and respond to adverse events appropriately</p>
+            </div>
+
+            <div class="feedback-box error">
+                <p><strong>Active Safety Event:</strong> You receive a call at 2:45 PM on Thursday. Parent of Participant #024 (Marcus, age 14) reports that Marcus developed hives, facial swelling, and difficulty breathing 15 minutes after receiving his Week 4 study drug dose this morning at 10:00 AM. They called 911. Marcus was taken to the emergency department and treated with epinephrine, antihistamines, and steroids. He's now stable and being observed in the ED.</p>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Q9: How would you classify this adverse event?
+                </label>
+                <select id="aeClassification">
+                    <option value="">-- Select Answer --</option>
+                    <option value="mild">Mild adverse event</option>
+                    <option value="moderate">Moderate adverse event</option>
+                    <option value="sae">Serious adverse event (SAE)</option>
+                    <option value="expected">Expected adverse reaction (no special reporting)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Q10: What is your immediate reporting timeline to the IRB for this event?
+                </label>
+                <select id="irbTimeline">
+                    <option value="">-- Select Answer --</option>
+                    <option value="24hours">Within 24 hours</option>
+                    <option value="48hours">Within 48 hours</option>
+                    <option value="7days">Within 7 days</option>
+                    <option value="next">At next scheduled IRB meeting</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Q11: Should Marcus continue in the trial?
+                </label>
+                <select id="continueTrial">
+                    <option value="">-- Select Answer --</option>
+                    <option value="continue">Yes, continue study drug as planned</option>
+                    <option value="hold">Hold study drug pending PI review</option>
+                    <option value="discontinue">Discontinue participant immediately</option>
+                    <option value="reduce">Continue with reduced dose</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Q12: Complete Adverse Event Report - Document this incident (150+ words)
+                    <span class="tooltip" data-tooltip="Include: event description, timeline, causality assessment, actions taken, outcome"</span>
+                </label>
+                <textarea id="aeReport" placeholder="Write a formal adverse event report including: (1) Event description with timeline, (2) Severity and causality assessment, (3) Immediate actions taken, (4) Reporting completed, (5) Participant status and follow-up plan"></textarea>
+            </div>
+
+            <button class="btn btn-secondary" onclick="showSection(2)">← Back</button>
+            <button class="btn btn-primary" onclick="showSection(4)">Next Section →</button>
+        </div>
+
+        <!-- Section 4: Data Management & Study Outcomes (30 points) -->
+        <div class="section" id="section4">
+            <div class="section-header">
+                <h2>Section 4: Data Management & Study Outcomes Analysis</h2>
+                <p>Analyze trial data and prepare for study closeout</p>
+            </div>
+
+            <div class="feedback-box success">
+                <p><strong>Scenario:</strong> The trial has completed enrollment (75 participants). You're preparing for the Week 12 interim analysis. Here's the current data:</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Treatment Arm:</strong> 38 participants (3 discontinued due to AEs, 2 lost to follow-up)</li>
+                    <li><strong>Placebo Arm:</strong> 37 participants (1 discontinued due to AE, 3 lost to follow-up)</li>
+                    <li><strong>Exacerbations - Treatment:</strong> 12 total events among 33 active participants</li>
+                    <li><strong>Exacerbations - Placebo:</strong> 24 total events among 33 active participants</li>
+                </ul>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Q13: What is the retention rate for the treatment arm at Week 12?
+                    <span class="tooltip" data-tooltip="(Participants still active / Total enrolled) × 100"</span>
+                </label>
+                <input type="number" id="retentionRate" step="0.1" placeholder="Enter percentage (e.g., 87.5)">
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Q14: What is the exacerbation rate per participant in the treatment arm?
+                    <span class="tooltip" data-tooltip="Total events / Active participants"</span>
+                </label>
+                <input type="number" id="exacerbationRate" step="0.01" placeholder="Enter rate (e.g., 0.36)">
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Q15: Based on the interim data, what percentage reduction in exacerbations does the treatment arm show compared to placebo?
+                    <span class="tooltip" data-tooltip="[(Placebo rate - Treatment rate) / Placebo rate] × 100"</span>
+                </label>
+                <input type="number" id="reductionPercent" step="0.1" placeholder="Enter percentage (e.g., 50.5)">
+            </div>
+
+            <div class="feedback-box warning" style="margin-top: 25px;">
+                <p><strong>Data Quality Issue:</strong> The sponsor's monitor has identified discrepancies during their quarterly audit:</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>12 CRFs missing spirometry data</li>
+                    <li>8 consent forms missing participant signatures (parent signed only)</li>
+                    <li>Source documents for 5 participants show different FEV1 values than CRFs</li>
+                </ul>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Q16: Query Resolution Plan - How would you address these findings? (150+ words)
+                    <span class="tooltip" data-tooltip="Consider: data correction process, preventing future issues, sponsor communication"</span>
+                </label>
+                <textarea id="queryResolution" placeholder="Describe your action plan for each finding: (1) Missing spirometry data - source document review and CRF completion, (2) Missing assent signatures - consent re-verification process, (3) FEV1 discrepancies - source-to-CRF reconciliation. Include timelines and prevention strategies."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Q17: Study Closeout Preparation - What are your top priorities for successful trial completion? (150+ words)
+                    <span class="tooltip" data-tooltip="Consider: final data collection, regulatory submissions, participant follow-up, archiving"</span>
+                </label>
+                <textarea id="closeoutPlan" placeholder="Outline key closeout activities: (1) Final visit completion for remaining participants, (2) CRF and query resolution, (3) Study drug accountability and destruction, (4) IRB closeout report, (5) Source document archiving, (6) Final sponsor monitoring visit preparation. Include timeline and stakeholder communication plan."></textarea>
+            </div>
+
+            <button class="btn btn-secondary" onclick="showSection(3)">← Back</button>
+            <button class="btn btn-primary" onclick="calculateScore()">Complete Simulation & View Results →</button>
+        </div>
+
+        <!-- Section 5: Results -->
+        <div class="section" id="section5">
+            <div class="section-header">
+                <h2>Your Clinical Research Coordination Results</h2>
+            </div>
+
+            <div class="score-card">
+                <h2 id="totalScore">--</h2>
+                <p style="font-size: 1.2rem;">out of 100 points</p>
+                <p id="scoreCategory" style="font-size: 1.3rem; font-weight: 600; margin-top: 15px;">--</p>
+            </div>
+
+            <div class="score-breakdown">
+                <div class="score-item">
+                    <h4>Section 1</h4>
+                    <p>Patient Screening</p>
+                    <p id="score1" style="font-size: 1.5rem; font-weight: 600; color: var(--primary-green);">--/25</p>
+                </div>
+                <div class="score-item">
+                    <h4>Section 2</h4>
+                    <p>Regulatory Compliance</p>
+                    <p id="score2" style="font-size: 1.5rem; font-weight: 600; color: var(--primary-green);">--/20</p>
+                </div>
+                <div class="score-item">
+                    <h4>Section 3</h4>
+                    <p>Adverse Events</p>
+                    <p id="score3" style="font-size: 1.5rem; font-weight: 600; color: var(--primary-green);">--/25</p>
+                </div>
+                <div class="score-item">
+                    <h4>Section 4</h4>
+                    <p>Data Management</p>
+                    <p id="score4" style="font-size: 1.5rem; font-weight: 600; color: var(--primary-green);">--/30</p>
+                </div>
+            </div>
+
+            <div id="detailedFeedback"></div>
+
+            <button class="btn btn-secondary" onclick="downloadReport()">Download Report</button>
+            <button class="btn btn-primary" onclick="location.reload()">Start Over</button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Supabase
+        let supabaseClient;
+        let userEmail = null;
+        let organizationId = null;
+
+        function initSupabase() {
+            const SUPABASE_URL = 'https://clhuplhaejneecbyhphh.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsaHVwbGhhZWpuZWVjYnlocGhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU1MzM2MjgsImV4cCI6MjA1MTEwOTYyOH0.vyodBXNgvIrv3Bqhm32mG5qW9Sj_NnYUuD-9xOKtKho';
+
+            if (typeof window.supabase === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+                script.onload = () => {
+                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    getUserData();
+                };
+                document.head.appendChild(script);
+            } else {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                getUserData();
+            }
+        }
+
+        function getUserData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Get user email - check URL params first, then localStorage
+            userEmail = urlParams.get('email') || localStorage.getItem('cloverpath_user_email');
+            
+            // Get organization_id for B2B/enterprise users - check URL params first, then localStorage
+            const orgParam = urlParams.get('organization_id') || urlParams.get('org_id');
+            organizationId = orgParam || localStorage.getItem('cloverpath_organization_id') || null;
+            
+            // If we have an org_id in URL but not in localStorage, store it
+            if (orgParam && !localStorage.getItem('cloverpath_organization_id')) {
+                try {
+                    localStorage.setItem('cloverpath_organization_id', orgParam);
+                } catch (e) {
+                    console.warn('Could not save organization_id to localStorage');
+                }
+            }
+        }
+
+        // Make globally accessible for onclick handlers
+        window.toggleMaterials = function() {
+            console.log('toggleMaterials called');
+            const content = document.getElementById('materialsContent');
+            const toggle = document.getElementById('materialsToggle');
+            
+            console.log('content element:', content);
+            console.log('toggle element:', toggle);
+            
+            if (content && toggle) {
+                if (content.classList.contains('open')) {
+                    content.classList.remove('open');
+                    toggle.textContent = '+';
+                } else {
+                    content.classList.add('open');
+                    toggle.textContent = '−';
+                }
+            } else {
+                console.error('Could not find materials elements');
+            }
+        }
+
+        // Make globally accessible for onclick handlers
+        window.showSection = function(sectionNum) {
+            console.log('showSection called with:', sectionNum);
+            const sections = document.querySelectorAll('.section');
+            console.log('Found sections:', sections.length);
+            
+            sections.forEach(section => section.classList.remove('active'));
+            const targetSection = document.getElementById('section' + sectionNum);
+            console.log('Target section:', targetSection);
+            
+            if (targetSection) {
+                targetSection.classList.add('active');
+            } else {
+                console.error('Could not find section:', 'section' + sectionNum);
+            }
+
+            const progress = (sectionNum / 5) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressPercent').textContent = Math.round(progress) + '% Complete';
+
+            const labels = ['Introduction', 'Patient Screening', 'Regulatory Compliance', 'Adverse Events', 'Data Management', 'Results'];
+            document.getElementById('progressLabel').textContent = labels[sectionNum];
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Send scroll to top message to parent
+            try {
+                window.parent.postMessage({ type: 'scroll-to-top' }, '*');
+            } catch (e) {
+                console.log('Could not send scroll message to parent');
+            }
+
+            // Update iframe height after section change
+            setTimeout(sendHeightToParent, 100);
+
+            // Save progress (except for intro and results sections)
+            if (sectionNum > 0 && sectionNum < 5) {
+                saveProgress(sectionNum);
+            }
+        }
+
+        async function saveProgress(currentSection) {
+            if (!supabaseClient || !userEmail) return;
+
+            try {
+                const progressData = {
+                    user_email: userEmail,
+                    simulation_type: 'clinical_research',
+                    progress_data: {
+                        status: 'in_progress',
+                        current_section: currentSection,
+                        last_activity: new Date().toISOString()
+                    },
+                    last_updated: new Date().toISOString(),
+                    organization_id: organizationId
+                };
+
+                await supabaseClient
+                    .from('simulation_progress')
+                    .upsert(progressData, {
+                        onConflict: 'user_email,simulation_type'
+                    });
+            } catch (error) {
+                // Silent fail for progress saves - don't interrupt user
+                console.warn('Could not save progress:', error);
+            }
+        }
+
+        window.calculateScore = function() {
+            let section1Score = 0;
+            let section2Score = 0;
+            let section3Score = 0;
+            let section4Score = 0;
+
+            // Get responses
+            const eligiblePatients = parseInt(document.getElementById('eligiblePatients').value) || 0;
+            const projectedEnrollment = parseInt(document.getElementById('projectedEnrollment').value) || 0;
+            const screeningRate = parseFloat(document.getElementById('screeningRate').value) || 0;
+            const recruitmentStrategy = document.getElementById('recruitmentStrategy').value;
+
+            const consentSigner = document.getElementById('consentSigner').value;
+            const assentRequired = document.getElementById('assentRequired').value;
+            const visitDeviation = document.getElementById('visitDeviation').value;
+            const deviationPlan = document.getElementById('deviationPlan').value;
+
+            const aeClassification = document.getElementById('aeClassification').value;
+            const irbTimeline = document.getElementById('irbTimeline').value;
+            const continueTrial = document.getElementById('continueTrial').value;
+            const aeReport = document.getElementById('aeReport').value;
+
+            const retentionRate = parseFloat(document.getElementById('retentionRate').value) || 0;
+            const exacerbationRate = parseFloat(document.getElementById('exacerbationRate').value) || 0;
+            const reductionPercent = parseFloat(document.getElementById('reductionPercent').value) || 0;
+            const queryResolution = document.getElementById('queryResolution').value;
+            const closeoutPlan = document.getElementById('closeoutPlan').value;
+
+            let feedback = '';
+
+            // Section 1: Patient Screening & Recruitment (25 points)
+            feedback += '<div class="feedback-box success"><h3>Section 1: Patient Screening & Recruitment</h3>';
+
+            // Q1: Eligible patients (5 points)
+            if (eligiblePatients >= 98 && eligiblePatients <= 102) {
+                section1Score += 5;
+                feedback += '<p><strong>CORRECT Eligible Patients (5/5):</strong> Correct! 100 patients meet ≥2 exacerbations/year criterion.</p>';
+            } else {
+                feedback += '<p><strong>INCORRECT Eligible Patients (0/5):</strong> Incorrect. Look at patients with "≥2 Exacerbations/Year" across all age groups: 18 + 38 + 44 = 100 patients.</p>';
+            }
+
+            // Q2: Projected enrollment (5 points)
+            if (projectedEnrollment >= 58 && projectedEnrollment <= 61) {
+                section1Score += 5;
+                feedback += '<p><strong>CORRECT Projected Enrollment (5/5):</strong> Correct! 18 already enrolled + (18 weeks × 2.3/week) = 59 total.</p>';
+            } else if (projectedEnrollment >= 40 && projectedEnrollment <= 65) {
+                section1Score += 2;
+                feedback += '<p><strong>WARNING Projected Enrollment (2/5):</strong> Close. Calculate: 18 enrolled + (18 remaining weeks × 2.3 patients/week) = 59 total.</p>';
+            } else {
+                feedback += '<p><strong>INCORRECT Projected Enrollment (0/5):</strong> Incorrect. You have 18 weeks remaining. At 2.3 patients/week: 18 + (18 × 2.3) = 59.</p>';
+            }
+
+            // Q3: Screening rate (6 points)
+            if (screeningRate >= 5.5 && screeningRate <= 5.8) {
+                section1Score += 6;
+                feedback += '<p><strong>CORRECT Screening Rate (6/6):</strong> Excellent! Need 57 more enrollees ÷ 0.56 success rate ÷ 18 weeks = 5.7 screens/week.</p>';
+            } else if (screeningRate >= 5.0 && screeningRate <= 6.5) {
+                section1Score += 3;
+                feedback += '<p><strong>WARNING Screening Rate (3/6):</strong> Close. Calculate: (75 target - 18 enrolled) ÷ (1 - 0.44 failure rate) ÷ 18 weeks = 5.7 screens/week.</p>';
+            } else {
+                feedback += '<p><strong>INCORRECT Screening Rate (0/6):</strong> Incorrect. Need 57 more enrollees with 44% screen failure rate over 18 weeks: 57 ÷ 0.56 ÷ 18 = 5.7 screens/week.</p>';
+            }
+
+            // Q4: Recruitment strategy (9 points)
+            const strategyWordCount = recruitmentStrategy.trim().split(/\s+/).length;
+            const hasDatabase = recruitmentStrategy.toLowerCase().includes('database') || recruitmentStrategy.toLowerCase().includes('contact');
+            const hasScreenFailure = recruitmentStrategy.toLowerCase().includes('screen') || recruitmentStrategy.toLowerCase().includes('eligibl') || recruitmentStrategy.toLowerCase().includes('fev1');
+            const hasPhysician = recruitmentStrategy.toLowerCase().includes('physician') || recruitmentStrategy.toLowerCase().includes('doctor') || recruitmentStrategy.toLowerCase().includes('referral');
+            const hasFamily = recruitmentStrategy.toLowerCase().includes('famil') || recruitmentStrategy.toLowerCase().includes('parent') || recruitmentStrategy.toLowerCase().includes('communication');
+            const hasRecruitTimeline = recruitmentStrategy.match(/week|month|pace|milestone/gi);
+
+            let strategyScore = 0;
+            if (strategyWordCount >= 150) strategyScore += 2;
+            else if (strategyWordCount >= 100) strategyScore += 1;
+            if (hasDatabase) strategyScore += 1.5;
+            if (hasScreenFailure) strategyScore += 2;
+            if (hasPhysician) strategyScore += 1.5;
+            if (hasFamily) strategyScore += 1;
+            if (hasRecruitTimeline) strategyScore += 1;
+
+            section1Score += Math.min(9, strategyScore);
+            if (strategyScore >= 7) {
+                feedback += '<p><strong>CORRECT Recruitment Strategy (' + Math.min(9, strategyScore).toFixed(1) + '/9):</strong> Comprehensive strategy addressing database outreach, screen failure reduction, and family engagement.</p>';
+            } else if (strategyScore >= 4) {
+                feedback += '<p><strong>WARNING Recruitment Strategy (' + Math.min(9, strategyScore).toFixed(1) + '/9):</strong> Good start but needs more detail. Include: (1) Systematic database review to contact 100 eligible patients, (2) Pre-screening FEV1 values to reduce >80% failures, (3) Physician referral partnerships, (4) Family-friendly scheduling/communication.</p>';
+            } else {
+                feedback += '<p><strong>INCORRECT Recruitment Strategy (' + Math.min(9, strategyScore).toFixed(1) + '/9):</strong> Insufficient detail. Address: database outreach, reducing 44% screen failure rate, physician engagement, and family communication strategy.</p>';
+            }
+
+            feedback += '</div>';
+
+            // Section 2: Regulatory Compliance (20 points)
+            feedback += '<div class="feedback-box success"><h3>Section 2: Informed Consent & Regulatory Compliance</h3>';
+
+            // Q5: Consent signer (5 points)
+            if (consentSigner === 'mother') {
+                section2Score += 5;
+                feedback += '<p><strong>CORRECT Consent Signer (5/5):</strong> Correct! Mother has sole legal custody and must sign.</p>';
+            } else {
+                feedback += '<p><strong>INCORRECT Consent Signer (0/5):</strong> Incorrect. Mother has sole legal custody, so only she can provide legal consent.</p>';
+            }
+
+            // Q6: Assent requirement (5 points)
+            if (assentRequired === 'assent') {
+                section2Score += 5;
+                feedback += '<p><strong>CORRECT Assent Requirement (5/5):</strong> Correct! Children ≥7 years must provide written assent.</p>';
+            } else {
+                feedback += '<p><strong>INCORRECT Assent Requirement (0/5):</strong> Incorrect. Per protocol, participants ≥7 years must provide pediatric assent.</p>';
+            }
+
+            // Q7: Visit deviation (3 points)
+            if (visitDeviation === 'yes') {
+                section2Score += 3;
+                feedback += '<p><strong>CORRECT Visit Deviation (3/3):</strong> Correct! Day 32 is outside the Day 28 ±3 window (Days 25-31).</p>';
+            } else {
+                feedback += '<p><strong>INCORRECT Visit Deviation (0/3):</strong> Incorrect. Visit window is Day 28 ±3 days (Days 25-31). Day 32 is a protocol deviation.</p>';
+            }
+
+            // Q8: Deviation plan (7 points)
+            const deviationWordCount = deviationPlan.trim().split(/\s+/).length;
+            const hasPI = deviationPlan.toLowerCase().includes('pi') || deviationPlan.toLowerCase().includes('investigator');
+            const hasLabs = deviationPlan.toLowerCase().includes('lab') || deviationPlan.toLowerCase().includes('blood') || deviationPlan.toLowerCase().includes('safety');
+            const hasDocumentation = deviationPlan.toLowerCase().includes('document') || deviationPlan.toLowerCase().includes('crf') || deviationPlan.toLowerCase().includes('report');
+            const hasPrevention = deviationPlan.toLowerCase().includes('prevent') || deviationPlan.toLowerCase().includes('calendar') || deviationPlan.toLowerCase().includes('reminder');
+
+            let deviationScore = 0;
+            if (deviationWordCount >= 100) deviationScore += 2;
+            else if (deviationWordCount >= 70) deviationScore += 1;
+            if (hasPI) deviationScore += 1.5;
+            if (hasLabs) deviationScore += 1.5;
+            if (hasDocumentation) deviationScore += 1;
+            if (hasPrevention) deviationScore += 1;
+
+            section2Score += Math.min(7, deviationScore);
+            if (deviationScore >= 6) {
+                feedback += '<p><strong>CORRECT Deviation Plan (' + Math.min(7, deviationScore).toFixed(1) + '/7):</strong> Thorough action plan with PI notification, make-up procedures, and prevention.</p>';
+            } else {
+                feedback += '<p><strong>WARNING Deviation Plan (' + Math.min(7, deviationScore).toFixed(1) + '/7):</strong> Address: (1) Notify PI within 24 hours, (2) Schedule make-up safety labs before Week 12, (3) Document deviation in CRF, (4) Implement calendar reminders for visit windows.</p>';
+            }
+
+            feedback += '</div>';
+
+            // Section 3: Adverse Event Management (25 points)
+            feedback += '<div class="feedback-box success"><h3>Section 3: Adverse Event Management</h3>';
+
+            // Q9: AE classification (6 points)
+            if (aeClassification === 'sae') {
+                section3Score += 6;
+                feedback += '<p><strong>CORRECT AE Classification (6/6):</strong> Correct! Anaphylaxis requiring ED treatment is a Serious Adverse Event.</p>';
+            } else {
+                feedback += '<p><strong>INCORRECT AE Classification (0/6):</strong> Incorrect. This is a Serious Adverse Event (SAE) - life-threatening reaction requiring emergency intervention.</p>';
+            }
+
+            // Q10: IRB timeline (6 points)
+            if (irbTimeline === '24hours') {
+                section3Score += 6;
+                feedback += '<p><strong>CORRECT IRB Timeline (6/6):</strong> Correct! SAEs must be reported to IRB within 24 hours per protocol.</p>';
+            } else {
+                feedback += '<p><strong>INCORRECT IRB Timeline (0/6):</strong> Incorrect. Materials state: "All serious adverse events (SAEs) must be reported to IRB within 24 hours."</p>';
+            }
+
+            // Q11: Continue trial (5 points)
+            if (continueTrial === 'discontinue') {
+                section3Score += 5;
+                feedback += '<p><strong>CORRECT Trial Continuation (5/5):</strong> Correct! Anaphylaxis to study drug requires immediate discontinuation.</p>';
+            } else if (continueTrial === 'hold') {
+                section3Score += 2;
+                feedback += '<p><strong>WARNING Trial Continuation (2/5):</strong> While holding is prudent, anaphylaxis is grounds for immediate discontinuation.</p>';
+            } else {
+                feedback += '<p><strong>INCORRECT Trial Continuation (0/5):</strong> Incorrect. Anaphylactic reactions require participant discontinuation from trial.</p>';
+            }
+
+            // Q12: AE report (8 points)
+            const aeWordCount = aeReport.trim().split(/\s+/).length;
+            const hasAETimeline = aeReport.includes('10:00') || aeReport.includes('2:45') || aeReport.toLowerCase().includes('15 minutes');
+            const hasCausality = aeReport.toLowerCase().includes('causal') || aeReport.toLowerCase().includes('related') || aeReport.toLowerCase().includes('study drug');
+            const hasActions = aeReport.toLowerCase().includes('epinephrine') || aeReport.toLowerCase().includes('ed') || aeReport.toLowerCase().includes('911');
+            const hasReporting = aeReport.toLowerCase().includes('irb') || aeReport.toLowerCase().includes('report') || aeReport.toLowerCase().includes('24');
+            const hasFollowup = aeReport.toLowerCase().includes('follow') || aeReport.toLowerCase().includes('discontinu') || aeReport.toLowerCase().includes('safety');
+
+            let aeReportScore = 0;
+            if (aeWordCount >= 150) aeReportScore += 2;
+            else if (aeWordCount >= 100) aeReportScore += 1;
+            if (hasAETimeline) aeReportScore += 1;
+            if (hasCausality) aeReportScore += 1.5;
+            if (hasActions) aeReportScore += 1.5;
+            if (hasReporting) aeReportScore += 1;
+            if (hasFollowup) aeReportScore += 1;
+
+            section3Score += Math.min(8, aeReportScore);
+            if (aeReportScore >= 7) {
+                feedback += '<p><strong>CORRECT AE Report (' + Math.min(8, aeReportScore).toFixed(1) + '/8):</strong> Complete adverse event documentation.</p>';
+            } else {
+                feedback += '<p><strong>WARNING AE Report (' + Math.min(8, aeReportScore).toFixed(1) + '/8):</strong> Include: (1) Timeline (dose at 10AM, symptoms at 10:15AM, ED at ~11AM), (2) Causality (definitely related to study drug), (3) Treatment received, (4) IRB notification within 24hr, (5) Participant discontinued, safety follow-up scheduled.</p>';
+            }
+
+            feedback += '</div>';
+
+            // Section 4: Data Management (30 points)
+            feedback += '<div class="feedback-box success"><h3>Section 4: Data Management & Study Outcomes</h3>';
+
+            // Q13: Retention rate (7 points)
+            if (retentionRate >= 86.5 && retentionRate <= 87.5) {
+                section4Score += 7;
+                feedback += '<p><strong>CORRECT Retention Rate (7/7):</strong> Correct! 33 active ÷ 38 enrolled = 86.8%.</p>';
+            } else if (retentionRate >= 80 && retentionRate <= 90) {
+                section4Score += 3;
+                feedback += '<p><strong>WARNING Retention Rate (3/7):</strong> Close. Calculate: 33 active participants ÷ 38 total enrolled = 86.8%.</p>';
+            } else {
+                feedback += '<p><strong>INCORRECT Retention Rate (0/7):</strong> Incorrect. 38 enrolled - 3 discontinued - 2 lost = 33 active. Retention = 33/38 = 86.8%.</p>';
+            }
+
+            // Q14: Exacerbation rate (7 points)
+            if (exacerbationRate >= 0.35 && exacerbationRate <= 0.37) {
+                section4Score += 7;
+                feedback += '<p><strong>CORRECT Exacerbation Rate (7/7):</strong> Correct! 12 events ÷ 33 participants = 0.36.</p>';
+            } else if (exacerbationRate >= 0.30 && exacerbationRate <= 0.40) {
+                section4Score += 3;
+                feedback += '<p><strong>WARNING Exacerbation Rate (3/7):</strong> Close. 12 total events ÷ 33 active participants = 0.36.</p>';
+            } else {
+                feedback += '<p><strong>INCORRECT Exacerbation Rate (0/7):</strong> Incorrect. 12 events ÷ 33 participants = 0.36 exacerbations per participant.</p>';
+            }
+
+            // Q15: Reduction percentage (6 points)
+            if (reductionPercent >= 49 && reductionPercent <= 51) {
+                section4Score += 6;
+                feedback += '<p><strong>CORRECT Reduction Percentage (6/6):</strong> Excellent! [(0.73 - 0.36) / 0.73] × 100 = 50.7% reduction.</p>';
+            } else if (reductionPercent >= 45 && reductionPercent <= 55) {
+                section4Score += 3;
+                feedback += '<p><strong>WARNING Reduction Percentage (3/6):</strong> Close. Placebo rate: 24/33=0.73. Treatment: 12/33=0.36. Reduction: [(0.73-0.36)/0.73]×100 = 50.7%.</p>';
+            } else {
+                feedback += '<p><strong>INCORRECT Reduction Percentage (0/6):</strong> Incorrect. Calculate: [(placebo rate 0.73 - treatment rate 0.36) / placebo rate 0.73] × 100 = 50.7%.</p>';
+            }
+
+            // Q16: Query resolution (5 points)
+            const queryWordCount = queryResolution.trim().split(/\s+/).length;
+            const hasSpirometry = queryResolution.toLowerCase().includes('spirometry') || queryResolution.toLowerCase().includes('source');
+            const hasConsent = queryResolution.toLowerCase().includes('consent') || queryResolution.toLowerCase().includes('assent') || queryResolution.toLowerCase().includes('signature');
+            const hasFEV1 = queryResolution.toLowerCase().includes('fev1') || queryResolution.toLowerCase().includes('discrepanc');
+            const hasQueryPrevention = queryResolution.toLowerCase().includes('prevent') || queryResolution.toLowerCase().includes('training') || queryResolution.toLowerCase().includes('process');
+
+            let queryScore = 0;
+            if (queryWordCount >= 150) queryScore += 1;
+            if (hasSpirometry) queryScore += 1.5;
+            if (hasConsent) queryScore += 1.5;
+            if (hasFEV1) queryScore += 1;
+            if (hasQueryPrevention) queryScore += 1;
+
+            section4Score += Math.min(5, queryScore);
+            if (queryScore >= 4) {
+                feedback += '<p><strong>CORRECT Query Resolution (' + Math.min(5, queryScore).toFixed(1) + '/5):</strong> Comprehensive plan addressing all data quality issues.</p>';
+            } else {
+                feedback += '<p><strong>WARNING Query Resolution (' + Math.min(5, queryScore).toFixed(1) + '/5):</strong> Address: (1) Review source documents for missing spirometry, (2) Re-obtain missing assent signatures, (3) Reconcile FEV1 discrepancies with source, (4) Implement QC checks.</p>';
+            }
+
+            // Q17: Closeout plan (5 points)
+            const closeoutWordCount = closeoutPlan.trim().split(/\s+/).length;
+            const hasVisits = closeoutPlan.toLowerCase().includes('visit') || closeoutPlan.toLowerCase().includes('participant');
+            const hasCRF = closeoutPlan.toLowerCase().includes('crf') || closeoutPlan.toLowerCase().includes('query') || closeoutPlan.toLowerCase().includes('data');
+            const hasDrug = closeoutPlan.toLowerCase().includes('drug') || closeoutPlan.toLowerCase().includes('accountability') || closeoutPlan.toLowerCase().includes('destruction');
+            const hasIRB = closeoutPlan.toLowerCase().includes('irb') || closeoutPlan.toLowerCase().includes('closeout report');
+            const hasArchiving = closeoutPlan.toLowerCase().includes('archiv') || closeoutPlan.toLowerCase().includes('source') || closeoutPlan.toLowerCase().includes('storage');
+
+            let closeoutScore = 0;
+            if (closeoutWordCount >= 150) closeoutScore += 1;
+            if (hasVisits) closeoutScore += 1;
+            if (hasCRF) closeoutScore += 1;
+            if (hasDrug) closeoutScore += 1;
+            if (hasIRB) closeoutScore += 0.5;
+            if (hasArchiving) closeoutScore += 0.5;
+
+            section4Score += Math.min(5, closeoutScore);
+            if (closeoutScore >= 4) {
+                feedback += '<p><strong>CORRECT Closeout Plan (' + Math.min(5, closeoutScore).toFixed(1) + '/5):</strong> Thorough closeout strategy.</p>';
+            } else {
+                feedback += '<p><strong>WARNING Closeout Plan (' + Math.min(5, closeoutScore).toFixed(1) + '/5):</strong> Include: final visits, CRF completion, drug accountability/destruction, IRB closeout, archiving.</p>';
+            }
+
+            feedback += '</div>';
+
+            // Calculate total and display
+            const totalScore = section1Score + section2Score + section3Score + section4Score;
+
+            document.getElementById('score1').textContent = section1Score.toFixed(1) + '/25';
+            document.getElementById('score2').textContent = section2Score.toFixed(1) + '/20';
+            document.getElementById('score3').textContent = section3Score.toFixed(1) + '/25';
+            document.getElementById('score4').textContent = section4Score.toFixed(1) + '/30';
+            document.getElementById('totalScore').textContent = totalScore.toFixed(0);
+
+            let category = '';
+            if (totalScore >= 90) {
+                category = 'Outstanding - Ready for Clinical Research Career';
+            } else if (totalScore >= 80) {
+                category = 'Strong - Solid Research Coordinator Skills';
+            } else if (totalScore >= 70) {
+                category = 'Good - Competent Understanding';
+            } else if (totalScore >= 60) {
+                category = 'Adequate - Basic Clinical Research Knowledge';
+            } else {
+                category = 'Needs Improvement - Review Materials';
+            }
+
+            document.getElementById('scoreCategory').textContent = category;
+            document.getElementById('detailedFeedback').innerHTML = feedback;
+
+            // Save final score to Supabase
+            if (userEmail) {
+                saveResults(totalScore, section1Score, section2Score, section3Score, section4Score);
+            }
+
+            showSection(5);
+        }
+
+        async function saveResults(totalScore, section1Score, section2Score, section3Score, section4Score) {
+            if (!supabaseClient || !userEmail) {
+                console.warn('Cannot save results: missing Supabase client or user email');
+                return;
+            }
+
+            const resultData = {
+                user_email: userEmail,
+                simulation_type: 'clinical_research',
+                total_score: Math.round(totalScore),
+                section_scores: {
+                    patient_screening: section1Score,
+                    regulatory_compliance: section2Score,
+                    adverse_events: section3Score,
+                    data_management: section4Score
+                },
+                completed_at: new Date().toISOString(),
+                organization_id: organizationId
+            };
+
+            try {
+                // Save to simulation_results
+                const { error: resultsError } = await supabaseClient
+                    .from('simulation_results')
+                    .upsert(resultData, { 
+                        onConflict: 'user_email,simulation_type' 
+                    });
+
+                if (resultsError) {
+                    console.error('Error saving to simulation_results:', resultsError);
+                }
+
+                // Also update simulation_progress to mark as completed
+                const progressData = {
+                    user_email: userEmail,
+                    simulation_type: 'clinical_research',
+                    progress_data: {
+                        status: 'completed',
+                        total_score: Math.round(totalScore),
+                        completed_at: new Date().toISOString()
+                    },
+                    last_updated: new Date().toISOString(),
+                    organization_id: organizationId
+                };
+
+                const { error: progressError } = await supabaseClient
+                    .from('simulation_progress')
+                    .upsert(progressData, {
+                        onConflict: 'user_email,simulation_type'
+                    });
+
+                if (progressError) {
+                    console.error('Error saving to simulation_progress:', progressError);
+                }
+
+            } catch (error) {
+                console.error('Error saving results:', error);
+            }
+        }
+
+        window.downloadReport = function() {
+            const reportContent = `
+CLINICAL RESEARCH COORDINATION SIMULATION - RESULTS REPORT
+Children's Research Institute - BREATHE-EASY Trial
+Generated: ${new Date().toLocaleDateString()}
+
+TOTAL SCORE: ${document.getElementById('totalScore').textContent}/100
+
+SCORE BREAKDOWN:
+- Section 1: Patient Screening & Recruitment: ${document.getElementById('score1').textContent}
+- Section 2: Informed Consent & Regulatory Compliance: ${document.getElementById('score2').textContent}
+- Section 3: Adverse Event Management: ${document.getElementById('score3').textContent}
+- Section 4: Data Management & Outcomes: ${document.getElementById('score4').textContent}
+
+PERFORMANCE CATEGORY: ${document.getElementById('scoreCategory').textContent}
+
+YOUR RESPONSES:
+
+Section 1: Patient Screening & Recruitment
+1. Eligible Patients: ${document.getElementById('eligiblePatients').value}
+2. Projected Enrollment: ${document.getElementById('projectedEnrollment').value}
+3. Screening Rate: ${document.getElementById('screeningRate').value} patients/week
+4. Recruitment Strategy: ${document.getElementById('recruitmentStrategy').value}
+
+Section 2: Regulatory Compliance
+5. Consent Signer: ${document.getElementById('consentSigner').value}
+6. Assent Requirement: ${document.getElementById('assentRequired').value}
+7. Visit Deviation: ${document.getElementById('visitDeviation').value}
+8. Deviation Plan: ${document.getElementById('deviationPlan').value}
+
+Section 3: Adverse Event Management
+9. AE Classification: ${document.getElementById('aeClassification').value}
+10. IRB Timeline: ${document.getElementById('irbTimeline').value}
+11. Continue Trial: ${document.getElementById('continueTrial').value}
+12. AE Report: ${document.getElementById('aeReport').value}
+
+Section 4: Data Management
+13. Retention Rate: ${document.getElementById('retentionRate').value}%
+14. Exacerbation Rate: ${document.getElementById('exacerbationRate').value}
+15. Reduction Percentage: ${document.getElementById('reductionPercent').value}%
+16. Query Resolution: ${document.getElementById('queryResolution').value}
+17. Closeout Plan: ${document.getElementById('closeoutPlan').value}
+
+DETAILED FEEDBACK:
+${document.getElementById('detailedFeedback').innerText}
+            `;
+
+            const blob = new Blob([reportContent], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Clinical_Research_Simulation_Report.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            initSupabase();
+        });
+        
+        // Send height to parent window for iframe resizing
+        window.sendHeightToParent = function() {
+            try {
+                const height = document.body.scrollHeight + 100;
+                window.parent.postMessage({
+                    type: 'iframe-height',
+                    height: height
+                }, '*');
+            } catch (e) {
+                console.error('Error sending height:', e);
+            }
+        }
+        
+        // Send height on load only
+        window.addEventListener('load', function() {
+            setTimeout(sendHeightToParent, 500);
+            setTimeout(sendHeightToParent, 1500);
+        });
+    </script>
+    
+    <div id="content-end-marker" style="height: 1px; margin: 0; padding: 0;"></div>
+</body>
+</html>
