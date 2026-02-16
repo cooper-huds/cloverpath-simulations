@@ -1,0 +1,36 @@
+<iframe 
+    id="environmental-science-simulation-frame"
+    src="https://cloverpath.github.io/cloverpath-simulations/environmental-science-simulation.html"
+    style="width: 100%; min-height: 800px; border: none;"
+    title="Environmental Science Simulation"
+></iframe>
+
+<script>
+    window.addEventListener('message', function(event) {
+        if (event.data && event.data.type === 'iframe-height') {
+            const iframe = document.getElementById('environmental-science-simulation-frame');
+            if (iframe) {
+                iframe.style.height = event.data.height + 'px';
+            }
+        }
+        if (event.data && event.data.type === 'scroll-to-top') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    });
+
+    // Pass user email and organization_id to iframe if available
+    document.addEventListener('DOMContentLoaded', function() {
+        const iframe = document.getElementById('environmental-science-simulation-frame');
+        const userEmail = localStorage.getItem('cloverpath_user_email');
+        const orgId = localStorage.getItem('cloverpath_organization_id');
+        
+        if (iframe && userEmail) {
+            let src = iframe.src;
+            src += '?email=' + encodeURIComponent(userEmail);
+            if (orgId) {
+                src += '&organization_id=' + encodeURIComponent(orgId);
+            }
+            iframe.src = src;
+        }
+    });
+</script>
