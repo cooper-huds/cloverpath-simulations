@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketing Simulation - Growth Strategy & Campaign Optimization - CloverPath</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        p, h1, h2, h3, h4, h5, h6, li, td, th, div, span {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+        }
+
+        :root {
+            --primary-green: #2d8659;
+            --light-green: #7cb342;
+            --dark-green: #1b5e3a;
+            --light-green-dark: #5a9c2e;
+            --bg-light: #f5f9f7;
+            --text-dark: #1a1a1a;
+            --text-gray: #666;
+            --border-color: #e0e0e0;
+            --white: #ffffff;
+            --red: #e53935;
+            --orange: #fb8c00;
+            --blue: #1e88e5;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            color: var(--white);
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .progress-container {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-green) 0%, var(--light-green) 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        .company-banner {
+            background: linear-gradient(135deg, #5a9c2e 0%, #7cb342 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .company-banner h2 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .alert-box {
+            background: #fff3cd;
+            border-left: 4px solid var(--orange);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .alert-box h3 {
+            color: var(--orange);
+            margin-bottom: 10px;
+        }
+
+        .section {
+            display: none;
+            background: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary-green);
+        }
+
+        .section-header h2 {
+            color: var(--primary-green);
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .data-table th {
+            background: var(--light-green-dark);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover {
+            background: var(--bg-light);
+        }
+
+        .metric-positive {
+            color: #2e7d32;
+            font-weight: 600;
+        }
+
+        .metric-negative {
+            color: #c62828;
+            font-weight: 600;
+        }
+
+        .materials-box {
+            background: var(--white);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .materials-header {
+            background: var(--white);
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .materials-header:hover {
+            background: var(--bg-light);
+        }
+
+        .materials-header h3 {
+            color: var(--primary-green);
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        .materials-toggle {
+            font-size: 1.5rem;
+            color: var(--primary-green);
+            font-weight: bold;
+        }
+
+        .materials-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .materials-content.open {
+            max-height: 8000px;
+        }
+
+        .materials-inner {
+            padding: 25px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-green);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-right: 10px;
+        }
+
+        .btn-primary {
+            background: var(--primary-green);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-green);
+            border: 2px solid var(--primary-green);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-light);
+        }
+
+        .feedback-box {
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .feedback-box.success {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+        }
+
+        .feedback-box.warning {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+        }
+
+        .feedback-box.info {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .metric-card {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .metric-card h4 {
+            color: var(--text-gray);
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .metric-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .metric-card .change {
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .score-card {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--light-green) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .score-card h2 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .score-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .score-item {
+            background: white;
+            color: var(--text-dark);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .score-item h4 {
+            color: var(--primary-green);
+            margin-bottom: 5px;
+        }
+
+        .budget-input-row {
+            display: grid;
+            grid-template-columns: 1fr 150px;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .budget-input-row label {
+            margin: 0;
+        }
+
+        .budget-input-row input {
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .company-banner h2 {
+                font-size: 1.5rem;
+            }
+
+            .metric-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .data-table {
+                font-size: 0.85rem;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 8px;
+            }
+
+            .budget-input-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script>
+        // Define global functions early to prevent "not defined" errors
+        window.toggleMaterials = function() {
+            const content = document.getElementById('materialsContent');
+            const toggle = document.getElementById('materialsToggle');
+            
+            if (content && toggle) {
+                if (content.classList.contains('open')) {
+                    content.classList.remove('open');
+                    toggle.textContent = '+';
+                } else {
+                    content.classList.add('open');
+                    toggle.textContent = '−';
+                }
+            }
+        }
+
+        window.showSection = function(sectionNum) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            const targetSection = document.getElementById('section' + sectionNum);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+
+            const progress = (sectionNum / 5) * 100;
+            const progressFill = document.getElementById('progressFill');
+            const progressPercent = document.getElementById('progressPercent');
+            const progressLabel = document.getElementById('progressLabel');
+            
+            if (progressFill) progressFill.style.width = progress + '%';
+            if (progressPercent) progressPercent.textContent = Math.round(progress) + '% Complete';
+
+            const labels = ['Introduction', 'Campaign Analysis', 'A/B Testing', 'Budget Allocation', 'Growth Strategy', 'Results'];
+            if (progressLabel) progressLabel.textContent = labels[sectionNum];
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            try {
+                window.parent.postMessage({ type: 'scroll-to-top' }, '*');
+            } catch (e) {}
+
+            if (typeof window.sendHeightToParent === 'function') {
+                setTimeout(window.sendHeightToParent, 100);
+            }
+
+            // Save progress (except for intro and results sections)
+            if (sectionNum > 0 && sectionNum < 5) {
+                saveProgress(sectionNum);
+            }
+        }
+
+        async function saveProgress(currentSection) {
+            if (!supabaseClient || !userEmail) return;
+
+            try {
+                const progressData = {
+                    user_email: userEmail,
+                    simulation_type: 'marketing',
+                    progress_data: {
+                        status: 'in_progress',
+                        current_section: currentSection,
+                        last_activity: new Date().toISOString()
+                    },
+                    last_updated: new Date().toISOString(),
+                    organization_id: organizationId
+                };
+
+                await supabaseClient
+                    .from('simulation_progress')
+                    .upsert(progressData, {
+                        onConflict: 'user_email,simulation_type'
+                    });
+            } catch (error) {
+                // Silent fail for progress saves - don't interrupt user
+                console.warn('Could not save progress:', error);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Marketing Simulation</h1>
+            <p>Growth strategy and campaign optimization for e-commerce</p>
+        </div>
+
+        <div class="progress-container">
+            <h3>Your Progress</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text">
+                <span id="progressLabel">Introduction</span>
+                <span id="progressPercent">0% Complete</span>
+            </div>
+        </div>
+
+        <div class="company-banner">
+            <h2>GreenLeaf Market</h2>
+            <p>Marketing Team - Growth & Performance Optimization</p>
+        </div>
+
+        <!-- Section 0: Introduction -->
+        <div class="section active" id="section0">
+            <div class="section-header">
+                <h2>Welcome to GreenLeaf Market</h2>
+                <p>Optimize marketing campaigns for Q1 product launch</p>
+            </div>
+
+            <div class="feedback-box success">
+                <h3 style="margin-bottom: 10px;">Your Role</h3>
+                <p><strong>Position:</strong> Marketing Analyst (Growth Team)</p>
+                <p><strong>Reporting To:</strong> Sarah Chen, VP of Marketing</p>
+                <p><strong>Company:</strong> GreenLeaf Market - Sustainable home goods e-commerce ($12M annual revenue)</p>
+                <p><strong>Your Mission:</strong> Analyze Q4 campaign performance, optimize for Q1, allocate $75K budget across channels.</p>
+            </div>
+
+            <div class="alert-box">
+                <h3>Q4 Performance: Below Target</h3>
+                <p><strong>Goal:</strong> 2,500 new customers at $30 CAC (Customer Acquisition Cost)</p>
+                <p><strong>Actual:</strong> 1,847 new customers at $38 CAC</p>
+                <p><strong>Revenue Impact:</strong> -26% vs target ($280K vs $375K goal)</p>
+                <p><strong>Key Issues:</strong> Email open rates declining, paid social CAC rising, conversion funnel drop-offs</p>
+            </div>
+
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <h4>Q4 Customers</h4>
+                    <div class="value">1,847</div>
+                    <div class="change metric-negative">-26% vs goal</div>
+                </div>
+                <div class="metric-card">
+                    <h4>Average CAC</h4>
+                    <div class="value">$38</div>
+                    <div class="change metric-negative">+27% vs target</div>
+                </div>
+                <div class="metric-card">
+                    <h4>Email Open Rate</h4>
+                    <div class="value">18.2%</div>
+                    <div class="change metric-negative">-8.3% QoQ</div>
+                </div>
+                <div class="metric-card">
+                    <h4>Conversion Rate</h4>
+                    <div class="value">2.4%</div>
+                    <div class="change metric-negative">-1.2% QoQ</div>
+                </div>
+            </div>
+
+            <div class="materials-box">
+                <div class="materials-header" onclick="toggleMaterials()">
+                    <h3>Marketing Data & Context</h3>
+                    <span class="materials-toggle" id="materialsToggle">+</span>
+                </div>
+                <div class="materials-content" id="materialsContent">
+                    <div class="materials-inner">
+                        <h4 style="color: var(--primary-green); margin-bottom: 15px;">Company Background</h4>
+                        
+                        <p><strong>GreenLeaf Market</strong> sells eco-friendly home goods online: reusable products, sustainable cleaning supplies, organic textiles. Founded 2021, now at $12M annual revenue with 45K active customers.</p>
+
+                        <p style="margin-top: 15px;"><strong>Target Customer:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Age: 28-45, predominantly female (72%)</li>
+                            <li>Income: $65K-$120K household</li>
+                            <li>Values: Sustainability, health-conscious, premium eco-products</li>
+                            <li>Average order value (AOV): $67</li>
+                            <li>Customer lifetime value (LTV): $310 over 24 months</li>
+                        </ul>
+
+                        <h4 style="color: var(--primary-green); margin: 25px 0 15px 0;">Q4 Channel Performance Data</h4>
+                        
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Channel</th>
+                                    <th>Q4 Spend</th>
+                                    <th>Customers</th>
+                                    <th>CAC</th>
+                                    <th>ROAS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Email Marketing</td>
+                                    <td>$8,500</td>
+                                    <td>412</td>
+                                    <td class="metric-positive">$21</td>
+                                    <td>3.2x</td>
+                                </tr>
+                                <tr>
+                                    <td>Paid Social (Meta)</td>
+                                    <td>$32,000</td>
+                                    <td>685</td>
+                                    <td class="metric-negative">$47</td>
+                                    <td>1.4x</td>
+                                </tr>
+                                <tr>
+                                    <td>Google Search Ads</td>
+                                    <td>$18,000</td>
+                                    <td>394</td>
+                                    <td class="metric-negative">$46</td>
+                                    <td>1.5x</td>
+                                </tr>
+                                <tr>
+                                    <td>Influencer Partnerships</td>
+                                    <td>$7,500</td>
+                                    <td>247</td>
+                                    <td class="metric-positive">$30</td>
+                                    <td>2.2x</td>
+                                </tr>
+                                <tr>
+                                    <td>Content Marketing (SEO)</td>
+                                    <td>$4,000</td>
+                                    <td>109</td>
+                                    <td>$37</td>
+                                    <td>1.8x</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p style="margin-top: 10px;"><em>CAC = Customer Acquisition Cost, ROAS = Return on Ad Spend (Revenue ÷ Spend)</em></p>
+
+                        <h4 style="color: var(--primary-green); margin: 25px 0 15px 0;">Email Campaign Performance (Last 10 Campaigns)</h4>
+                        
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Subject Line</th>
+                                    <th>Open Rate</th>
+                                    <th>Click Rate</th>
+                                    <th>Conversions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Dec 15</td>
+                                    <td>Last Chance: 30% Off Holiday Sale</td>
+                                    <td class="metric-negative">14.2%</td>
+                                    <td>2.1%</td>
+                                    <td>37</td>
+                                </tr>
+                                <tr>
+                                    <td>Dec 8</td>
+                                    <td>5 Ways to Reduce Plastic in Your Kitchen</td>
+                                    <td class="metric-positive">26.8%</td>
+                                    <td>4.7%</td>
+                                    <td>68</td>
+                                </tr>
+                                <tr>
+                                    <td>Dec 1</td>
+                                    <td>Don't Miss Out - Cyber Monday Deals</td>
+                                    <td class="metric-negative">12.9%</td>
+                                    <td>1.8%</td>
+                                    <td>29</td>
+                                </tr>
+                                <tr>
+                                    <td>Nov 24</td>
+                                    <td>Black Friday: Our Biggest Sale Ever</td>
+                                    <td class="metric-negative">16.3%</td>
+                                    <td>2.9%</td>
+                                    <td>51</td>
+                                </tr>
+                                <tr>
+                                    <td>Nov 17</td>
+                                    <td>New Arrivals: Bamboo Kitchen Collection</td>
+                                    <td>22.4%</td>
+                                    <td>3.8%</td>
+                                    <td>59</td>
+                                </tr>
+                                <tr>
+                                    <td>Nov 10</td>
+                                    <td>Member Exclusive: Early Access Sale</td>
+                                    <td>19.7%</td>
+                                    <td>3.2%</td>
+                                    <td>47</td>
+                                </tr>
+                                <tr>
+                                    <td>Nov 3</td>
+                                    <td>How to Create a Zero-Waste Home</td>
+                                    <td class="metric-positive">28.1%</td>
+                                    <td>5.1%</td>
+                                    <td>74</td>
+                                </tr>
+                                <tr>
+                                    <td>Oct 27</td>
+                                    <td>Flash Sale: 48 Hours Only</td>
+                                    <td class="metric-negative">13.6%</td>
+                                    <td>2.0%</td>
+                                    <td>31</td>
+                                </tr>
+                                <tr>
+                                    <td>Oct 20</td>
+                                    <td>Customer Spotlight: Sarah's Sustainability Journey</td>
+                                    <td>24.3%</td>
+                                    <td>4.2%</td>
+                                    <td>62</td>
+                                </tr>
+                                <tr>
+                                    <td>Oct 13</td>
+                                    <td>Shop Now - Limited Stock Available</td>
+                                    <td class="metric-negative">11.8%</td>
+                                    <td>1.6%</td>
+                                    <td>24</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4 style="color: var(--primary-green); margin: 25px 0 15px 0;">A/B Test Results (December)</h4>
+                        
+                        <p><strong>Test 1: Landing Page CTA Button</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Variant A ("Shop Now"): 2.3% conversion, 1,247 visitors</li>
+                            <li>Variant B ("Start Shopping"): 2.8% conversion, 1,253 visitors</li>
+                            <li>Variant C ("Explore Products"): 3.1% conversion, 1,239 visitors</li>
+                        </ul>
+
+                        <p style="margin-top: 15px;"><strong>Test 2: Email Subject Line Style</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Variant A (Promotional): "Save 25% This Weekend Only" - 15.2% open rate</li>
+                            <li>Variant B (Educational): "3 Simple Swaps for a Greener Kitchen" - 24.7% open rate</li>
+                            <li>Variant C (Question): "Are You Making These Sustainability Mistakes?" - 21.3% open rate</li>
+                        </ul>
+
+                        <p style="margin-top: 15px;"><strong>Test 3: Product Page Layout</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Variant A (Images above fold): 2.4% add-to-cart rate</li>
+                            <li>Variant B (Reviews above fold): 3.2% add-to-cart rate</li>
+                            <li>Variant C (Sustainability info above fold): 2.9% add-to-cart rate</li>
+                        </ul>
+
+                        <h4 style="color: var(--primary-green); margin: 25px 0 15px 0;">Q1 Goals & Budget</h4>
+                        
+                        <div class="feedback-box warning">
+                            <p><strong>Q1 Target:</strong> 3,200 new customers at $28 CAC or better</p>
+                            <p><strong>Available Budget:</strong> $75,000 for January-March</p>
+                            <p><strong>New Product Launch:</strong> Bamboo kitchenware line (15 SKUs) launching Feb 1</p>
+                            <p><strong>Success Metric:</strong> $480K revenue from new customers (3,200 × $150 first-purchase value)</p>
+                        </div>
+
+                        <h4 style="color: var(--primary-green); margin: 25px 0 15px 0;">Market Context</h4>
+                        
+                        <p><strong>Wins:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Email list grew 34% to 52K subscribers (Q4)</li>
+                            <li>Instagram followers increased 22% to 28K</li>
+                            <li>Educational content (blog, guides) driving 40% of organic traffic</li>
+                            <li>Customer retention rate: 42% (repeat purchase within 6 months)</li>
+                        </ul>
+
+                        <p style="margin-top: 15px;"><strong>Challenges:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Email engagement declining despite list growth (opens: 26.5% → 18.2%)</li>
+                            <li>Meta ad costs increased 43% due to iOS privacy changes</li>
+                            <li>Conversion rate dropped from 3.6% → 2.4% (site speed issues, less effective ads)</li>
+                            <li>Promotional fatigue: Discount-heavy campaigns underperform</li>
+                            <li>Competitive pressure: 3 new eco-brands launched with aggressive pricing</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="showSection(1)">Begin Campaign Analysis</button>
+        </div>
+
+        <!-- Section 1: Campaign Performance Analysis (25 points) -->
+        <div class="section" id="section1">
+            <div class="section-header">
+                <h2>Section 1: Campaign Performance Analysis</h2>
+                <p>Diagnose email performance and identify optimization opportunities</p>
+            </div>
+
+            <div class="feedback-box warning">
+                <strong>Your Task:</strong> Analyze Q4 email campaign data to identify patterns in what drives engagement vs what causes campaigns to fail.
+            </div>
+
+            <div class="form-group">
+                <label>Q1: What is the PRIMARY pattern explaining why some emails have high open rates (26-28%) vs low (12-16%)?</label>
+                <select id="emailPattern">
+                    <option value="">-- Select Answer --</option>
+                    <option value="educational">Educational/value-driven content outperforms promotional/sale content</option>
+                    <option value="timing">Send timing (day of week) determines open rate success</option>
+                    <option value="length">Shorter subject lines (under 40 chars) perform better</option>
+                    <option value="urgency">Urgency language ("Last Chance", "Don't Miss") increases opens</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Q2: Based on Q4 channel data, which channel has the BEST efficiency (lowest CAC)?</label>
+                <select id="bestCAC">
+                    <option value="">-- Select Answer --</option>
+                    <option value="email">Email Marketing ($21 CAC)</option>
+                    <option value="influencer">Influencer Partnerships ($30 CAC)</option>
+                    <option value="content">Content Marketing ($37 CAC)</option>
+                    <option value="meta">Paid Social ($47 CAC)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Q3: Calculate: If Q1 budget is $75,000 and target is 3,200 customers, what is the maximum allowable CAC to stay on budget?</label>
+                <input type="number" step="0.01" id="maxCAC" placeholder="Enter $ amount (e.g., 23.44)">
+            </div>
+
+            <div class="form-group">
+                <label>Q4: Which channel has the WORST problem (highest CAC relative to profitability)?</label>
+                <select id="worstChannel">
+                    <option value="">-- Select Answer --</option>
+                    <option value="meta">Paid Social (Meta) - $47 CAC, 1.4x ROAS</option>
+                    <option value="google">Google Search Ads - $46 CAC, 1.5x ROAS</option>
+                    <option value="content">Content Marketing - $37 CAC, 1.8x ROAS</option>
+                    <option value="influencer">Influencer Partnerships - $30 CAC, 2.2x ROAS</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Q5: Campaign Performance Analysis - Explain what the data reveals (150+ words required)</label>
+                <textarea id="campaignAnalysis" placeholder="Analyze: (1) Why do educational subject lines (Dec 8, Nov 3) dramatically outperform promotional ones (Dec 15, Dec 1, Oct 13)? (2) What does this tell you about audience fatigue from discounts? (3) Why is email the most profitable channel despite smallest spend? (4) What specific problem is causing Meta/Google ads to have high CAC ($46-47) vs target ($30)? Reference iOS privacy changes, targeting effectiveness, creative quality. Be specific with data."></textarea>
+            </div>
+
+            <button class="btn btn-secondary" onclick="showSection(0)">Back</button>
+            <button class="btn btn-primary" onclick="showSection(2)">Next Section</button>
+        </div>
+
+        <!-- Section 2: A/B Testing Strategy (25 points) -->
+        <div class="section" id="section2">
+            <div class="section-header">
+                <h2>Section 2: A/B Testing & Optimization</h2>
+                <p>Evaluate test results and design experiments for Q1</p>
+            </div>
+
+            <div class="feedback-box success">
+                <strong>Challenge:</strong> Review December A/B tests and design the next testing roadmap to improve conversion rates for Q1 launch.
+            </div>
+
+            <div class="form-group">
+                <label>Q6: Based on December Test 1 (CTA button), which variant should you implement?</label>
+                <select id="ctaWinner">
+                    <option value="">-- Select Answer --</option>
+                    <option value="a">Variant A: "Shop Now" (2.3% conversion)</option>
+                    <option value="b">Variant B: "Start Shopping" (2.8% conversion)</option>
+                    <option value="c">Variant C: "Explore Products" (3.1% conversion)</option>
+                    <option value="more-testing">Run more tests - difference not statistically significant</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Q7: For email subject lines (Test 2), which insight should guide your Q1 strategy?</label>
+                <select id="subjectInsight">
+                    <option value="">-- Select Answer --</option>
+                    <option value="educational">Educational content (24.7%) beats promotional (15.2%) by 63% - reduce discount emails</option>
+                    <option value="questions">Question format (21.3%) is middle ground - use occasionally</option>
+                    <option value="mix">Mix all three styles equally to avoid pattern fatigue</option>
+                    <option value="promotional">Promotional still works for sales events - keep using</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Q8: What should be your NEXT A/B test priority for Q1?</label>
+                <select id="nextTest">
+                    <option value="">-- Select Answer --</option>
+                    <option value="email-frequency">Email frequency (2x/week vs 1x/week) to optimize list fatigue</option>
+                    <option value="landing-page">Landing page headline variations for bamboo product launch</option>
+                    <option value="pricing">Pricing strategy ($5 off vs free shipping threshold)</option>
+                    <option value="ad-creative">Ad creative styles (lifestyle vs product-focused images)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Q9: Calculate: For 10,000 emails split 50/50, if Variant A gets 2,000 opens and Variant B gets 2,300 opens, what are the open rates?</label>
+                <input type="text" id="openRates" placeholder="Enter as: A=X%, B=Y% (e.g., A=20%, B=23%)">
+            </div>
+
+            <div class="form-group">
+                <label>Q10: A/B Testing Strategy - Design your Q1 testing roadmap (150+ words required)</label>
+                <textarea id="testingStrategy" placeholder="Present comprehensive testing plan: (1) Hypothesis for why conversion rate dropped from 3.6% to 2.4%, (2) Top 3 tests to run in Q1 with specific variants and success metrics, (3) How you'll sequence tests (what first vs later), (4) Sample size requirements and test duration, (5) How you'll implement winning variants, (6) How testing supports the bamboo product launch in February. Be specific."></textarea>
+            </div>
+
+            <button class="btn btn-secondary" onclick="showSection(1)">Back</button>
+            <button class="btn btn-primary" onclick="showSection(3)">Next Section</button>
+        </div>
+
+        <!-- Section 3: Budget Allocation (25 points) -->
+        <div class="section" id="section3">
+            <div class="section-header">
+                <h2>Section 3: Q1 Budget Allocation</h2>
+                <p>Allocate $75,000 across channels to acquire 3,200 customers at ≤$28 CAC</p>
+            </div>
+
+            <div class="alert-box">
+                <strong>Budget Constraints:</strong> Total = $75,000. Goal = 3,200 customers. Target CAC ≤ $28. Base decisions on Q4 performance data.
+            </div>
+
+            <div class="form-group">
+                <label>Allocate Q1 Marketing Budget (Must total exactly $75,000):</label>
+                
+                <div class="budget-input-row">
+                    <label>Email Marketing (Q4 CAC: $21):</label>
+                    <input type="number" id="budgetEmail" placeholder="$" min="0" max="75000">
+                </div>
+
+                <div class="budget-input-row">
+                    <label>Paid Social - Meta (Q4 CAC: $47):</label>
+                    <input type="number" id="budgetMeta" placeholder="$" min="0" max="75000">
+                </div>
+
+                <div class="budget-input-row">
+                    <label>Google Search Ads (Q4 CAC: $46):</label>
+                    <input type="number" id="budgetGoogle" placeholder="$" min="0" max="75000">
+                </div>
+
+                <div class="budget-input-row">
+                    <label>Influencer Partnerships (Q4 CAC: $30):</label>
+                    <input type="number" id="budgetInfluencer" placeholder="$" min="0" max="75000">
+                </div>
+
+                <div class="budget-input-row">
+                    <label>Content Marketing/SEO (Q4 CAC: $37):</label>
+                    <input type="number" id="budgetContent" placeholder="$" min="0" max="75000">
+                </div>
+
+                <p id="budgetTotal" style="margin-top: 15px; font-weight: 600; font-size: 1.1rem;"></p>
+            </div>
+
+            <div class="form-group">
+                <label>Q11: Based on your allocation, estimate your blended CAC (weighted average across all channels):</label>
+                <input type="number" step="0.01" id="blendedCAC" placeholder="Enter projected CAC in $">
+            </div>
+
+            <div class="form-group">
+                <label>Q12: Budget Allocation Rationale - Justify your strategy (150+ words required)</label>
+                <textarea id="budgetRationale" placeholder="Explain your budget decisions: (1) Why you increased/decreased each channel based on Q4 CAC data, (2) How your allocation achieves the 3,200 customer goal at ≤$28 CAC, (3) Trade-offs between scaling proven low-CAC channels (email) vs maintaining volume from expensive channels (Meta/Google), (4) How you're balancing short-term acquisition vs long-term brand building (content/SEO), (5) Specific expected customer volumes per channel. Use numbers."></textarea>
+            </div>
+
+            <button class="btn btn-secondary" onclick="showSection(2)">Back</button>
+            <button class="btn btn-primary" onclick="showSection(4)">Next Section</button>
+        </div>
+
+        <!-- Section 4: Growth Strategy & Recommendations (25 points) -->
+        <div class="section" id="section4">
+            <div class="section-header">
+                <h2>Section 4: Growth Strategy & Recommendations</h2>
+                <p>Present strategic recommendations to VP of Marketing</p>
+            </div>
+
+            <div class="feedback-box success">
+                <strong>Final Deliverable:</strong> Write executive summary for Sarah (VP Marketing) with Q1 growth strategy, priorities, and projected outcomes.
+            </div>
+
+            <div class="form-group">
+                <label>Q13: What is the MOST IMPORTANT strategic priority for Q1?</label>
+                <select id="topPriority">
+                    <option value="">-- Select Answer --</option>
+                    <option value="email-engagement">Improve email engagement by shifting from promotional to educational content</option>
+                    <option value="paid-efficiency">Reduce paid social CAC through better targeting and creative refresh</option>
+                    <option value="conversion">Fix site conversion rate (2.4% → 3.6%) through UX improvements and A/B testing</option>
+                    <option value="influencer">Scale influencer partnerships as most cost-effective paid channel</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Q14: Calculate: With LTV of $310 and your target CAC of $28, what is the LTV:CAC ratio?</label>
+                <input type="number" step="0.1" id="ltvCacRatio" placeholder="Enter ratio (e.g., 11.1)">
+            </div>
+
+            <div class="form-group">
+                <label>Q15: For the Feb 1 bamboo product launch, what marketing tactic will drive most awareness?</label>
+                <select id="launchTactic">
+                    <option value="">-- Select Answer --</option>
+                    <option value="email-series">Email series to existing 52K subscribers (educational + early access)</option>
+                    <option value="paid-blast">Large paid social budget push ($20K blitz campaign)</option>
+                    <option value="influencer-unboxing">Influencer unboxing/review campaign with 10+ micro-influencers</option>
+                    <option value="pr">PR outreach to sustainability blogs and media outlets</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Q16: Growth Strategy Recommendation - Write executive summary (200+ words required)</label>
+                <textarea id="growthStrategy" placeholder="Present complete Q1 strategy to Sarah (VP Marketing): (1) Top 3 strategic initiatives with expected impact on CAC and conversion, (2) Budget allocation rationale with projected customer acquisition by channel, (3) A/B testing roadmap to improve conversion from 2.4% → 3.0%+, (4) How you'll leverage the email list (52K subscribers) more effectively, (5) Bamboo product launch plan (Feb 1) with go-to-market tactics, (6) Key metrics to track weekly (beyond just CAC - include ROAS, LTV, email engagement, conversion rate), (7) Risk mitigation if channels underperform. Be comprehensive and specific."></textarea>
+            </div>
+
+            <button class="btn btn-secondary" onclick="showSection(3)">Back</button>
+            <button class="btn btn-primary" onclick="calculateScore()">Complete Simulation & View Results</button>
+        </div>
+
+        <!-- Section 5: Results -->
+        <div class="section" id="section5">
+            <div class="section-header">
+                <h2>Your Marketing Simulation Results</h2>
+            </div>
+
+            <div class="score-card">
+                <h2 id="totalScore">--</h2>
+                <p style="font-size: 1.2rem;">out of 100 points</p>
+                <p id="scoreCategory" style="font-size: 1.3rem; font-weight: 600; margin-top: 15px;">--</p>
+            </div>
+
+            <div class="score-breakdown">
+                <div class="score-item">
+                    <h4>Section 1</h4>
+                    <p>Campaign Analysis</p>
+                    <p id="score1" style="font-size: 1.5rem; font-weight: 600; color: var(--primary-green);">--/25</p>
+                </div>
+                <div class="score-item">
+                    <h4>Section 2</h4>
+                    <p>A/B Testing Strategy</p>
+                    <p id="score2" style="font-size: 1.5rem; font-weight: 600; color: var(--primary-green);">--/25</p>
+                </div>
+                <div class="score-item">
+                    <h4>Section 3</h4>
+                    <p>Budget Allocation</p>
+                    <p id="score3" style="font-size: 1.5rem; font-weight: 600; color: var(--primary-green);">--/25</p>
+                </div>
+                <div class="score-item">
+                    <h4>Section 4</h4>
+                    <p>Growth Strategy</p>
+                    <p id="score4" style="font-size: 1.5rem; font-weight: 600; color: var(--primary-green);">--/25</p>
+                </div>
+            </div>
+
+            <div id="detailedFeedback"></div>
+
+            <button class="btn btn-secondary" onclick="downloadReport()">Download Report</button>
+            <button class="btn btn-primary" onclick="location.reload()">Start Over</button>
+        </div>
+    </div>
+
+    <script>
+        let supabaseClient;
+        let userEmail = null;
+        let organizationId = null;
+
+        function initSupabase() {
+            const SUPABASE_URL = 'https://clhuplhaejneecbyhphh.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsaHVwbGhhZWpuZWVjYnlocGhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU1MzM2MjgsImV4cCI6MjA1MTEwOTYyOH0.vyodBXNgvIrv3Bqhm32mG5qW9Sj_NnYUuD-9xOKtKho';
+
+            if (typeof window.supabase === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+                script.onload = () => {
+                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    getUserData();
+                };
+                document.head.appendChild(script);
+            } else {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                getUserData();
+            }
+        }
+
+        function getUserData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Get user email - check URL params first, then localStorage
+            userEmail = urlParams.get('email') || localStorage.getItem('cloverpath_user_email');
+            
+            // Get organization_id for B2B/enterprise users - check URL params first, then localStorage
+            const orgParam = urlParams.get('organization_id') || urlParams.get('org_id');
+            organizationId = orgParam || localStorage.getItem('cloverpath_organization_id') || null;
+            
+            // If we have an org_id in URL but not in localStorage, store it
+            if (orgParam && !localStorage.getItem('cloverpath_organization_id')) {
+                try {
+                    localStorage.setItem('cloverpath_organization_id', orgParam);
+                } catch (e) {
+                    console.warn('Could not save organization_id to localStorage');
+                }
+            }
+        }
+
+        // Update budget total dynamically
+        function updateBudgetTotal() {
+            const email = parseInt(document.getElementById('budgetEmail').value) || 0;
+            const meta = parseInt(document.getElementById('budgetMeta').value) || 0;
+            const google = parseInt(document.getElementById('budgetGoogle').value) || 0;
+            const influencer = parseInt(document.getElementById('budgetInfluencer').value) || 0;
+            const content = parseInt(document.getElementById('budgetContent').value) || 0;
+            
+            const total = email + meta + google + influencer + content;
+            const remaining = 75000 - total;
+            
+            const budgetTotalEl = document.getElementById('budgetTotal');
+            if (budgetTotalEl) {
+                if (total === 75000) {
+                    budgetTotalEl.textContent = 'Total: $' + total.toLocaleString() + ' ✓';
+                    budgetTotalEl.style.color = 'green';
+                } else {
+                    budgetTotalEl.textContent = 'Total: $' + total.toLocaleString() + ' (Remaining: $' + remaining.toLocaleString() + ')';
+                    budgetTotalEl.style.color = remaining < 0 ? 'red' : 'orange';
+                }
+            }
+        }
+
+        // STRICT GRADING SYSTEM
+        window.calculateScore = function() {
+            let s1 = 0, s2 = 0, s3 = 0, s4 = 0;
+            let fb = '';
+
+            // Get responses
+            const emailPattern = document.getElementById('emailPattern').value;
+            const bestCAC = document.getElementById('bestCAC').value;
+            const maxCAC = parseFloat(document.getElementById('maxCAC').value) || 0;
+            const worstChannel = document.getElementById('worstChannel').value;
+            const campaignAnalysis = document.getElementById('campaignAnalysis').value.trim();
+
+            const ctaWinner = document.getElementById('ctaWinner').value;
+            const subjectInsight = document.getElementById('subjectInsight').value;
+            const nextTest = document.getElementById('nextTest').value;
+            const openRates = document.getElementById('openRates').value.trim();
+            const testingStrategy = document.getElementById('testingStrategy').value.trim();
+
+            const budgetEmail = parseInt(document.getElementById('budgetEmail').value) || 0;
+            const budgetMeta = parseInt(document.getElementById('budgetMeta').value) || 0;
+            const budgetGoogle = parseInt(document.getElementById('budgetGoogle').value) || 0;
+            const budgetInfluencer = parseInt(document.getElementById('budgetInfluencer').value) || 0;
+            const budgetContent = parseInt(document.getElementById('budgetContent').value) || 0;
+            const budgetTotal = budgetEmail + budgetMeta + budgetGoogle + budgetInfluencer + budgetContent;
+            const blendedCAC = parseFloat(document.getElementById('blendedCAC').value) || 0;
+            const budgetRationale = document.getElementById('budgetRationale').value.trim();
+
+            const topPriority = document.getElementById('topPriority').value;
+            const ltvCacRatio = parseFloat(document.getElementById('ltvCacRatio').value) || 0;
+            const launchTactic = document.getElementById('launchTactic').value;
+            const growthStrategy = document.getElementById('growthStrategy').value.trim();
+
+            // SECTION 1: CAMPAIGN ANALYSIS (25 pts) - STRICT
+            fb += '<div class="feedback-box success"><h3>Section 1: Campaign Analysis (25 pts)</h3>';
+            
+            // Q1: Email pattern (6 pts)
+            if (emailPattern === 'educational') {
+                s1 += 6;
+                fb += '<p><strong>✓ CORRECT (6/6):</strong> Educational content (26-28% opens) dramatically outperforms promotional (12-16%).</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/6):</strong> Data shows educational/value-driven subject lines are the clear winner.</p>';
+            }
+
+            // Q2: Best CAC (5 pts)
+            if (bestCAC === 'email') {
+                s1 += 5;
+                fb += '<p><strong>✓ CORRECT (5/5):</strong> Email has lowest CAC at $21 = most efficient channel.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/5):</strong> Email Marketing has $21 CAC = best efficiency.</p>';
+            }
+
+            // Q3: Max CAC calculation (5 pts)
+            if (maxCAC >= 23.43 && maxCAC <= 23.44) {
+                s1 += 5;
+                fb += '<p><strong>✓ CORRECT (5/5):</strong> $75,000 ÷ 3,200 customers = $23.44 maximum CAC.</p>';
+            } else if (maxCAC >= 23.0 && maxCAC <= 24.0) {
+                s1 += 2;
+                fb += '<p><strong>~ CLOSE (2/5):</strong> Right approach. $75,000 ÷ 3,200 = $23.44.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/5):</strong> Calculation: $75,000 ÷ 3,200 customers = $23.44.</p>';
+            }
+
+            // Q4: Worst channel (4 pts)
+            if (worstChannel === 'meta') {
+                s1 += 4;
+                fb += '<p><strong>✓ CORRECT (4/4):</strong> Meta has worst CAC ($47) and lowest ROAS (1.4x) = biggest problem.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/4):</strong> Paid Social (Meta) has highest CAC ($47) and worst ROAS.</p>';
+            }
+
+            // Q5: Campaign Analysis Essay (5 pts) - STRICT
+            const caWords = campaignAnalysis.split(/\s+/).length;
+            const caLower = campaignAnalysis.toLowerCase();
+            
+            let cas = 0;
+            let caMissing = [];
+            
+            if (caWords < 100) {
+                fb += '<p><strong>✗ TOO SHORT (0/5):</strong> Need 150+ words. Yours: ' + caWords + ' words.</p>';
+            } else {
+                if (caWords >= 150) cas += 0.5;
+                
+                // Must explain educational vs promotional pattern
+                const explainsPattern = (caLower.includes('educational') || caLower.includes('value')) &&
+                                       (caLower.includes('promotional') || caLower.includes('discount'));
+                if (explainsPattern) {
+                    cas += 1.5;
+                } else {
+                    caMissing.push('educational vs promotional performance pattern');
+                }
+                
+                // Must discuss promotional fatigue
+                const discussesFatigue = caLower.includes('fatigue') || caLower.includes('saturated') ||
+                                        (caLower.includes('too many') && (caLower.includes('sale') || caLower.includes('discount')));
+                if (discussesFatigue) {
+                    cas += 1;
+                } else {
+                    caMissing.push('promotional fatigue/oversaturation');
+                }
+                
+                // Must explain why email is profitable
+                const explainsEmail = (caLower.includes('email') && (caLower.includes('$21') || caLower.includes('21'))) ||
+                                     (caLower.includes('lowest') && caLower.includes('cac'));
+                if (explainsEmail) {
+                    cas += 1;
+                } else {
+                    caMissing.push('why email has low CAC ($21)');
+                }
+                
+                // Must reference iOS/privacy changes
+                const mentionsPrivacy = caLower.includes('ios') || caLower.includes('privacy') ||
+                                       (caLower.includes('target') && caLower.includes('effective'));
+                if (mentionsPrivacy) {
+                    cas += 1;
+                } else {
+                    caMissing.push('iOS privacy changes affecting Meta/Google targeting');
+                }
+                
+                if (caWords < 120) cas = Math.min(cas, 2.5);
+                
+                s1 += cas;
+                
+                if (cas >= 4) {
+                    fb += '<p><strong>✓ EXCELLENT (' + cas.toFixed(1) + '/5):</strong> Comprehensive analysis with data support.</p>';
+                } else if (cas >= 2.5) {
+                    fb += '<p><strong>~ GOOD (' + cas.toFixed(1) + '/5):</strong> Missing: ' + caMissing.join(', ') + '.</p>';
+                } else {
+                    fb += '<p><strong>✗ INSUFFICIENT (' + cas.toFixed(1) + '/5):</strong> Need: ' + caMissing.join(', ') + '.</p>';
+                }
+            }
+            
+            fb += '</div>';
+
+            // SECTION 2: A/B TESTING (25 pts) - STRICT
+            fb += '<div class="feedback-box success"><h3>Section 2: A/B Testing Strategy (25 pts)</h3>';
+            
+            // Q6: CTA winner (6 pts)
+            if (ctaWinner === 'c') {
+                s2 += 6;
+                fb += '<p><strong>✓ CORRECT (6/6):</strong> Variant C "Explore Products" (3.1%) clearly wins.</p>';
+            } else if (ctaWinner === 'b') {
+                s2 += 3;
+                fb += '<p><strong>~ PARTIAL (3/6):</strong> Variant B (2.8%) is good but C (3.1%) is better.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/6):</strong> Variant C has highest conversion (3.1%).</p>';
+            }
+
+            // Q7: Subject insight (6 pts)
+            if (subjectInsight === 'educational') {
+                s2 += 6;
+                fb += '<p><strong>✓ CORRECT (6/6):</strong> Educational (24.7%) beats promotional (15.2%) by 63% = shift strategy.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/6):</strong> Educational content significantly outperforms promotional.</p>';
+            }
+
+            // Q8: Next test priority (5 pts)
+            if (nextTest === 'landing-page') {
+                s2 += 5;
+                fb += '<p><strong>✓ CORRECT (5/5):</strong> Landing page optimization for Feb 1 bamboo launch = highest priority.</p>';
+            } else if (nextTest === 'ad-creative') {
+                s2 += 3;
+                fb += '<p><strong>~ GOOD (3/5):</strong> Ad creative is important but landing page affects all channels.</p>';
+            } else {
+                fb += '<p><strong>✗ SUBOPTIMAL (0/5):</strong> Landing page for product launch = most critical test.</p>';
+            }
+
+            // Q9: Open rate calculation (3 pts)
+            const orLower = openRates.toLowerCase().replace(/\s/g, '');
+            if (orLower.includes('a=40') && orLower.includes('b=46')) {
+                s2 += 3;
+                fb += '<p><strong>✓ CORRECT (3/3):</strong> A = 2,000/5,000 = 40%, B = 2,300/5,000 = 46%.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/3):</strong> A = 2,000÷5,000 = 40%, B = 2,300÷5,000 = 46%.</p>';
+            }
+
+            // Q10: Testing Strategy Essay (5 pts) - STRICT
+            const tsWords = testingStrategy.split(/\s+/).length;
+            const tsLower = testingStrategy.toLowerCase();
+            
+            let tss = 0;
+            let tsMissing = [];
+            
+            if (tsWords < 100) {
+                fb += '<p><strong>✗ TOO SHORT (0/5):</strong> Need 150+ words. Yours: ' + tsWords + ' words.</p>';
+            } else {
+                if (tsWords >= 150) tss += 0.5;
+                
+                // Must have hypothesis for conversion drop
+                const hasHypothesis = (tsLower.includes('hypothesis') || tsLower.includes('because') || tsLower.includes('cause')) &&
+                                     (tsLower.includes('2.4') || tsLower.includes('3.6') || tsLower.includes('conversion'));
+                if (hasHypothesis) {
+                    tss += 1.5;
+                } else {
+                    tsMissing.push('hypothesis for conversion drop (3.6% → 2.4%)');
+                }
+                
+                // Must list specific tests
+                const listsTests = (tsLower.match(/test/g) || []).length >= 3 &&
+                                  (tsLower.includes('variant') || tsLower.includes('version'));
+                if (listsTests) {
+                    tss += 1.5;
+                } else {
+                    tsMissing.push('3 specific tests with variants');
+                }
+                
+                // Must mention bamboo launch
+                const mentionsLaunch = tsLower.includes('bamboo') || tsLower.includes('february') ||
+                                      (tsLower.includes('product') && tsLower.includes('launch'));
+                if (mentionsLaunch) {
+                    tss += 1;
+                } else {
+                    tsMissing.push('bamboo product launch connection');
+                }
+                
+                // Must discuss implementation
+                const discussesImpl = tsLower.includes('implement') || tsLower.includes('winner') ||
+                                     tsLower.includes('roll out') || tsLower.includes('deploy');
+                if (discussesImpl) {
+                    tss += 0.5;
+                }
+                
+                if (tsWords < 120) tss = Math.min(tss, 2.5);
+                
+                s2 += tss;
+                
+                if (tss >= 4) {
+                    fb += '<p><strong>✓ EXCELLENT (' + tss.toFixed(1) + '/5):</strong> Comprehensive testing roadmap.</p>';
+                } else {
+                    fb += '<p><strong>~ NEEDS WORK (' + tss.toFixed(1) + '/5):</strong> Missing: ' + tsMissing.join(', ') + '.</p>';
+                }
+            }
+            
+            fb += '</div>';
+
+            // SECTION 3: BUDGET ALLOCATION (25 pts) - STRICT
+            fb += '<div class="feedback-box success"><h3>Section 3: Budget Allocation (25 pts)</h3>';
+            
+            // Budget total check (5 pts)
+            if (budgetTotal === 75000) {
+                s3 += 5;
+                fb += '<p><strong>✓ CORRECT (5/5):</strong> Budget totals exactly $75,000.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/5):</strong> Budget must total $75,000 (yours: $' + budgetTotal.toLocaleString() + ').</p>';
+            }
+
+            // Email allocation check (5 pts) - should be high given low CAC
+            if (budgetEmail >= 15000 && budgetEmail <= 25000) {
+                s3 += 5;
+                fb += '<p><strong>✓ GOOD (5/5):</strong> Email ($' + budgetEmail.toLocaleString() + ') appropriately scaled given low $21 CAC.</p>';
+            } else if (budgetEmail >= 10000) {
+                s3 += 2;
+                fb += '<p><strong>~ OKAY (2/5):</strong> Email could be higher given $21 CAC (best channel).</p>';
+            } else {
+                fb += '<p><strong>✗ PROBLEM (0/5):</strong> Email has lowest CAC ($21) - should receive more budget.</p>';
+            }
+
+            // Meta allocation check (5 pts) - should be reduced given high CAC
+            if (budgetMeta <= 20000) {
+                s3 += 5;
+                fb += '<p><strong>✓ GOOD (5/5):</strong> Meta reduced appropriately given high $47 CAC.</p>';
+            } else if (budgetMeta <= 25000) {
+                s3 += 2;
+                fb += '<p><strong>~ OKAY (2/5):</strong> Meta still high considering $47 CAC problem.</p>';
+            } else {
+                fb += '<p><strong>✗ PROBLEM (0/5):</strong> Meta has $47 CAC (worst) - should be reduced more.</p>';
+            }
+
+            // Blended CAC check (5 pts)
+            if (blendedCAC >= 25 && blendedCAC <= 29) {
+                s3 += 5;
+                fb += '<p><strong>✓ CORRECT (5/5):</strong> Projected CAC $' + blendedCAC.toFixed(2) + ' achieves target (≤$28).</p>';
+            } else if (blendedCAC > 0 && blendedCAC <= 32) {
+                s3 += 2;
+                fb += '<p><strong>~ WARNING (2/5):</strong> Projected CAC $' + blendedCAC.toFixed(2) + ' may not hit target.</p>';
+            } else {
+                fb += '<p><strong>✗ MISSING (0/5):</strong> Must calculate weighted average CAC based on allocation.</p>';
+            }
+
+            // Q12: Budget Rationale Essay (5 pts) - STRICT
+            const brWords = budgetRationale.split(/\s+/).length;
+            const brLower = budgetRationale.toLowerCase();
+            
+            let brs = 0;
+            let brMissing = [];
+            
+            if (brWords < 100) {
+                fb += '<p><strong>✗ TOO SHORT (0/5):</strong> Need 150+ words. Yours: ' + brWords + ' words.</p>';
+            } else {
+                if (brWords >= 150) brs += 0.5;
+                
+                // Must justify based on CAC data
+                const usesCACData = (brLower.includes('$21') || brLower.includes('$47') || brLower.includes('$46')) &&
+                                   (brLower.includes('cac') || brLower.includes('acquisition'));
+                if (usesCACData) {
+                    brs += 1.5;
+                } else {
+                    brMissing.push('CAC data justification');
+                }
+                
+                // Must show customer volume projection
+                const projectsCustomers = (brLower.includes('3,200') || brLower.includes('3200')) ||
+                                          (brLower.includes('customer') && /\d{3,4}/.test(brLower));
+                if (projectsCustomers) {
+                    brs += 1;
+                } else {
+                    brMissing.push('how allocation achieves 3,200 customer goal');
+                }
+                
+                // Must discuss tradeoffs
+                const discussesTradeoffs = brLower.includes('tradeoff') || brLower.includes('balance') ||
+                                          (brLower.includes('while') && brLower.includes('also'));
+                if (discussesTradeoffs) {
+                    brs += 1;
+                } else {
+                    brMissing.push('tradeoffs between channels');
+                }
+                
+                // Must justify multiple channels
+                const justifiesChannels = (brLower.match(/email|meta|google|influencer|content/g) || []).length >= 4;
+                if (justifiesChannels) {
+                    brs += 1;
+                }
+                
+                if (brWords < 120) brs = Math.min(brs, 2.5);
+                
+                s3 += brs;
+                
+                if (brs >= 4) {
+                    fb += '<p><strong>✓ EXCELLENT (' + brs.toFixed(1) + '/5):</strong> Data-driven allocation strategy.</p>';
+                } else {
+                    fb += '<p><strong>~ NEEDS WORK (' + brs.toFixed(1) + '/5):</strong> Missing: ' + brMissing.join(', ') + '.</p>';
+                }
+            }
+            
+            fb += '</div>';
+
+            // SECTION 4: GROWTH STRATEGY (25 pts) - STRICT
+            fb += '<div class="feedback-box success"><h3>Section 4: Growth Strategy (25 pts)</h3>';
+            
+            // Q13: Top priority (6 pts)
+            if (topPriority === 'conversion') {
+                s4 += 6;
+                fb += '<p><strong>✓ CORRECT (6/6):</strong> Conversion rate (2.4% → 3.6%) affects ALL channels = highest leverage.</p>';
+            } else if (topPriority === 'email-engagement') {
+                s4 += 3;
+                fb += '<p><strong>~ GOOD (3/6):</strong> Email is important but conversion affects all channels.</p>';
+            } else {
+                fb += '<p><strong>✗ SUBOPTIMAL (0/6):</strong> Conversion rate improvement has multiplicative effect across all channels.</p>';
+            }
+
+            // Q14: LTV:CAC ratio (5 pts)
+            if (ltvCacRatio >= 11.0 && ltvCacRatio <= 11.1) {
+                s4 += 5;
+                fb += '<p><strong>✓ CORRECT (5/5):</strong> $310 ÷ $28 = 11.07 LTV:CAC ratio.</p>';
+            } else if (ltvCacRatio >= 10.5 && ltvCacRatio <= 11.5) {
+                s4 += 2;
+                fb += '<p><strong>~ CLOSE (2/5):</strong> LTV $310 ÷ CAC $28 = 11.07.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/5):</strong> Calculation: $310 ÷ $28 = 11.07.</p>';
+            }
+
+            // Q15: Launch tactic (4 pts)
+            if (launchTactic === 'email-series') {
+                s4 += 4;
+                fb += '<p><strong>✓ CORRECT (4/4):</strong> Email to 52K subscribers = largest owned audience, most cost-effective.</p>';
+            } else if (launchTactic === 'influencer-unboxing') {
+                s4 += 2;
+                fb += '<p><strong>~ GOOD (2/4):</strong> Influencer works but email (52K) is larger owned asset.</p>';
+            } else {
+                fb += '<p><strong>✗ SUBOPTIMAL (0/4):</strong> Email series to 52K subscribers = most reach for lowest cost.</p>';
+            }
+
+            // Q16: Growth Strategy Essay (10 pts) - VERY STRICT
+            const gsWords = growthStrategy.split(/\s+/).length;
+            const gsLower = growthStrategy.toLowerCase();
+            
+            let gss = 0;
+            let gsMissing = [];
+            
+            if (gsWords < 150) {
+                fb += '<p><strong>✗ TOO SHORT (0/10):</strong> Need 200+ words. Yours: ' + gsWords + ' words.</p>';
+            } else {
+                if (gsWords >= 200) gss += 1;
+                
+                // Must list top 3 initiatives
+                const hasInitiatives = (gsLower.match(/initiative|priority|strategy/g) || []).length >= 2;
+                if (hasInitiatives) {
+                    gss += 2;
+                } else {
+                    gsMissing.push('top 3 strategic initiatives');
+                }
+                
+                // Must reference budget allocation
+                const referencesBudget = (gsLower.includes('$75') || gsLower.includes('75,000') || gsLower.includes('budget')) &&
+                                         gsLower.includes('channel');
+                if (referencesBudget) {
+                    gss += 1.5;
+                } else {
+                    gsMissing.push('budget allocation by channel');
+                }
+                
+                // Must discuss bamboo launch
+                const hasLaunch = (gsLower.includes('bamboo') || gsLower.includes('february')) &&
+                                  gsLower.includes('launch');
+                if (hasLaunch) {
+                    gss += 1.5;
+                } else {
+                    gsMissing.push('bamboo product launch plan (Feb 1)');
+                }
+                
+                // Must define success metrics
+                const hasMetrics = (gsLower.includes('metric') || gsLower.includes('track')) &&
+                                  (gsLower.includes('roas') || gsLower.includes('ltv') || gsLower.includes('conversion'));
+                if (hasMetrics) {
+                    gss += 1.5;
+                } else {
+                    gsMissing.push('key metrics to track (beyond CAC)');
+                }
+                
+                // Must address risks
+                const addressesRisks = gsLower.includes('risk') || gsLower.includes('contingency') ||
+                                      (gsLower.includes('if') && gsLower.includes('underperform'));
+                if (addressesRisks) {
+                    gss += 1.5;
+                } else {
+                    gsMissing.push('risk mitigation/contingency plans');
+                }
+                
+                // Must discuss email leverage
+                const discussesEmailList = (gsLower.includes('52') || gsLower.includes('email list')) &&
+                                            gsLower.includes('subscriber');
+                if (discussesEmailList) {
+                    gss += 1;
+                }
+                
+                if (gsWords < 180) gss = Math.min(gss, 5);
+                
+                s4 += gss;
+                
+                if (gss >= 8) {
+                    fb += '<p><strong>✓ EXCELLENT (' + gss.toFixed(1) + '/10):</strong> Executive-ready presentation.</p>';
+                } else if (gss >= 5) {
+                    fb += '<p><strong>~ GOOD (' + gss.toFixed(1) + '/10):</strong> Missing: ' + gsMissing.join(', ') + '.</p>';
+                } else {
+                    fb += '<p><strong>✗ INSUFFICIENT (' + gss.toFixed(1) + '/10):</strong> Need: ' + gsMissing.join(', ') + '.</p>';
+                }
+            }
+            
+            fb += '</div>';
+
+            // Calculate total and display
+            const total = s1 + s2 + s3 + s4;
+
+            document.getElementById('score1').textContent = s1.toFixed(1) + '/25';
+            document.getElementById('score2').textContent = s2.toFixed(1) + '/25';
+            document.getElementById('score3').textContent = s3.toFixed(1) + '/25';
+            document.getElementById('score4').textContent = s4.toFixed(1) + '/25';
+            document.getElementById('totalScore').textContent = total.toFixed(0);
+
+            let cat = '';
+            if (total >= 90) cat = 'Outstanding - Marketing Leader Ready';
+            else if (total >= 80) cat = 'Strong - Growth Marketing Skills';
+            else if (total >= 70) cat = 'Good - Solid Marketing Fundamentals';
+            else if (total >= 60) cat = 'Adequate - Basic Understanding';
+            else cat = 'Needs Improvement - Review Materials';
+
+            document.getElementById('scoreCategory').textContent = cat;
+            document.getElementById('detailedFeedback').innerHTML = fb;
+
+            // Save to Supabase
+            if (userEmail && supabaseClient) {
+                saveResults(total, s1, s2, s3, s4);
+            }
+
+            window.showSection(5);
+            
+            setTimeout(window.sendHeightToParent, 300);
+        }
+
+        async function saveResults(total, s1, s2, s3, s4) {
+            if (!supabaseClient || !userEmail) {
+                console.warn('Cannot save results: missing Supabase client or user email');
+                return;
+            }
+
+            const resultData = {
+                user_email: userEmail,
+                simulation_type: 'marketing',
+                total_score: Math.round(total),
+                section_scores: {
+                    campaign_analysis: s1,
+                    ab_testing: s2,
+                    budget_allocation: s3,
+                    growth_strategy: s4
+                },
+                completed_at: new Date().toISOString(),
+                organization_id: organizationId // null for B2C, UUID for B2B
+            };
+
+            try {
+                // Save to simulation_results
+                const { error: resultsError } = await supabaseClient
+                    .from('simulation_results')
+                    .upsert(resultData, { 
+                        onConflict: 'user_email,simulation_type' 
+                    });
+
+                if (resultsError) {
+                    console.error('Error saving to simulation_results:', resultsError);
+                }
+
+                // Also update simulation_progress to mark as completed
+                const progressData = {
+                    user_email: userEmail,
+                    simulation_type: 'marketing',
+                    progress_data: {
+                        status: 'completed',
+                        total_score: Math.round(total),
+                        completed_at: new Date().toISOString()
+                    },
+                    last_updated: new Date().toISOString(),
+                    organization_id: organizationId
+                };
+
+                const { error: progressError } = await supabaseClient
+                    .from('simulation_progress')
+                    .upsert(progressData, {
+                        onConflict: 'user_email,simulation_type'
+                    });
+
+                if (progressError) {
+                    console.error('Error saving to simulation_progress:', progressError);
+                }
+
+            } catch (error) {
+                console.error('Error saving results:', error);
+            }
+        }
+
+        window.downloadReport = function() {
+            const content = `
+MARKETING SIMULATION - RESULTS REPORT
+GreenLeaf Market - Growth Strategy & Campaign Optimization
+Generated: ${new Date().toLocaleDateString()}
+
+TOTAL SCORE: ${document.getElementById('totalScore').textContent}/100
+
+SCORE BREAKDOWN:
+- Section 1: Campaign Analysis: ${document.getElementById('score1').textContent}
+- Section 2: A/B Testing Strategy: ${document.getElementById('score2').textContent}
+- Section 3: Budget Allocation: ${document.getElementById('score3').textContent}
+- Section 4: Growth Strategy: ${document.getElementById('score4').textContent}
+
+PERFORMANCE: ${document.getElementById('scoreCategory').textContent}
+
+DETAILED FEEDBACK:
+${document.getElementById('detailedFeedback').innerText}
+            `;
+
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Marketing_Simulation_Report.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        window.sendHeightToParent = function() {
+            try {
+                const height = document.body.scrollHeight + 100;
+                window.parent.postMessage({ type: 'iframe-height', height: height }, '*');
+            } catch (e) {}
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initSupabase();
+            
+            // Add budget input listeners
+            const budgetInputs = ['budgetEmail', 'budgetMeta', 'budgetGoogle', 'budgetInfluencer', 'budgetContent'];
+            budgetInputs.forEach(id => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.addEventListener('input', updateBudgetTotal);
+                }
+            });
+        });
+
+        window.addEventListener('load', function() {
+            setTimeout(window.sendHeightToParent, 500);
+            setTimeout(window.sendHeightToParent, 1500);
+        });
+    </script>
+    
+    <div id="content-end-marker" style="height: 1px;"></div>
+</body>
+</html>
