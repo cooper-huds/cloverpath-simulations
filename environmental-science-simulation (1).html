@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Environmental Science Simulation - Environmental Impact Assessment - CloverPath</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        p, h1, h2, h3, h4, h5, h6, li, td, th, div, span {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+        }
+
+        :root {
+            --primary-green: #2d8659;
+            --light-green: #7cb342;
+            --dark-green: #1b5e3a;
+            --light-green-dark: #5a9c2e;
+            --bg-light: #f5f9f7;
+            --text-dark: #1a1a1a;
+            --text-gray: #666;
+            --border-color: #e0e0e0;
+            --white: #ffffff;
+            --red: #e53935;
+            --orange: #fb8c00;
+            --blue: #1e88e5;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            color: var(--white);
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .progress-container {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-green) 0%, var(--light-green) 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        .company-banner {
+            background: linear-gradient(135deg, #5a9c2e 0%, #7cb342 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .company-banner h2 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .alert-box {
+            background: #fff3cd;
+            border-left: 4px solid var(--orange);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .alert-box h3 {
+            color: var(--orange);
+            margin-bottom: 10px;
+        }
+
+        .section {
+            display: none;
+            background: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary-green);
+        }
+
+        .section-header h2 {
+            color: var(--primary-green);
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .data-table th {
+            background: var(--light-green-dark);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover {
+            background: var(--bg-light);
+        }
+
+        .metric-good {
+            color: #2e7d32;
+            font-weight: 600;
+        }
+
+        .metric-warning {
+            color: #f57c00;
+            font-weight: 600;
+        }
+
+        .metric-bad {
+            color: #c62828;
+            font-weight: 600;
+        }
+
+        .materials-box {
+            background: var(--white);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .materials-header {
+            background: var(--white);
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .materials-header:hover {
+            background: var(--bg-light);
+        }
+
+        .materials-header h3 {
+            color: var(--primary-green);
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        .materials-toggle {
+            font-size: 1.5rem;
+            color: var(--primary-green);
+            font-weight: bold;
+        }
+
+        .materials-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .materials-content.open {
+            max-height: 12000px;
+        }
+
+        .materials-inner {
+            padding: 25px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-green);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-right: 10px;
+        }
+
+        .btn-primary {
+            background: var(--primary-green);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-green);
+            border: 2px solid var(--primary-green);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-light);
+        }
+
+        .feedback-box {
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .feedback-box.success {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+        }
+
+        .feedback-box.warning {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+        }
+
+        .feedback-box.info {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .metric-card {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .metric-card h4 {
+            color: var(--text-gray);
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .metric-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .metric-card .sublabel {
+            font-size: 0.9rem;
+            margin-top: 5px;
+            color: var(--text-gray);
+        }
+
+        .score-card {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--light-green) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .score-card h2 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .score-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .score-item {
+            background: white;
+            color: var(--text-dark);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .score-item h4 {
+            color: var(--primary-green);
+            margin-bottom: 5px;
+        }
+
+        .site-map {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .company-banner h2 {
+                font-size: 1.5rem;
+            }
+
+            .metric-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .data-table {
+                font-size: 0.85rem;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 8px;
+            }
+        }
+    </style>
+    <script>
+        window.toggleMaterials = function() {
+            const content = document.getElementById('materialsContent');
+            const toggle = document.getElementById('materialsToggle');
+            
+            if (content && toggle) {
+                if (content.classList.contains('open')) {
+                    content.classList.remove('open');
+                    toggle.textContent = '+';
+                } else {
+                    content.classList.add('open');
+                    toggle.textContent = '−';
+                }
+            }
+        }
+
+        window.showSection = function(sectionNum) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            const targetSection = document.getElementById('section' + sectionNum);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+
+            const progress = (sectionNum / 5) * 100;
+            const progressFill = document.getElementById('progressFill');
+            const progressPercent = document.getElementById('progressPercent');
+            const progressLabel = document.getElementById('progressLabel');
+            
+            if (progressFill) progressFill.style.width = progress + '%';
+            if (progressPercent) progressPercent.textContent = Math.round(progress) + '% Complete';
+
+            const labels = ['Introduction', 'Baseline Analysis', 'Impact Assessment', 'Mitigation Strategy', 'Final Recommendation', 'Results'];
+            if (progressLabel) progressLabel.textContent = labels[sectionNum];
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            try {
+                window.parent.postMessage({ type: 'scroll-to-top' }, '*');
+            } catch (e) {}
+
+            if (typeof window.sendHeightToParent === 'function') {
+                setTimeout(window.sendHeightToParent, 100);
+            }
+
+            // Save progress (except for intro and results sections)
+            if (sectionNum > 0 && sectionNum < 5) {
+                saveProgress(sectionNum);
+            }
+        }
+
+        async function saveProgress(currentSection) {
+            if (!supabaseClient || !userEmail) return;
+
+            try {
+                const progressData = {
+                    user_email: userEmail,
+                    simulation_type: 'environmental_science',
+                    progress_data: {
+                        status: 'in_progress',
+                        current_section: currentSection,
+                        last_activity: new Date().toISOString()
+                    },
+                    last_updated: new Date().toISOString(),
+                    organization_id: organizationId
+                };
+
+                await supabaseClient
+                    .from('simulation_progress')
+                    .upsert(progressData, {
+                        onConflict: 'user_email,simulation_type'
+                    });
+            } catch (error) {
+                // Silent fail for progress saves - don't interrupt user
+                console.warn('Could not save progress:', error);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Environmental Science Simulation</h1>
+            <p>Environmental Impact Assessment for proposed data center development</p>
+        </div>
+
+        <div class="progress-container">
+            <h3>Your Progress</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text">
+                <span id="progressLabel">Introduction</span>
+                <span id="progressPercent">0% Complete</span>
+            </div>
+        </div>
+
+        <div class="company-banner">
+            <h2>TechVista Data Solutions</h2>
+            <p>Environmental Consulting Team - EIA for Riverside Data Center</p>
+        </div>
+
+        <!-- Section 0: Introduction -->
+        <div class="section active" id="section0">
+            <div class="section-header">
+                <h2>Welcome to TechVista Environmental Consulting</h2>
+                <p>Conduct Environmental Impact Assessment for proposed data center</p>
+            </div>
+
+            <div class="feedback-box success">
+                <h3 style="margin-bottom: 10px;">Your Role</h3>
+                <p><strong>Position:</strong> Environmental Consultant (EIA Team)</p>
+                <p><strong>Reporting To:</strong> Dr. Jennifer Martinez, Senior Environmental Scientist</p>
+                <p><strong>Client:</strong> TechVista Data Solutions - Planning 250,000 sq ft data center</p>
+                <p><strong>Your Mission:</strong> Conduct comprehensive Environmental Impact Assessment per NEPA requirements and provide regulatory recommendation.</p>
+            </div>
+
+            <div class="alert-box">
+                <h3>Project Overview: Riverside Data Center</h3>
+                <p><strong>Location:</strong> 45-acre site adjacent to Blue Heron Wetland Preserve (Oregon)</p>
+                <p><strong>Project:</strong> 250,000 sq ft data center + cooling infrastructure + access road</p>
+                <p><strong>Environmental Concerns:</strong> Protected wetland 200m away, endangered salmon habitat, water usage 2.5M gallons/day</p>
+                <p><strong>Regulatory Framework:</strong> NEPA (National Environmental Policy Act), Clean Water Act, Endangered Species Act</p>
+            </div>
+
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <h4>Project Footprint</h4>
+                    <div class="value">45 acres</div>
+                    <div class="sublabel">25 acres developed, 20 acres buffer</div>
+                </div>
+                <div class="metric-card">
+                    <h4>Wetland Distance</h4>
+                    <div class="value">200m</div>
+                    <div class="sublabel">Blue Heron Wetland Preserve</div>
+                </div>
+                <div class="metric-card">
+                    <h4>Water Usage</h4>
+                    <div class="value">2.5M gal/day</div>
+                    <div class="sublabel">For cooling systems</div>
+                </div>
+                <div class="metric-card">
+                    <h4>Protected Species</h4>
+                    <div class="value">3 species</div>
+                    <div class="sublabel">Coho salmon, spotted owl, red-legged frog</div>
+                </div>
+            </div>
+
+            <div class="materials-box">
+                <div class="materials-header" onclick="toggleMaterials()">
+                    <h3>Environmental Survey Data & Site Information</h3>
+                    <span class="materials-toggle" id="materialsToggle">+</span>
+                </div>
+                <div class="materials-content" id="materialsContent">
+                    <div class="materials-inner">
+                        <h4 style="color: var(--primary-green); margin-bottom: 15px;">Site Description</h4>
+                        
+                        <p><strong>Proposed Development:</strong> TechVista Data Solutions plans to construct a 250,000 sq ft data center on a 45-acre site in Clackamas County, Oregon. The facility will require significant water usage for cooling systems (2.5 million gallons/day from Willamette River) and construction of a 1.2-mile access road connecting to Highway 99E.</p>
+
+                        <p style="margin-top: 15px;"><strong>Current Land Use:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>30 acres: Grassland/former agricultural (inactive 8 years)</li>
+                            <li>10 acres: Mixed deciduous forest (oak-maple-alder)</li>
+                            <li>5 acres: Seasonal wetland (wet Oct-Apr, dry May-Sep)</li>
+                        </ul>
+
+                        <p style="margin-top: 15px;"><strong>Proximity to Protected Areas:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Blue Heron Wetland Preserve: 200m south (120-acre protected wetland complex)</li>
+                            <li>Willamette River: 0.8 miles west (water source + salmon habitat)</li>
+                            <li>Mt. Talbert Nature Park: 1.2 miles northeast (state park, old-growth forest)</li>
+                        </ul>
+
+                        <h4 style="color: var(--primary-green); margin: 25px 0 15px 0;">Water Quality Data (Baseline)</h4>
+                        
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Measured Value</th>
+                                    <th>EPA Standard</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>pH</td>
+                                    <td>7.2</td>
+                                    <td>6.5-8.5</td>
+                                    <td class="metric-good">Within Range</td>
+                                </tr>
+                                <tr>
+                                    <td>Dissolved Oxygen</td>
+                                    <td>8.4 mg/L</td>
+                                    <td>> 6.5 mg/L</td>
+                                    <td class="metric-good">Good</td>
+                                </tr>
+                                <tr>
+                                    <td>Total Suspended Solids</td>
+                                    <td>12 mg/L</td>
+                                    <td>< 25 mg/L</td>
+                                    <td class="metric-good">Good</td>
+                                </tr>
+                                <tr>
+                                    <td>Nitrates (NO3-N)</td>
+                                    <td>1.8 mg/L</td>
+                                    <td>< 10 mg/L</td>
+                                    <td class="metric-good">Good</td>
+                                </tr>
+                                <tr>
+                                    <td>Phosphates (PO4-P)</td>
+                                    <td>0.08 mg/L</td>
+                                    <td>< 0.1 mg/L</td>
+                                    <td class="metric-good">Good</td>
+                                </tr>
+                                <tr>
+                                    <td>Turbidity</td>
+                                    <td>4.2 NTU</td>
+                                    <td>< 5 NTU</td>
+                                    <td class="metric-good">Good</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p style="margin-top: 10px;"><em>Note: Data collected from seasonal wetland and drainage channels over 12-month period (Oct 2024 - Sep 2025).</em></p>
+
+                        <h4 style="color: var(--primary-green); margin: 25px 0 15px 0;">Wildlife & Habitat Survey Results</h4>
+                        
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Species</th>
+                                    <th>Observations</th>
+                                    <th>Status</th>
+                                    <th>Habitat Use</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Coho Salmon</strong> (Oncorhynchus kisutch)</td>
+                                    <td>Migration route in adjacent creek</td>
+                                    <td class="metric-bad">Threatened (ESA)</td>
+                                    <td>Spawning habitat 0.5 mi downstream</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Northern Spotted Owl</strong> (Strix occidentalis)</td>
+                                    <td>Nest site 400m north in forest</td>
+                                    <td class="metric-bad">Threatened (ESA)</td>
+                                    <td>Foraging in mixed forest on site</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Oregon Spotted Frog</strong> (Rana pretiosa)</td>
+                                    <td>Breeding observed in seasonal wetland</td>
+                                    <td class="metric-bad">Threatened (ESA)</td>
+                                    <td>Permanent resident, breeds Mar-Apr</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Great Blue Heron</strong> (Ardea herodias)</td>
+                                    <td>Colony 200m south in preserve</td>
+                                    <td class="metric-good">Not listed</td>
+                                    <td>Foraging in wetland</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Western Pond Turtle</strong> (Actinemys marmorata)</td>
+                                    <td>12 individuals in wetland</td>
+                                    <td class="metric-warning">Sensitive species</td>
+                                    <td>Nesting on south-facing slopes</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Roosevelt Elk</strong> (Cervus canadensis)</td>
+                                    <td>Tracks/scat in grassland</td>
+                                    <td class="metric-good">Not listed</td>
+                                    <td>Occasional foraging</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4 style="color: var(--primary-green); margin: 25px 0 15px 0;">Soil & Geology Data</h4>
+                        
+                        <p><strong>Soil Types:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><strong>Willamette Silt Loam</strong> (20 acres): Well-drained, moderate permeability, suitable for construction</li>
+                            <li><strong>Wapato Silty Clay Loam</strong> (15 acres): Poorly drained, high water table, requires engineered foundations</li>
+                            <li><strong>Chehalis Silty Clay Loam</strong> (10 acres): Seasonally saturated, flood-prone, not suitable for development</li>
+                        </ul>
+
+                        <p style="margin-top: 15px;"><strong>Hydrologic Features:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Groundwater depth: 3-8 feet below surface (seasonal variation)</li>
+                            <li>Surface drainage: Northeast to southwest toward seasonal creek</li>
+                            <li>100-year floodplain: Covers 8 acres in southwest corner</li>
+                            <li>Wetland delineation: 5 acres qualify as jurisdictional wetlands under Clean Water Act</li>
+                        </ul>
+
+                        <h4 style="color: var(--primary-green); margin: 25px 0 15px 0;">Air Quality Baseline</h4>
+                        
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Pollutant</th>
+                                    <th>Current Level</th>
+                                    <th>NAAQS Standard</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>PM2.5 (24-hr avg)</td>
+                                    <td>18 μg/m³</td>
+                                    <td>< 35 μg/m³</td>
+                                    <td class="metric-good">Good</td>
+                                </tr>
+                                <tr>
+                                    <td>PM10 (24-hr avg)</td>
+                                    <td>42 μg/m³</td>
+                                    <td>< 150 μg/m³</td>
+                                    <td class="metric-good">Good</td>
+                                </tr>
+                                <tr>
+                                    <td>Ozone (8-hr avg)</td>
+                                    <td>0.062 ppm</td>
+                                    <td>< 0.070 ppm</td>
+                                    <td class="metric-good">Good</td>
+                                </tr>
+                                <tr>
+                                    <td>NO2 (annual avg)</td>
+                                    <td>28 ppb</td>
+                                    <td>< 53 ppb</td>
+                                    <td class="metric-good">Good</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p style="margin-top: 10px;"><em>NAAQS = National Ambient Air Quality Standards (EPA)</em></p>
+
+                        <h4 style="color: var(--primary-green); margin: 25px 0 15px 0;">Proposed Project Details</h4>
+                        
+                        <p><strong>Construction Phase (18 months):</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Site grading: 25 acres (removal of vegetation, soil compaction)</li>
+                            <li>Foundation excavation: 300,000 cubic yards of soil</li>
+                            <li>Access road: 1.2 miles, 24-foot width, asphalt paving</li>
+                            <li>Stormwater retention pond: 2 acres, 8-foot depth</li>
+                            <li>Utility connections: 0.8-mile water pipeline from Willamette River</li>
+                            <li>Peak construction workforce: 450 workers, 80 heavy vehicles/day</li>
+                        </ul>
+
+                        <p style="margin-top: 15px;"><strong>Operational Phase:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Water usage: 2.5 million gallons/day for cooling towers (returns 95% to river at +8°F)</li>
+                            <li>Power consumption: 48 MW (from regional grid, 35% renewable)</li>
+                            <li>Wastewater discharge: 125,000 gallons/day (treated to secondary standards)</li>
+                            <li>Diesel generators: 12 backup generators (tested monthly, 2 hours/test)</li>
+                            <li>Employment: 85 full-time staff, 150 vehicles/day</li>
+                        </ul>
+
+                        <h4 style="color: var(--primary-green); margin: 25px 0 15px 0;">Regulatory Requirements</h4>
+                        
+                        <p><strong>NEPA (National Environmental Policy Act):</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Requires Environmental Assessment (EA) or Environmental Impact Statement (EIS)</li>
+                            <li>Must evaluate direct, indirect, and cumulative impacts</li>
+                            <li>Public comment period required (30-45 days)</li>
+                            <li>Finding of No Significant Impact (FONSI) OR full EIS required</li>
+                        </ul>
+
+                        <p style="margin-top: 15px;"><strong>Clean Water Act (Section 404):</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Permit required for discharge to waters of the U.S.</li>
+                            <li>Mitigation required for wetland impacts (1:1 or 2:1 ratio)</li>
+                            <li>Stormwater management plan (NPDES permit)</li>
+                        </ul>
+
+                        <p style="margin-top: 15px;"><strong>Endangered Species Act:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Section 7 consultation with USFWS for threatened species</li>
+                            <li>Biological Assessment required (impacts to coho salmon, spotted owl, spotted frog)</li>
+                            <li>Incidental Take Permit may be required</li>
+                            <li>Critical habitat designation must be considered</li>
+                        </ul>
+
+                        <h4 style="color: var(--primary-green); margin: 25px 0 15px 0;">Significance Thresholds (EPA Guidance)</h4>
+                        
+                        <p><strong>Impact Magnitude Classification:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><strong>Negligible:</strong> Barely measurable, no mitigation needed</li>
+                            <li><strong>Minor:</strong> Detectable but small, standard mitigation sufficient</li>
+                            <li><strong>Moderate:</strong> Clearly measurable, requires targeted mitigation</li>
+                            <li><strong>Major:</strong> Substantial change, extensive mitigation required, may preclude project</li>
+                        </ul>
+
+                        <p style="margin-top: 15px;"><strong>Significant Impact Criteria (triggers EIS):</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Impacts to threatened/endangered species habitat</li>
+                            <li>Discharge to impaired water bodies</li>
+                            <li>Loss of >1 acre jurisdictional wetlands</li>
+                            <li>Air emissions exceeding 250 tons/year (major source)</li>
+                            <li>Public controversy or high stakeholder concern</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="showSection(1)">Begin Baseline Analysis</button>
+        </div>
+
+        <!-- Section 1: Baseline Environmental Analysis (25 points) -->
+        <div class="section" id="section1">
+            <div class="section-header">
+                <h2>Section 1: Baseline Environmental Analysis</h2>
+                <p>Analyze existing environmental conditions and identify sensitive resources</p>
+            </div>
+
+            <div class="feedback-box warning">
+                <strong>Your Task:</strong> Review baseline data to characterize current environmental conditions and identify resources that would be impacted by development.
+            </div>
+
+            <div class="form-group">
+                <label>Q1: Which environmental resource faces the GREATEST risk from this project?</label>
+                <select id="greatestRisk">
+                    <option value="">-- Select Answer --</option>
+                    <option value="wetland">5-acre seasonal wetland (jurisdictional under Clean Water Act)</option>
+                    <option value="air-quality">Air quality from diesel generators and construction equipment</option>
+                    <option value="groundwater">Groundwater quality from potential contamination</option>
+                    <option value="threatened-species">Threatened species habitat (coho salmon, spotted owl, spotted frog)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Q2: Based on water quality data, what is the current baseline condition?</label>
+                <select id="waterBaseline">
+                    <option value="">-- Select Answer --</option>
+                    <option value="impaired">Impaired - exceeds EPA standards, already degraded</option>
+                    <option value="good">Good - all parameters within EPA standards</option>
+                    <option value="marginal">Marginal - some parameters near threshold limits</option>
+                    <option value="excellent">Excellent - all parameters well below limits</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Q3: How many acres of the site are UNSUITABLE for construction due to soil/hydrology constraints?</label>
+                <input type="number" id="unsuitableAcres" placeholder="Enter number of acres">
+            </div>
+
+            <div class="form-group">
+                <label>Q4: Which species requires Section 7 consultation under the Endangered Species Act?</label>
+                <select id="section7Species">
+                    <option value="">-- Select Answer --</option>
+                    <option value="all-three">All three: Coho salmon, spotted owl, spotted frog (all Threatened)</option>
+                    <option value="salmon-only">Coho salmon only (aquatic impacts)</option>
+                    <option value="none">None - consultation not required for this project</option>
+                    <option value="owl-only">Spotted owl only (forest habitat impacts)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Q5: Baseline Environmental Analysis - Characterize existing conditions (150+ words required)</label>
+                <textarea id="baselineAnalysis" placeholder="Provide comprehensive baseline analysis: (1) Describe current habitat quality and ecological value of the site (reference specific data: DO levels, pH, species observations), (2) Identify which resources are most sensitive to disturbance and why (wetland functions, threatened species breeding/nesting, water quality), (3) Explain the significance of the 200m distance to Blue Heron Wetland Preserve, (4) Assess whether the site provides critical habitat functions (breeding, foraging, migration corridors) based on wildlife survey data. Use specific numbers from the data tables."></textarea>
+            </div>
+
+            <button class="btn btn-secondary" onclick="showSection(0)">Back</button>
+            <button class="btn btn-primary" onclick="showSection(2)">Next Section</button>
+        </div>
+
+        <!-- Section 2: Impact Assessment (25 points) -->
+        <div class="section" id="section2">
+            <div class="section-header">
+                <h2>Section 2: Environmental Impact Assessment</h2>
+                <p>Evaluate magnitude and significance of project impacts</p>
+            </div>
+
+            <div class="feedback-box info">
+                <strong>Challenge:</strong> Assess impact magnitude for each environmental resource using EPA significance criteria. Consider direct, indirect, and cumulative effects.
+            </div>
+
+            <div class="form-group">
+                <label>Q6: What is the impact magnitude for water withdrawal (2.5M gallons/day from Willamette River)?</label>
+                <select id="waterWithdrawal">
+                    <option value="">-- Select Answer --</option>
+                    <option value="negligible">Negligible - River flow is 15,000 cfs, withdrawal is 0.4% of flow</option>
+                    <option value="minor">Minor - Small percentage but still measurable impact</option>
+                    <option value="moderate">Moderate - Significant water use requires mitigation</option>
+                    <option value="major">Major - Threatens river ecosystem and salmon habitat</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Q7: Construction will impact 5 acres of seasonal wetland. Under Clean Water Act, what mitigation ratio is typically required?</label>
+                <select id="wetlandMitigation">
+                    <option value="">-- Select Answer --</option>
+                    <option value="1to1">1:1 (create/restore 5 acres wetland)</option>
+                    <option value="2to1">2:1 (create/restore 10 acres wetland)</option>
+                    <option value="3to1">3:1 (create/restore 15 acres wetland)</option>
+                    <option value="none">No mitigation required - seasonal wetland not jurisdictional</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Q8: The project returns cooling water to the river at +8°F above intake temperature. What is the PRIMARY ecological concern?</label>
+                <select id="thermalImpact">
+                    <option value="">-- Select Answer --</option>
+                    <option value="salmon">Thermal stress on coho salmon (cold-water species, spawning impacted by temp)</option>
+                    <option value="do">Dissolved oxygen reduction (warmer water holds less oxygen)</option>
+                    <option value="algae">Algal bloom promotion from increased temperature</option>
+                    <option value="none">No concern - 8°F increase is within natural variation</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Q9: During construction, PM10 (particulate matter) will increase from 42 to 95 μg/m³. Is this a significant air quality impact?</label>
+                <select id="airQualityImpact">
+                    <option value="">-- Select Answer --</option>
+                    <option value="yes-major">Yes - Exceeds NAAQS standard (150 μg/m³ limit), major impact</option>
+                    <option value="no-below">No - Still below NAAQS standard of 150 μg/m³</option>
+                    <option value="yes-moderate">Yes - Moderate impact, requires dust control measures</option>
+                    <option value="temporary">No - Temporary construction impact, not significant</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Q10: Impact Assessment Report - Evaluate project impacts (150+ words required)</label>
+                <textarea id="impactAssessment" placeholder="Provide comprehensive impact analysis: (1) Assess impacts to threatened species using SPECIFIC evidence from surveys (spotted frog breeding in wetland to be filled, spotted owl foraging habitat lost, salmon thermal stress from warm discharge), (2) Calculate total wetland loss and explain Clean Water Act implications (5 acres jurisdictional), (3) Evaluate cumulative impacts (construction + operation phases combined), (4) Determine if this project meets EPA criteria for 'significant impact' requiring full EIS vs just EA. Reference specific thresholds from materials (>1 acre wetland, threatened species, thermal discharge)."></textarea>
+            </div>
+
+            <button class="btn btn-secondary" onclick="showSection(1)">Back</button>
+            <button class="btn btn-primary" onclick="showSection(3)">Next Section</button>
+        </div>
+
+        <!-- Section 3: Mitigation Strategy (25 points) -->
+        <div class="section" id="section3">
+            <div class="section-header">
+                <h2>Section 3: Mitigation Strategy & Design</h2>
+                <p>Develop mitigation measures to reduce environmental impacts</p>
+            </div>
+
+            <div class="alert-box">
+                <strong>Objective:</strong> Design comprehensive mitigation strategy addressing all significant impacts. Mitigation hierarchy: Avoid → Minimize → Mitigate → Compensate.
+            </div>
+
+            <div class="form-group">
+                <label>Q11: What is the BEST mitigation approach for protecting spotted frog breeding habitat?</label>
+                <select id="frogMitigation">
+                    <option value="">-- Select Answer --</option>
+                    <option value="relocate">Relocate frogs to nearby Blue Heron Preserve before construction</option>
+                    <option value="avoid">Avoid impact by redesigning project to preserve 5-acre seasonal wetland</option>
+                    <option value="compensate">Allow wetland fill, create 10-acre replacement wetland on-site</option>
+                    <option value="timing">Allow development, restrict construction to non-breeding season (May-Feb)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Q12: To mitigate thermal impacts to salmon, which strategy is MOST effective?</label>
+                <select id="thermalMitigation">
+                    <option value="">-- Select Answer --</option>
+                    <option value="cooling-towers">Install closed-loop cooling towers (eliminates river discharge)</option>
+                    <option value="diffuser">Install diffuser to mix warm discharge with river water</option>
+                    <option value="timing">Restrict discharge during critical salmon migration (Sep-Nov)</option>
+                    <option value="offset">Purchase salmon habitat restoration credits to offset impact</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Q13: For the 1.2-mile access road crossing wildlife habitat, what mitigation should be included?</label>
+                <select id="roadMitigation">
+                    <option value="">-- Select Answer --</option>
+                    <option value="culverts">Wildlife underpasses/culverts at 3 locations (elk, turtle movement)</option>
+                    <option value="fencing">Wildlife fencing along entire length to prevent road crossing</option>
+                    <option value="speed">Reduced speed limits (25 mph) in wildlife zones</option>
+                    <option value="none">No mitigation - road design is sufficient</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Q14: Calculate required wetland mitigation area if 5 acres are filled and 2:1 ratio is mandated:</label>
+                <input type="number" id="mitigationAcres" placeholder="Enter acres of wetland to create/restore">
+            </div>
+
+            <div class="form-group">
+                <label>Q15: Mitigation Strategy Plan - Design comprehensive approach (150+ words required)</label>
+                <textarea id="mitigationPlan" placeholder="Present detailed mitigation strategy: (1) For each major impact category (wetland, threatened species, water quality, air quality), specify mitigation measures following hierarchy: avoidance first, then minimization, then compensation, (2) Design stormwater management system to prevent sediment/pollutant discharge to wetland (bioswales, retention pond specifications), (3) Propose buffer zone dimensions between development and wetland (EPA recommends 50-100m), (4) Create construction best practices (silt fencing, equipment washing stations, dust suppression), (5) Outline long-term monitoring plan (water quality sampling quarterly, wildlife surveys annually, wetland success criteria). Be specific with numbers and standards."></textarea>
+            </div>
+
+            <button class="btn btn-secondary" onclick="showSection(2)">Back</button>
+            <button class="btn btn-primary" onclick="showSection(4)">Next Section</button>
+        </div>
+
+        <!-- Section 4: Final Recommendation (25 points) -->
+        <div class="section" id="section4">
+            <div class="section-header">
+                <h2>Section 4: Regulatory Recommendation & Executive Summary</h2>
+                <p>Provide final recommendation to regulatory agency</p>
+            </div>
+
+            <div class="feedback-box success">
+                <strong>Final Deliverable:</strong> Write executive summary for EPA/state environmental agency with final recommendation on project approval.
+            </div>
+
+            <div class="form-group">
+                <label>Q16: Based on your impact assessment, does this project require a full Environmental Impact Statement (EIS)?</label>
+                <select id="eisRequired">
+                    <option value="">-- Select Answer --</option>
+                    <option value="yes-threatened">Yes - Impacts to threatened species habitat trigger EIS requirement</option>
+                    <option value="yes-wetland">Yes - 5-acre wetland loss exceeds significance threshold (>1 acre)</option>
+                    <option value="yes-both">Yes - Multiple significant impacts (wetland + threatened species + thermal discharge)</option>
+                    <option value="no-fonsi">No - Environmental Assessment with Finding of No Significant Impact (FONSI) sufficient if mitigation implemented</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Q17: What is your FINAL recommendation to the regulatory agency?</label>
+                <select id="finalRecommendation">
+                    <option value="">-- Select Answer --</option>
+                    <option value="approve">Approve - Environmental impacts acceptable with standard conditions</option>
+                    <option value="conditional">Conditional Approval - Approve only if specific mitigation measures implemented (wetland avoidance, closed-loop cooling, wildlife underpasses)</option>
+                    <option value="deny">Deny - Environmental impacts too significant, cannot be adequately mitigated</option>
+                    <option value="alternative">Require Alternative Analysis - Evaluate different site locations or reduced project scope</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Q18: If conditionally approved, which requirement is MOST CRITICAL for permit conditions?</label>
+                <select id="criticalCondition">
+                    <option value="">-- Select Answer --</option>
+                    <option value="wetland-avoidance">Wetland avoidance - Redesign to preserve 5-acre seasonal wetland (protects spotted frog breeding)</option>
+                    <option value="cooling">Closed-loop cooling system - Eliminate thermal discharge to river (protects salmon)</option>
+                    <option value="monitoring">5-year monitoring program for water quality and wildlife</option>
+                    <option value="buffer">100-meter buffer zone between development and Blue Heron Preserve</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Q19: Calculate: If wetland mitigation costs $45,000/acre and 2:1 ratio required for 5-acre impact, what is total mitigation cost?</label>
+                <input type="number" id="mitigationCost" placeholder="Enter total cost in dollars">
+            </div>
+
+            <div class="form-group">
+                <label>Q20: Executive Summary & Recommendation - Final report (200+ words required)</label>
+                <textarea id="executiveSummary" placeholder="Write comprehensive regulatory recommendation: (1) Summarize baseline conditions and environmental sensitivity of the site (wetland, threatened species, water quality), (2) Identify significant impacts that exceed EPA thresholds (5-acre wetland loss, thermal discharge to salmon habitat, spotted frog breeding disruption), (3) Evaluate adequacy of proposed mitigation (specify which measures are sufficient vs which are inadequate), (4) State clear recommendation: Approve, Conditional Approval, or Deny with detailed justification, (5) If conditional, list SPECIFIC permit conditions with measurable performance standards (e.g., 'wetland mitigation must achieve 80% native plant cover within 3 years'), (6) Outline compliance monitoring requirements and adaptive management triggers. Write as formal executive summary for regulatory decision-makers."></textarea>
+            </div>
+
+            <button class="btn btn-secondary" onclick="showSection(3)">Back</button>
+            <button class="btn btn-primary" onclick="calculateScore()">Complete Assessment & View Results</button>
+        </div>
+
+        <!-- Section 5: Results -->
+        <div class="section" id="section5">
+            <div class="section-header">
+                <h2>Your Environmental Assessment Results</h2>
+            </div>
+
+            <div class="score-card">
+                <h2 id="totalScore">--</h2>
+                <p style="font-size: 1.2rem;">out of 100 points</p>
+                <p id="scoreCategory" style="font-size: 1.3rem; font-weight: 600; margin-top: 15px;">--</p>
+            </div>
+
+            <div class="score-breakdown">
+                <div class="score-item">
+                    <h4>Section 1</h4>
+                    <p>Baseline Analysis</p>
+                    <p id="score1" style="font-size: 1.5rem; font-weight: 600; color: var(--primary-green);">--/25</p>
+                </div>
+                <div class="score-item">
+                    <h4>Section 2</h4>
+                    <p>Impact Assessment</p>
+                    <p id="score2" style="font-size: 1.5rem; font-weight: 600; color: var(--primary-green);">--/25</p>
+                </div>
+                <div class="score-item">
+                    <h4>Section 3</h4>
+                    <p>Mitigation Strategy</p>
+                    <p id="score3" style="font-size: 1.5rem; font-weight: 600; color: var(--primary-green);">--/25</p>
+                </div>
+                <div class="score-item">
+                    <h4>Section 4</h4>
+                    <p>Final Recommendation</p>
+                    <p id="score4" style="font-size: 1.5rem; font-weight: 600; color: var(--primary-green);">--/25</p>
+                </div>
+            </div>
+
+            <div id="detailedFeedback"></div>
+
+            <button class="btn btn-secondary" onclick="downloadReport()">Download Report</button>
+            <button class="btn btn-primary" onclick="location.reload()">Start Over</button>
+        </div>
+    </div>
+
+    <script>
+        let supabaseClient;
+        let userEmail = null;
+        let organizationId = null;
+
+        function initSupabase() {
+            const SUPABASE_URL = 'https://clhuplhaejneecbyhphh.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsaHVwbGhhZWpuZWVjYnlocGhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU1MzM2MjgsImV4cCI6MjA1MTEwOTYyOH0.vyodBXNgvIrv3Bqhm32mG5qW9Sj_NnYUuD-9xOKtKho';
+
+            if (typeof window.supabase === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+                script.onload = () => {
+                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    getUserData();
+                };
+                document.head.appendChild(script);
+            } else {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                getUserData();
+            }
+        }
+
+        function getUserData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Get user email - check URL params first, then localStorage
+            userEmail = urlParams.get('email') || localStorage.getItem('cloverpath_user_email');
+            
+            // Get organization_id for B2B/enterprise users - check URL params first, then localStorage
+            const orgParam = urlParams.get('organization_id') || urlParams.get('org_id');
+            organizationId = orgParam || localStorage.getItem('cloverpath_organization_id') || null;
+            
+            // If we have an org_id in URL but not in localStorage, store it
+            if (orgParam && !localStorage.getItem('cloverpath_organization_id')) {
+                try {
+                    localStorage.setItem('cloverpath_organization_id', orgParam);
+                } catch (e) {
+                    console.warn('Could not save organization_id to localStorage');
+                }
+            }
+        }
+
+        // STRICT GRADING SYSTEM
+        window.calculateScore = function() {
+            let s1 = 0, s2 = 0, s3 = 0, s4 = 0;
+            let fb = '';
+
+            // Get responses
+            const greatestRisk = document.getElementById('greatestRisk').value;
+            const waterBaseline = document.getElementById('waterBaseline').value;
+            const unsuitableAcres = parseFloat(document.getElementById('unsuitableAcres').value) || 0;
+            const section7Species = document.getElementById('section7Species').value;
+            const baselineAnalysis = document.getElementById('baselineAnalysis').value.trim();
+
+            const waterWithdrawal = document.getElementById('waterWithdrawal').value;
+            const wetlandMitigation = document.getElementById('wetlandMitigation').value;
+            const thermalImpact = document.getElementById('thermalImpact').value;
+            const airQualityImpact = document.getElementById('airQualityImpact').value;
+            const impactAssessment = document.getElementById('impactAssessment').value.trim();
+
+            const frogMitigation = document.getElementById('frogMitigation').value;
+            const thermalMitigation = document.getElementById('thermalMitigation').value;
+            const roadMitigation = document.getElementById('roadMitigation').value;
+            const mitigationAcres = parseFloat(document.getElementById('mitigationAcres').value) || 0;
+            const mitigationPlan = document.getElementById('mitigationPlan').value.trim();
+
+            const eisRequired = document.getElementById('eisRequired').value;
+            const finalRecommendation = document.getElementById('finalRecommendation').value;
+            const criticalCondition = document.getElementById('criticalCondition').value;
+            const mitigationCost = parseFloat(document.getElementById('mitigationCost').value) || 0;
+            const executiveSummary = document.getElementById('executiveSummary').value.trim();
+
+            // SECTION 1: BASELINE ANALYSIS (25 pts) - STRICT
+            fb += '<div class="feedback-box success"><h3>Section 1: Baseline Analysis (25 pts)</h3>';
+            
+            // Q1: Greatest risk (6 pts)
+            if (greatestRisk === 'threatened-species') {
+                s1 += 6;
+                fb += '<p><strong>✓ CORRECT (6/6):</strong> Threatened species habitat = ESA consultation required, highest regulatory concern.</p>';
+            } else if (greatestRisk === 'wetland') {
+                s1 += 3;
+                fb += '<p><strong>~ PARTIAL (3/6):</strong> Wetland is significant but threatened species trigger ESA = stricter requirements.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/6):</strong> Threatened species (coho salmon, spotted owl, spotted frog) = highest regulatory risk under ESA.</p>';
+            }
+
+            // Q2: Water baseline (5 pts)
+            if (waterBaseline === 'good') {
+                s1 += 5;
+                fb += '<p><strong>✓ CORRECT (5/5):</strong> All parameters within EPA standards = good baseline condition.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/5):</strong> Table shows all parameters within EPA standards = "good" baseline.</p>';
+            }
+
+            // Q3: Unsuitable acres (5 pts)
+            if (unsuitableAcres === 15) {
+                s1 += 5;
+                fb += '<p><strong>✓ CORRECT (5/5):</strong> Wapato (10 acres) + Chehalis (5 acres) = 15 acres unsuitable.</p>';
+            } else if (unsuitableAcres >= 10 && unsuitableAcres <= 20) {
+                s1 += 2;
+                fb += '<p><strong>~ CLOSE (2/5):</strong> Wapato Silty Clay (10 acres) + Chehalis (5 acres) = 15 total.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/5):</strong> Wapato (poorly drained, 10 acres) + Chehalis (flood-prone, 5 acres) = 15 acres.</p>';
+            }
+
+            // Q4: Section 7 species (4 pts)
+            if (section7Species === 'all-three') {
+                s1 += 4;
+                fb += '<p><strong>✓ CORRECT (4/4):</strong> All three species listed as Threatened under ESA = Section 7 consultation required.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/4):</strong> Coho salmon, spotted owl, spotted frog = all Threatened (ESA) = all require consultation.</p>';
+            }
+
+            // Q5: Baseline Analysis Essay (5 pts) - STRICT
+            const baWords = baselineAnalysis.split(/\s+/).length;
+            const baLower = baselineAnalysis.toLowerCase();
+            
+            let bas = 0;
+            let baMissing = [];
+            
+            if (baWords < 100) {
+                fb += '<p><strong>✗ TOO SHORT (0/5):</strong> Need 150+ words. Yours: ' + baWords + ' words.</p>';
+            } else {
+                if (baWords >= 150) bas += 0.5;
+                
+                // Must reference specific data
+                const usesData = (baLower.includes('8.4') || baLower.includes('7.2') || baLower.includes('ph')) &&
+                                (baLower.includes('dissolved oxygen') || baLower.includes('do'));
+                if (usesData) {
+                    bas += 1.5;
+                } else {
+                    baMissing.push('specific water quality data (pH 7.2, DO 8.4 mg/L)');
+                }
+                
+                // Must discuss wetland significance
+                const discussesWetland = (baLower.includes('wetland') && baLower.includes('5 acres')) ||
+                                        (baLower.includes('seasonal') && baLower.includes('breeding'));
+                if (discussesWetland) {
+                    bas += 1;
+                } else {
+                    baMissing.push('5-acre wetland significance for spotted frog breeding');
+                }
+                
+                // Must explain threatened species use
+                const explainsSpecies = (baLower.includes('breeding') || baLower.includes('foraging') || baLower.includes('nesting')) &&
+                                       (baLower.includes('spotted frog') || baLower.includes('owl') || baLower.includes('salmon'));
+                if (explainsSpecies) {
+                    bas += 1;
+                } else {
+                    baMissing.push('threatened species habitat use (breeding, foraging, migration)');
+                }
+                
+                // Must address Blue Heron Preserve proximity
+                const discusses200m = baLower.includes('200') && (baLower.includes('preserve') || baLower.includes('buffer'));
+                if (discusses200m) {
+                    bas += 1;
+                } else {
+                    baMissing.push('200m proximity to Blue Heron Wetland Preserve');
+                }
+                
+                if (baWords < 120) bas = Math.min(bas, 2.5);
+                
+                s1 += bas;
+                
+                if (bas >= 4) {
+                    fb += '<p><strong>✓ EXCELLENT (' + bas.toFixed(1) + '/5):</strong> Comprehensive baseline characterization with data.</p>';
+                } else {
+                    fb += '<p><strong>~ NEEDS WORK (' + bas.toFixed(1) + '/5):</strong> Missing: ' + baMissing.join(', ') + '.</p>';
+                }
+            }
+            
+            fb += '</div>';
+
+            // SECTION 2: IMPACT ASSESSMENT (25 pts) - STRICT
+            fb += '<div class="feedback-box success"><h3>Section 2: Impact Assessment (25 pts)</h3>';
+            
+            // Q6: Water withdrawal (6 pts)
+            if (waterWithdrawal === 'negligible') {
+                s2 += 6;
+                fb += '<p><strong>✓ CORRECT (6/6):</strong> 2.5M gal/day = 3.9 cfs vs 15,000 cfs river flow = 0.026% = negligible.</p>';
+            } else if (waterWithdrawal === 'minor') {
+                s2 += 3;
+                fb += '<p><strong>~ PARTIAL (3/6):</strong> Impact is measurable but <0.1% of flow = negligible per EPA guidance.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/6):</strong> Withdrawal is 0.026% of river flow = negligible impact.</p>';
+            }
+
+            // Q7: Wetland mitigation ratio (5 pts)
+            if (wetlandMitigation === '2to1') {
+                s2 += 5;
+                fb += '<p><strong>✓ CORRECT (5/5):</strong> Typical Clean Water Act requirement = 2:1 mitigation ratio for wetland impacts.</p>';
+            } else if (wetlandMitigation === '1to1') {
+                s2 += 2;
+                fb += '<p><strong>~ PARTIAL (2/5):</strong> 1:1 is minimum, but 2:1 is standard for seasonal wetlands.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/5):</strong> EPA/Corps guidance = 2:1 ratio standard for wetland compensation.</p>';
+            }
+
+            // Q8: Thermal impact (5 pts)
+            if (thermalImpact === 'salmon') {
+                s2 += 5;
+                fb += '<p><strong>✓ CORRECT (5/5):</strong> Coho salmon = cold-water species, +8°F impacts spawning success and migration.</p>';
+            } else if (thermalImpact === 'do') {
+                s2 += 2;
+                fb += '<p><strong>~ PARTIAL (2/5):</strong> DO is affected but primary concern is direct thermal stress on salmon.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/5):</strong> Threatened coho salmon = cold-water species highly sensitive to temperature.</p>';
+            }
+
+            // Q9: Air quality impact (4 pts)
+            if (airQualityImpact === 'yes-moderate') {
+                s2 += 4;
+                fb += '<p><strong>✓ CORRECT (4/4):</strong> 95 μg/m³ < 150 limit but 126% increase = moderate impact, requires mitigation.</p>';
+            } else if (airQualityImpact === 'no-below') {
+                s2 += 2;
+                fb += '<p><strong>~ PARTIAL (2/4):</strong> Below NAAQS but 126% increase during construction = moderate impact.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/4):</strong> Below standard but 126% increase = moderate impact requiring dust control.</p>';
+            }
+
+            // Q10: Impact Assessment Essay (5 pts) - STRICT
+            const iaWords = impactAssessment.split(/\s+/).length;
+            const iaLower = impactAssessment.toLowerCase();
+            
+            let ias = 0;
+            let iaMissing = [];
+            
+            if (iaWords < 100) {
+                fb += '<p><strong>✗ TOO SHORT (0/5):</strong> Need 150+ words. Yours: ' + iaWords + ' words.</p>';
+            } else {
+                if (iaWords >= 150) ias += 0.5;
+                
+                // Must analyze threatened species impacts with specifics
+                const analyzesThreatened = (iaLower.includes('spotted frog') && iaLower.includes('breeding')) ||
+                                          (iaLower.includes('salmon') && (iaLower.includes('thermal') || iaLower.includes('temperature'))) ||
+                                          (iaLower.includes('owl') && iaLower.includes('foraging'));
+                if (analyzesThreatened) {
+                    ias += 1.5;
+                } else {
+                    iaMissing.push('specific threatened species impacts (frog breeding lost, salmon thermal stress, owl habitat)');
+                }
+                
+                // Must calculate wetland loss and CWA implications
+                const discusses5Acres = (iaLower.includes('5 acres') || iaLower.includes('5-acre')) &&
+                                       (iaLower.includes('clean water act') || iaLower.includes('cwa') || iaLower.includes('jurisdictional'));
+                if (discusses5Acres) {
+                    ias += 1;
+                } else {
+                    iaMissing.push('5-acre wetland loss and Clean Water Act implications');
+                }
+                
+                // Must discuss cumulative impacts
+                const discussesCumulative = iaLower.includes('cumulative') ||
+                                           (iaLower.includes('construction') && iaLower.includes('operation'));
+                if (discussesCumulative) {
+                    ias += 1;
+                } else {
+                    iaMissing.push('cumulative impacts (construction + operation phases)');
+                }
+                
+                // Must reference EIS criteria
+                const referencesEIS = (iaLower.includes('eis') || iaLower.includes('significant')) &&
+                                     (iaLower.includes('threshold') || iaLower.includes('>1 acre') || iaLower.includes('> 1 acre'));
+                if (referencesEIS) {
+                    ias += 1;
+                } else {
+                    iaMissing.push('EIS significance thresholds (>1 acre wetland, threatened species)');
+                }
+                
+                if (iaWords < 120) ias = Math.min(ias, 2.5);
+                
+                s2 += ias;
+                
+                if (ias >= 4) {
+                    fb += '<p><strong>✓ EXCELLENT (' + ias.toFixed(1) + '/5):</strong> Rigorous impact analysis with regulatory framework.</p>';
+                } else {
+                    fb += '<p><strong>~ NEEDS WORK (' + ias.toFixed(1) + '/5):</strong> Missing: ' + iaMissing.join(', ') + '.</p>';
+                }
+            }
+            
+            fb += '</div>';
+
+            // SECTION 3: MITIGATION STRATEGY (25 pts) - STRICT
+            fb += '<div class="feedback-box success"><h3>Section 3: Mitigation Strategy (25 pts)</h3>';
+            
+            // Q11: Frog mitigation (6 pts)
+            if (frogMitigation === 'avoid') {
+                s2 += 6;
+                fb += '<p><strong>✓ CORRECT (6/6):</strong> Avoidance (preserve wetland) = highest priority in mitigation hierarchy.</p>';
+            } else if (frogMitigation === 'compensate') {
+                s3 += 3;
+                fb += '<p><strong>~ PARTIAL (3/6):</strong> Compensation works but avoidance is preferred mitigation approach.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/6):</strong> Mitigation hierarchy: Avoid > Minimize > Mitigate > Compensate. Preserve wetland = best.</p>';
+            }
+
+            // Q12: Thermal mitigation (6 pts)
+            if (thermalMitigation === 'cooling-towers') {
+                s3 += 6;
+                fb += '<p><strong>✓ CORRECT (6/6):</strong> Closed-loop cooling eliminates thermal discharge = complete avoidance of impact.</p>';
+            } else if (thermalMitigation === 'diffuser') {
+                s3 += 2;
+                fb += '<p><strong>~ PARTIAL (2/6):</strong> Diffuser reduces impact but doesn\'t eliminate thermal pollution.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/6):</strong> Closed-loop cooling = eliminates discharge, most effective mitigation.</p>';
+            }
+
+            // Q13: Road mitigation (5 pts)
+            if (roadMitigation === 'culverts') {
+                s3 += 5;
+                fb += '<p><strong>✓ CORRECT (5/5):</strong> Wildlife underpasses maintain connectivity for elk, turtles = best practice.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/5):</strong> Wildlife culverts/underpasses = standard mitigation for habitat fragmentation.</p>';
+            }
+
+            // Q14: Mitigation acres calculation (3 pts)
+            if (mitigationAcres === 10) {
+                s3 += 3;
+                fb += '<p><strong>✓ CORRECT (3/3):</strong> 5 acres × 2:1 ratio = 10 acres wetland mitigation.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/3):</strong> Calculation: 5 acres impacted × 2:1 ratio = 10 acres to create/restore.</p>';
+            }
+
+            // Q15: Mitigation Plan Essay (5 pts) - STRICT
+            const mpWords = mitigationPlan.split(/\s+/).length;
+            const mpLower = mitigationPlan.toLowerCase();
+            
+            let mps = 0;
+            let mpMissing = [];
+            
+            if (mpWords < 100) {
+                fb += '<p><strong>✗ TOO SHORT (0/5):</strong> Need 150+ words. Yours: ' + mpWords + ' words.</p>';
+            } else {
+                if (mpWords >= 150) mps += 0.5;
+                
+                // Must follow mitigation hierarchy
+                const followsHierarchy = (mpLower.includes('avoid') || mpLower.includes('avoidance')) &&
+                                        (mpLower.includes('minimize') || mpLower.includes('minimization'));
+                if (followsHierarchy) {
+                    mps += 1.5;
+                } else {
+                    mpMissing.push('mitigation hierarchy (avoid → minimize → mitigate → compensate)');
+                }
+                
+                // Must design stormwater system
+                const designsStormwater = (mpLower.includes('stormwater') || mpLower.includes('storm water')) &&
+                                         (mpLower.includes('bioswale') || mpLower.includes('retention') || mpLower.includes('pond'));
+                if (designsStormwater) {
+                    mps += 1;
+                } else {
+                    mpMissing.push('stormwater management system (bioswales, retention pond)');
+                }
+                
+                // Must specify buffer dimensions
+                const specifiesBuffer = (mpLower.includes('50') || mpLower.includes('100')) &&
+                                       (mpLower.includes('meter') || mpLower.includes('buffer'));
+                if (specifiesBuffer) {
+                    mps += 1;
+                } else {
+                    mpMissing.push('buffer zone dimensions (EPA recommends 50-100m)');
+                }
+                
+                // Must include monitoring plan
+                const hasMonitoring = (mpLower.includes('monitor') || mpLower.includes('monitoring')) &&
+                                     (mpLower.includes('quarterly') || mpLower.includes('annual') || mpLower.includes('water quality'));
+                if (hasMonitoring) {
+                    mps += 1;
+                } else {
+                    mpMissing.push('monitoring plan (water quality, wildlife surveys)');
+                }
+                
+                if (mpWords < 120) mps = Math.min(mps, 2.5);
+                
+                s3 += mps;
+                
+                if (mps >= 4) {
+                    fb += '<p><strong>✓ EXCELLENT (' + mps.toFixed(1) + '/5):</strong> Comprehensive mitigation design with specifics.</p>';
+                } else {
+                    fb += '<p><strong>~ NEEDS WORK (' + mps.toFixed(1) + '/5):</strong> Missing: ' + mpMissing.join(', ') + '.</p>';
+                }
+            }
+            
+            fb += '</div>';
+
+            // SECTION 4: FINAL RECOMMENDATION (25 pts) - STRICT
+            fb += '<div class="feedback-box success"><h3>Section 4: Final Recommendation (25 pts)</h3>';
+            
+            // Q16: EIS requirement (6 pts)
+            if (eisRequired === 'yes-both') {
+                s4 += 6;
+                fb += '<p><strong>✓ CORRECT (6/6):</strong> Multiple significant impacts (>1 acre wetland + threatened species + thermal) = EIS required.</p>';
+            } else if (eisRequired === 'yes-threatened' || eisRequired === 'yes-wetland') {
+                s4 += 3;
+                fb += '<p><strong>~ PARTIAL (3/6):</strong> Correct that EIS needed, but BOTH wetland and threatened species trigger requirement.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/6):</strong> 5-acre wetland (>1 acre threshold) + threatened species = significant impacts requiring EIS.</p>';
+            }
+
+            // Q17: Final recommendation (5 pts)
+            if (finalRecommendation === 'conditional') {
+                s4 += 5;
+                fb += '<p><strong>✓ CORRECT (5/5):</strong> Conditional approval = appropriate given significant impacts that CAN be mitigated.</p>';
+            } else if (finalRecommendation === 'deny') {
+                s4 += 2;
+                fb += '<p><strong>~ CONSERVATIVE (2/5):</strong> Impacts are significant but can be mitigated with conditions.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/5):</strong> Unconditional approval ignores significant impacts. Conditional approval = appropriate.</p>';
+            }
+
+            // Q18: Critical condition (4 pts)
+            if (criticalCondition === 'wetland-avoidance') {
+                s4 += 4;
+                fb += '<p><strong>✓ CORRECT (4/4):</strong> Wetland avoidance = protects threatened spotted frog breeding, highest priority.</p>';
+            } else if (criticalCondition === 'cooling') {
+                s4 += 2;
+                fb += '<p><strong>~ GOOD (2/4):</strong> Cooling is important but wetland houses threatened frog breeding = most critical.</p>';
+            } else {
+                fb += '<p><strong>✗ SUBOPTIMAL (0/4):</strong> Wetland avoidance = protects threatened species breeding habitat = most critical.</p>';
+            }
+
+            // Q19: Mitigation cost calculation (5 pts)
+            if (mitigationCost === 450000) {
+                s4 += 5;
+                fb += '<p><strong>✓ CORRECT (5/5):</strong> 10 acres × $45,000/acre = $450,000.</p>';
+            } else if (mitigationCost >= 400000 && mitigationCost <= 500000) {
+                s4 += 2;
+                fb += '<p><strong>~ CLOSE (2/5):</strong> 5 acres × 2:1 = 10 acres × $45,000 = $450,000.</p>';
+            } else {
+                fb += '<p><strong>✗ INCORRECT (0/5):</strong> 5 acres × 2:1 ratio = 10 acres × $45,000/acre = $450,000.</p>';
+            }
+
+            // Q20: Executive Summary (5 pts) - VERY STRICT
+            const esWords = executiveSummary.split(/\s+/).length;
+            const esLower = executiveSummary.toLowerCase();
+            
+            let ess = 0;
+            let esMissing = [];
+            
+            if (esWords < 150) {
+                fb += '<p><strong>✗ TOO SHORT (0/5):</strong> Need 200+ words. Yours: ' + esWords + ' words.</p>';
+            } else {
+                if (esWords >= 200) ess += 1;
+                
+                // Must summarize baseline
+                const summarizesBaseline = (esLower.includes('baseline') || esLower.includes('existing')) &&
+                                          (esLower.includes('wetland') || esLower.includes('threatened species'));
+                if (summarizesBaseline) {
+                    ess += 1;
+                } else {
+                    esMissing.push('baseline conditions summary');
+                }
+                
+                // Must identify significant impacts with specifics
+                const identifiesImpacts = (esLower.includes('5 acres') || esLower.includes('5-acre')) &&
+                                         (esLower.includes('significant') || esLower.includes('exceed'));
+                if (identifiesImpacts) {
+                    ess += 1;
+                } else {
+                    esMissing.push('specific significant impacts (5-acre wetland, thermal discharge)');
+                }
+                
+                // Must state clear recommendation
+                const statesRecommendation = (esLower.includes('recommend') || esLower.includes('recommendation')) &&
+                                            (esLower.includes('approve') || esLower.includes('conditional') || esLower.includes('deny'));
+                if (statesRecommendation) {
+                    ess += 1;
+                } else {
+                    esMissing.push('clear recommendation (approve/conditional/deny)');
+                }
+                
+                // Must specify permit conditions
+                const specifiesConditions = esLower.includes('condition') &&
+                                           (esLower.includes('wetland') || esLower.includes('cooling') || esLower.includes('buffer'));
+                if (specifiesConditions) {
+                    ess += 1;
+                } else {
+                    esMissing.push('specific permit conditions with performance standards');
+                }
+                
+                if (esWords < 180) ess = Math.min(ess, 2.5);
+                
+                s4 += ess;
+                
+                if (ess >= 4) {
+                    fb += '<p><strong>✓ EXCELLENT (' + ess.toFixed(1) + '/5):</strong> Professional regulatory recommendation.</p>';
+                } else {
+                    fb += '<p><strong>~ NEEDS WORK (' + ess.toFixed(1) + '/5):</strong> Missing: ' + esMissing.join(', ') + '.</p>';
+                }
+            }
+            
+            fb += '</div>';
+
+            // Calculate total and display
+            const total = s1 + s2 + s3 + s4;
+
+            document.getElementById('score1').textContent = s1.toFixed(1) + '/25';
+            document.getElementById('score2').textContent = s2.toFixed(1) + '/25';
+            document.getElementById('score3').textContent = s3.toFixed(1) + '/25';
+            document.getElementById('score4').textContent = s4.toFixed(1) + '/25';
+            document.getElementById('totalScore').textContent = total.toFixed(0);
+
+            let cat = '';
+            if (total >= 90) cat = 'Outstanding - Environmental Consultant Ready';
+            else if (total >= 80) cat = 'Strong - EIA Skills Demonstrated';
+            else if (total >= 70) cat = 'Good - Solid Environmental Assessment';
+            else if (total >= 60) cat = 'Adequate - Basic Understanding';
+            else cat = 'Needs Improvement - Review Materials';
+
+            document.getElementById('scoreCategory').textContent = cat;
+            document.getElementById('detailedFeedback').innerHTML = fb;
+
+            // Save to Supabase
+            if (userEmail && supabaseClient) {
+                saveResults(total, s1, s2, s3, s4);
+            }
+
+            window.showSection(5);
+            setTimeout(window.sendHeightToParent, 300);
+        }
+
+        async function saveResults(total, s1, s2, s3, s4) {
+            if (!supabaseClient || !userEmail) {
+                console.warn('Cannot save results: missing Supabase client or user email');
+                return;
+            }
+
+            const resultData = {
+                user_email: userEmail,
+                simulation_type: 'environmental_science',
+                total_score: Math.round(total),
+                section_scores: {
+                    baseline_analysis: s1,
+                    impact_assessment: s2,
+                    mitigation_strategy: s3,
+                    final_recommendation: s4
+                },
+                completed_at: new Date().toISOString(),
+                organization_id: organizationId
+            };
+
+            try {
+                // Save to simulation_results
+                const { error: resultsError } = await supabaseClient
+                    .from('simulation_results')
+                    .upsert(resultData, { 
+                        onConflict: 'user_email,simulation_type' 
+                    });
+
+                if (resultsError) {
+                    console.error('Error saving to simulation_results:', resultsError);
+                }
+
+                // Also update simulation_progress to mark as completed
+                const progressData = {
+                    user_email: userEmail,
+                    simulation_type: 'environmental_science',
+                    progress_data: {
+                        status: 'completed',
+                        total_score: Math.round(total),
+                        completed_at: new Date().toISOString()
+                    },
+                    last_updated: new Date().toISOString(),
+                    organization_id: organizationId
+                };
+
+                const { error: progressError } = await supabaseClient
+                    .from('simulation_progress')
+                    .upsert(progressData, {
+                        onConflict: 'user_email,simulation_type'
+                    });
+
+                if (progressError) {
+                    console.error('Error saving to simulation_progress:', progressError);
+                }
+
+            } catch (error) {
+                console.error('Error saving results:', error);
+            }
+        }
+
+        window.downloadReport = function() {
+            const content = `
+ENVIRONMENTAL SCIENCE SIMULATION - RESULTS REPORT
+TechVista Data Center - Environmental Impact Assessment
+Generated: ${new Date().toLocaleDateString()}
+
+TOTAL SCORE: ${document.getElementById('totalScore').textContent}/100
+
+SCORE BREAKDOWN:
+- Section 1: Baseline Analysis: ${document.getElementById('score1').textContent}
+- Section 2: Impact Assessment: ${document.getElementById('score2').textContent}
+- Section 3: Mitigation Strategy: ${document.getElementById('score3').textContent}
+- Section 4: Final Recommendation: ${document.getElementById('score4').textContent}
+
+PERFORMANCE: ${document.getElementById('scoreCategory').textContent}
+
+DETAILED FEEDBACK:
+${document.getElementById('detailedFeedback').innerText}
+            `;
+
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Environmental_Assessment_Report.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        window.sendHeightToParent = function() {
+            try {
+                const height = document.body.scrollHeight + 100;
+                window.parent.postMessage({ type: 'iframe-height', height: height }, '*');
+            } catch (e) {}
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initSupabase();
+        });
+
+        window.addEventListener('load', function() {
+            setTimeout(window.sendHeightToParent, 500);
+            setTimeout(window.sendHeightToParent, 1500);
+        });
+    </script>
+    
+    <div id="content-end-marker" style="height: 1px;"></div>
+</body>
+</html>
